@@ -1,0 +1,6 @@
+__pycache__
+dbx-demo-strands.code-workspace
+mcp/glue-catalog-server/build/
+mcp/glue-catalog-server/node_modules/
+mcp/unity-catalog-server/build/
+mcp/unity-catalog-server/node_modules/
