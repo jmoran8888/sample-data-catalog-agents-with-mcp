@@ -1,6 +1,29 @@
-__pycache__
-dbx-demo-strands.code-workspace
-mcp/glue-catalog-server/build/
-mcp/glue-catalog-server/node_modules/
-mcp/unity-catalog-server/build/
-mcp/unity-catalog-server/node_modules/
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+.terraform.lock.hcl
+
+# Environment files
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

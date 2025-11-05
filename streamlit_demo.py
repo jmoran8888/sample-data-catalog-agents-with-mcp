@@ -11,7 +11,11 @@ that can query both Unity Catalog and AWS Glue Catalog.
 import json
 import logging
 import streamlit as st
+from dotenv import load_dotenv
 from agents.unified_catalog_agent import unified_agent
+
+# Load environment variables
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(
@@ -44,25 +48,6 @@ def main():
     The agent uses MCP (Model Context Protocol) to interact with both catalog agents and provides a unified interface for data discovery.
     """)
     
-    # Warning about MCP servers
-    st.warning("""
-    **Important**: Make sure you have built the MCP servers before running this demo:
-    
-    ```
-    # Build Unity catalog MCP server
-    cd mcp/unity-catalog-server
-    npm install
-    npm run build
-    cd ../..
-    
-    # Build AWS Glue catalog MCP server
-    cd mcp/glue-catalog-server
-    npm install
-    npm run build
-    cd ../..
-    ```
-    """)
-    
     # Example queries
     with st.expander("Example queries", expanded=True):
         st.markdown("""
@@ -80,7 +65,7 @@ def main():
     
     # Process query
     if submit and query:
-        with st.spinner("Processing query... This may take a moment as the MCP servers initialize."):
+        with st.spinner("Processing query..."):
             try:
                 # Call the unified agent
                 response = unified_agent(query)
@@ -135,7 +120,7 @@ def main():
                     
             except Exception as e:
                 st.error(f"Error: {e}")
-                st.info("Make sure you have built the MCP servers before running this demo. See the instructions above.")
+                st.info("Make sure you have built the MCP servers and have AWS credentials configured and Unity Catalog running on port 8080.")
 
 if __name__ == "__main__":
     main()

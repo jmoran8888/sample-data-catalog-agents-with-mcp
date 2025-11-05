@@ -1,0 +1,16 @@
+# Copy this file to terraform.tfvars and fill in your values
+
+# Admin user email for Cognito authentication
+admin_email = "jenfmor@amazon.com"
+
+# Temporary password for the admin user (must meet password policy)
+admin_temp_password = "TempPass123!"
+
+# Database password (optional - has default)
+# db_password = "YourSecurePassword123!"
+
+# AWS region (optional - defaults to us-east-1)
+# aws_region = "us-east-1"
+
+# Environment name (optional - defaults to dev)
+# environment = "dev"

@@ -6,3 +6,6 @@ strands-agents-builder
 requests
 mcp
 streamlit
+fastmcp
+starlette
+python-dotenv
