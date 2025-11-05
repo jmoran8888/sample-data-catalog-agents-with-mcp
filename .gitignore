@@ -18,6 +18,13 @@ env/
 .venv/
 venv/
 
+# Node.js
+node_modules/
+build/
+dist/
+*.log
+npm-debug.log*
+
 # IDE
 .vscode/
 .idea/
