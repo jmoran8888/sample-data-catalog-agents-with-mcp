@@ -13,7 +13,7 @@ from tools.unity_tools import (
 )
 
 # Create FastMCP server with AgentCore Runtime compatibility
-mcp = FastMCP(host="0.0.0.0", stateless_http=True)
+mcp = FastMCP(host="0.0.0.0", port=8080, stateless_http=True)
 
 @mcp.tool()
 def list_unity_databases_tool() -> list:

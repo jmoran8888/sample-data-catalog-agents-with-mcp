@@ -11,6 +11,16 @@ The system follows a hierarchical multi-agent architecture with three main agent
 
 These agents are integrated using the Model Context Protocol (MCP), which allows the supervisor agent to use the specialized agents as tools.
 
+### Deployment Options
+
+The system supports two deployment modes:
+- **Local Development**: All components run locally using Docker Compose
+- **AWS Production**: Deployed on AWS infrastructure using:
+  - ECS Fargate for application hosting
+  - AWS Bedrock AgentCore Runtime for MCP server execution
+  - Cognito for authentication
+  - RDS PostgreSQL for metadata storage
+
 ```mermaid
 graph TD
     %% User Interfaces
@@ -144,6 +154,7 @@ sequenceDiagram
 - **Unity Catalog MCP Server**: Wraps the Unity catalog agent as an MCP tool
 - **AWS Glue Catalog MCP Server**: Wraps the AWS Glue catalog agent as an MCP tool
 - Both servers expose their respective agents' functionality through a standardized interface
+- **AWS Deployment**: MCP servers run on AWS Bedrock AgentCore Runtime for scalable, managed execution
 
 ### 4. Specialized Agents
 - **Unity Catalog Agent**: Specialized for querying the Unity catalog

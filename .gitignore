@@ -2,11 +2,20 @@
 *.tfstate
 *.tfstate.*
 *.tfvars
+!terraform.tfvars.example
 .terraform/
 .terraform.lock.hcl
+tfplan
 
 # Environment files
 .env
+.bedrock_agentcore.yaml
+agentcore-config.json
+
+# Internal documentation (for reference only, not for open source)
+AGENTCORE_DEPLOYMENT_FIX.md
+CLEANUP_SUMMARY.md
+SECURE_DEPLOYMENT.md
 
 # Python
 __pycache__/
@@ -30,6 +39,12 @@ npm-debug.log*
 .idea/
 *.swp
 *.swo
+
+# Unity Catalog local installation
+unitycatalog/
+
+# Temporary debugging files
+eni-details.json
 
 # OS
 .DS_Store

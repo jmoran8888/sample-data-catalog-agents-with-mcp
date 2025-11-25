@@ -1,10 +1,11 @@
 # Copy this file to terraform.tfvars and fill in your values
 
 # Admin user email for Cognito authentication
-admin_email = "jenfmor@amazon.com"
+admin_email = "admin@example.com"
 
 # Temporary password for the admin user (must meet password policy)
-admin_temp_password = "TempPass123!"
+# IMPORTANT: Change this to a secure password before deploying
+admin_temp_password = "ChangeMe123!SecurePassword"
 
 # Database password (optional - has default)
 # db_password = "YourSecurePassword123!"

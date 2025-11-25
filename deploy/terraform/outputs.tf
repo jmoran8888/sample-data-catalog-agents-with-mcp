@@ -1,3 +1,8 @@
+output "aws_region" {
+  description = "AWS region"
+  value       = var.aws_region
+}
+
 output "agentcore_role_arn" {
   description = "AgentCore Runtime IAM Role ARN"
   value       = aws_iam_role.agentcore_runtime.arn

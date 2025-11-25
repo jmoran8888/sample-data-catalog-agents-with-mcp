@@ -79,7 +79,7 @@ resource "aws_cognito_user" "admin" {
     email_verified = true
   }
 
-  temporary_password = "TempPass123!"
+  temporary_password = var.admin_temp_password
   message_action     = "SUPPRESS"
 
   lifecycle {

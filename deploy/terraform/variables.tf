@@ -44,7 +44,7 @@ variable "db_password" {
   description = "Database password"
   type        = string
   sensitive   = true
-  default     = "CatalogAgents2024!"
+  default     = "ChangeThisSecurePassword123!"
 }
 
 variable "admin_email" {
@@ -56,14 +56,4 @@ variable "admin_temp_password" {
   description = "Temporary password for admin user"
   type        = string
   sensitive   = true
-}
-
-variable "unity_mcp_runtime_id" {
-  description = "Unity Catalog MCP Runtime ID from AgentCore"
-  type        = string
-}
-
-variable "glue_mcp_runtime_id" {
-  description = "Glue Catalog MCP Runtime ID from AgentCore"
-  type        = string
 }

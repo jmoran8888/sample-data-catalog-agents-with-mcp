@@ -55,6 +55,16 @@ resource "aws_iam_role_policy" "agentcore_runtime" {
           "glue:GetPartition"
         ]
         Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchCheckLayerAvailability"
+        ]
+        Resource = "*"
       }
     ]
   })

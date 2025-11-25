@@ -116,14 +116,6 @@ resource "aws_ecs_task_definition" "streamlit_app" {
         {
           name  = "AWS_DEFAULT_REGION"
           value = var.aws_region
-        },
-        {
-          name  = "UNITY_MCP_RUNTIME_ID"
-          value = var.unity_mcp_runtime_id
-        },
-        {
-          name  = "GLUE_MCP_RUNTIME_ID"
-          value = var.glue_mcp_runtime_id
         }
       ]
 
