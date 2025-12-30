@@ -42,35 +42,65 @@ These diagrams provide a detailed view of how the agents work together and how t
 - Consistent interface across all catalog agents
 - MCP servers for wrapping agents as tools
 
-## Setup
+## Deployment Options
 
-1. Create a virtual environment:
-   ```
-   uv venv .venv
-   ```
+This project supports two deployment modes:
 
-2. Activate the virtual environment:
-   ```
-   source .venv/bin/activate  # On Linux/macOS
-   .venv\Scripts\activate     # On Windows
-   ```
+### 1. Local Development (Quick Start)
+Follow the setup instructions below for local development and testing.
 
-3. Install requirements:
-   ```
-   uv pip install -r requirements.txt
-   ```
+### 2. AWS Production Deployment
 
-4. Make sure your AWS profile is set up correctly with permissions to access the AWS Glue catalog
+Deploy to AWS with complete managed infrastructure:
+- **ECS Fargate**: Runs Unity Catalog and Streamlit applications
+- **RDS PostgreSQL**: Metadata storage
+- **Application Load Balancer**: Traffic routing with Cognito authentication
+- **AWS Bedrock AgentCore Runtime**: Executes MCP servers
+- **Amazon Cognito**: User authentication
+- **VPC**: Isolated network with public/private subnets
 
-5. Make sure you have a few tables created in your Glue catalog for testing
+**See "AWS Deployment" section below for complete instructions.**
+**Review [SECURITY.md](SECURITY.md) before deploying.**
 
-6. Install Unity Catalog [locally](https://github.com/unitycatalog/unitycatalog) and run it on port 8080
-   - The Unity catalog API should be accessible at http://localhost:8080/api/2.1/unity-catalog
-   - The API follows the [Unity Catalog REST API specification](https://docs.unitycatalog.io/swagger-docs/)
+## Local Development Setup
 
-7. Add some tables to the Unity catalog.
+### 1. Environment Setup
 
-## Building MCP Servers
+Create and activate a virtual environment:
+```bash
+uv venv .venv
+source .venv/bin/activate  # On Linux/macOS
+# .venv\Scripts\activate     # On Windows
+```
+
+Install requirements:
+```bash
+uv pip install -r requirements.txt
+```
+
+### 2. Configure AWS Profile
+
+Make sure your AWS profile is set up correctly with permissions to access the AWS Glue catalog.
+
+### 3. Install Unity Catalog
+
+Install Unity Catalog [locally](https://github.com/unitycatalog/unitycatalog) and run it on port 8080:
+- The Unity catalog API should be accessible at http://localhost:8080/api/2.1/unity-catalog
+- The API follows the [Unity Catalog REST API specification](https://docs.unitycatalog.io/swagger-docs/)
+
+### 4. Populate Sample Data
+
+**For AWS Glue Catalog:**
+```bash
+python setup/setup_glue_sample_data.py
+```
+
+**For Unity Catalog:**
+```bash
+python setup/setup_unity_simple.py
+```
+
+### 5. Build MCP Servers
 
 Before running the unified catalog agent, you need to build the TypeScript MCP servers:
 
@@ -92,64 +122,144 @@ Before running the unified catalog agent, you need to build the TypeScript MCP s
 
 These steps compile the TypeScript code to JavaScript, creating the necessary files in the `build` directories that the unified agent needs to run. If you encounter an error like `Cannot find module '/path/to/mcp/unity-catalog-server/build/index.js'`, it means you need to build the MCP servers first.
 
-## Usage
+### 6. Run the Application
 
-### Command Line Demo
+#### Command Line Demo
 Run the demo script with the desired agent:
-```
+```bash
 python demo.py --agent unity    # For Unity catalog agent (default)
 python demo.py --agent glue     # For AWS Glue catalog agent
 python demo.py --agent unified  # For Unified catalog agent
 ```
 
-### Streamlit Demo
-Run the Streamlit demo for the unified agent:
-```
+#### Streamlit UI
+Run the Streamlit demo:
+```bash
 streamlit run streamlit_demo.py
 ```
-This will launch a web interface where you can interact with the unified catalog agent.
+Access at: http://localhost:8501
+
+## AWS Deployment
+
+### Prerequisites
+
+1. **Python 3.9+** with pip
+2. **AWS CLI** configured with appropriate permissions
+3. **Terraform** >= 1.0
+4. **Docker** for building container images
+
+Required AWS permissions: ECS, ECR, RDS, VPC, IAM, CloudWatch, Bedrock AgentCore, CodeBuild
+
+### How AgentCore Deployment Works
+
+This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP servers to AWS Bedrock AgentCore:
+
+1. **Toolkit packages your Python code** - MCP server files and dependencies
+2. **Creates CodeBuild projects** - Automatically builds container images from source
+3. **Manages ECR repositories** - Creates and pushes to toolkit-managed repos (bedrock-agentcore-*)
+4. **Deploys to AgentCore** - Handles all API complexities correctly
+5. **Monitors deployment** - Waits for READY status
+
+**Benefits:**
+- ✅ Reliable deployment (matches AWS Console behavior)
+- ✅ Automatic container building
+- ✅ No manual Docker commands needed for MCP servers
+- ✅ Built-in error handling
+
+**Resources Created:**
+- CodeBuild projects (one per MCP server)
+- ECR repositories (bedrock-agentcore-unityCatalogMcp_*, bedrock-agentcore-glueCatalogMcp_*)
+- AgentCore runtime instances
+- Sample data automatically populated in both catalogs
+
+**Note:** All toolkit-created resources are automatically cleaned up by `cleanup_aws.py`.
+
+### Deployment
+
+```bash
+# Complete automated deployment
+python setup/deploy_aws.py
+```
+
+This single script automatically:
+1. Deploys Terraform infrastructure (VPC, ECS, RDS, ALB, Cognito)
+2. Builds and pushes Streamlit Docker image to ECR
+3. Deploys MCP servers to AgentCore Runtime (toolkit builds MCP images)
+4. Updates ECS services with configuration
+5. Populates both AWS Glue and Unity catalogs with sample data
+6. Provides access URLs and credentials
+
+### Accessing the Application
+
+After deployment completes, the script will output:
+- **Application URL**: `https://<alb-dns-name>`
+- **Login URL**: Cognito authentication page
+
+**To access:**
+1. Open the Login URL provided by the deployment script
+2. Sign in with your Cognito credentials
+3. You'll be redirected to the Streamlit application
+4. Use the web interface to query both catalogs
+
+**To get URLs later:**
+```bash
+cd deploy/terraform
+terraform output alb_dns_name
+terraform output admin_login_url
+```
+
+### Cleanup
+
+⚠️ **Warning**: Destroys ALL resources and data. This action CANNOT be undone.
+
+```bash
+python setup/cleanup_aws.py
+```
+
+This script will:
+1. Delete AgentCore runtimes (Unity & Glue MCP servers)
+2. Delete CodeBuild projects (created by toolkit)
+3. Empty all ECR repositories (including toolkit-created ones)
+4. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, Cognito, etc.)
+5. Remove local configuration files (.env, agentcore-config.json, etc.)
+
+## Usage & Example Queries
+
+### Command Line (Local Development Only)
+
+```bash
+python demo.py --agent unity    # Unity catalog agent
+python demo.py --agent glue     # AWS Glue catalog agent  
+python demo.py --agent unified  # Unified catalog agent
+```
+
+### Streamlit Web UI
+
+**Local:** http://localhost:8501 (after running `streamlit run streamlit_demo.py`)  
+**AWS:** Get URL from terraform: `cd deploy/terraform && terraform output streamlit_url`
 
 ### Example Queries
 
-For AWS Glue Catalog:
+**For AWS Glue Catalog:**
 - "List all databases in the Glue catalog"
 - "Show me all tables in database X"
 - "Find tables with 'customer' in the name"
 - "Get details for table Y in database X"
 - "Find tables with columns containing 'timestamp'"
 
-For Unity Catalog:
+**For Unity Catalog:**
 - "List all databases in the Unity catalog"
 - "Show me all tables in catalog_name.schema_name"
 - "Find tables with 'customer' in the name"
 - "Get details for table_name in catalog_name.schema_name"
 - "Find tables with columns containing 'timestamp'"
 
-For Unified Catalog Agent:
+**For Unified Catalog Agent:**
 - "List all databases in both catalogs"
 - "Find tables with 'customer' in the name in both catalogs"
 - "Show me all tables in the Unity catalog"
 - "Show me all tables in the AWS Glue catalog"
 - "Find tables with columns containing 'timestamp' across both catalogs"
-
-## Project Structure
-
-- `agents/glue_catalog_agent.py`: Defines the AWS Glue catalog agent
-- `agents/unity_catalog_agent.py`: Defines the Unity catalog agent
-- `agents/unified_catalog_agent.py`: Defines the unified catalog agent that uses both catalogs
-- `tools/glue_tools.py`: Custom tools for interacting with the AWS Glue catalog
-- `tools/unity_tools.py`: Custom tools for interacting with the Unity catalog
-- `mcp/unity-catalog-server/`: MCP server for the Unity catalog agent
-- `mcp/glue-catalog-server/`: MCP server for the AWS Glue catalog agent
-- `demo.py`: Demo script to showcase all agents' capabilities
-- `streamlit_demo.py`: Streamlit web application for the unified agent
-- `test_agent.py`: Test script for the AWS Glue catalog agent
-- `test_unity_agent.py`: Test script for the Unity catalog agent
-- `test_unified_agent.py`: Test script for the unified catalog agent
-- `architecture_diagrams.md`: High-level architecture diagrams
-- `technical_data_flow.md`: Detailed technical data flow diagrams
-- `implementation_details.md`: Implementation details and code structure diagrams
-- `architecture_diagrams_README.md`: Guide to the architecture documentation
 
 ## Limitations
 
@@ -157,9 +267,14 @@ This project is a proof-of-concept. Do not use this code for production purposes
 
 ## Security
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+**IMPORTANT:** Before deploying this project to AWS:
+1. Review and follow all security guidelines in [SECURITY.md](SECURITY.md)
+2. Replace all placeholder passwords with secure values
+3. Never commit `terraform.tfvars`, `*.tfstate`, or `tfplan` files
+4. Consider using AWS Secrets Manager for credential management
+
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information on reporting security issues.
 
 ## License
 
 This library is licensed under the MIT-0 License. See the LICENSE file.
-
