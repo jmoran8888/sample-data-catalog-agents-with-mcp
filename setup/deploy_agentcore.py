@@ -35,11 +35,14 @@ def get_terraform_output(output_name):
     
     return output
 
-def deploy_mcp_server(server_name, entrypoint_file, agent_execution_role, region='us-east-1'):
+def deploy_mcp_server(server_name, entrypoint_file, agent_execution_role, region='us-east-1', display_name=None):
     """Deploy a single MCP server using the AgentCore toolkit"""
     
+    # Use display name for user-facing messages, server_name for technical operations
+    name_to_display = display_name if display_name else server_name
+    
     print(f"\n{'='*60}")
-    print(f"Deploying {server_name}")
+    print(f"Deploying {name_to_display}")
     print(f"{'='*60}")
     
     runtime = Runtime()
@@ -132,7 +135,8 @@ def deploy_mcp_servers(agent_type=None):
                 server_name=f'unity_catalog_mcp_{unique_suffix}',
                 entrypoint_file='mcp/unity_catalog_mcp_server.py',
                 agent_execution_role=role_arn,
-                region=aws_region
+                region=aws_region,
+                display_name='Unity MCP (Step 3a)'
             )
             results['unity'] = unity_result
         except Exception as e:
@@ -146,7 +150,8 @@ def deploy_mcp_servers(agent_type=None):
                 server_name=f'glue_catalog_mcp_{unique_suffix}',
                 entrypoint_file='mcp/glue_catalog_mcp_server.py',
                 agent_execution_role=role_arn,
-                region=aws_region
+                region=aws_region,
+                display_name='Glue MCP (Step 3b)'
             )
             results['glue'] = glue_result
         except Exception as e:
