@@ -357,12 +357,7 @@ def destroy_terraform():
     print("   - VPC and networking")
     print("   - RDS database")
     print("   - ECS cluster and services")
-<<<<<<< HEAD
-    print("   - ALB and load balancers")
-    print("   - Cognito user pools")
-=======
     print("   - ALB and security groups")
->>>>>>> aws-infra
     print("   - ECR repositories")
     print("   - All data will be PERMANENTLY deleted")
     

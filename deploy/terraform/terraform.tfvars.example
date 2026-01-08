@@ -1,15 +1,5 @@
 # Copy this file to terraform.tfvars and fill in your values
 
-<<<<<<< HEAD
-# Admin user email for Cognito authentication
-admin_email = "admin@example.com"
-
-# Temporary password for the admin user (must meet password policy)
-# IMPORTANT: Change this to a secure password before deploying
-admin_temp_password = "ChangeMe123!SecurePassword"
-
-=======
->>>>>>> aws-infra
 # Database password (optional - has default)
 # db_password = "YourSecurePassword123!"
 
@@ -18,10 +8,7 @@ admin_temp_password = "ChangeMe123!SecurePassword"
 
 # Environment name (optional - defaults to dev)
 # environment = "dev"
-<<<<<<< HEAD
-=======
 
 # IP Address Whitelist (REQUIRED for security)
 # Get your IP with: curl ifconfig.me
 allowed_ip_address = ""  # Set to your IP address (e.g., "1.2.3.4")
->>>>>>> aws-infra
