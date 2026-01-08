@@ -54,9 +54,9 @@ Follow the setup instructions below for local development and testing.
 Deploy to AWS with complete managed infrastructure:
 - **ECS Fargate**: Runs Unity Catalog and Streamlit applications
 - **RDS PostgreSQL**: Metadata storage
-- **Application Load Balancer**: Traffic routing with Cognito authentication
+- **Application Load Balancer**: Traffic routing with IP-based access control
 - **AWS Bedrock AgentCore Runtime**: Executes MCP servers
-- **Amazon Cognito**: User authentication
+- **Security Group Whitelisting**: IP-based authentication for secure access
 - **VPC**: Isolated network with public/private subnets
 
 **See "AWS Deployment" section below for complete instructions.**
@@ -196,20 +196,19 @@ MY_IP=$(curl -s ifconfig.me)
 
 # Create deploy/terraform/terraform.tfvars
 cat > deploy/terraform/terraform.tfvars << EOF
-admin_email = "your-email@example.com"
-admin_temp_password = "YourSecurePassword123!"
 aws_region = "us-east-1"
 environment = "dev"
 
-# IP Whitelist - Restrict access to your IP only
+# IP Whitelist - REQUIRED: Restrict access to your IP only
 allowed_ip_address = "$MY_IP"
 EOF
 ```
 
 **⚠️ Security Notes**: 
 - This file is in `.gitignore` - never commit it
-- The ALB will only be accessible from the IP address you specify
-- Update `allowed_ip_address` if your IP changes
+- The ALB will only be accessible from the IP address you specify in `allowed_ip_address`
+- This is the primary security mechanism - ensure you set a valid IP address
+- Update `allowed_ip_address` if your IP changes and run `terraform apply`
 
 ### Deployment
 
@@ -219,31 +218,31 @@ python setup/deploy_aws.py
 ```
 
 This single script automatically:
-1. Deploys Terraform infrastructure (VPC, ECS, RDS, ALB, Cognito)
+1. Deploys Terraform infrastructure (VPC, ECS, RDS, ALB with IP whitelisting)
 2. Builds and pushes Streamlit Docker image to ECR
 3. Deploys MCP servers to AgentCore Runtime (toolkit builds MCP images)
 4. Updates ECS services with configuration
 5. Populates both AWS Glue and Unity catalogs with sample data
-6. Provides access URLs and credentials
+6. Provides access URLs
 
 ### Accessing the Application
 
 After deployment completes, the script will output:
 - **Application URL**: `https://<alb-dns-name>`
-- **Login URL**: Cognito authentication page
 
 **To access:**
-1. Open the Login URL provided by the deployment script
-2. Sign in with your Cognito credentials
-3. You'll be redirected to the Streamlit application
+1. Open the Application URL in your browser
+2. Access is restricted to the IP address you specified in `allowed_ip_address`
+3. If your IP changes, update the `terraform.tfvars` file and run `terraform apply`
 4. Use the web interface to query both catalogs
 
-**To get URLs later:**
+**To get URL later:**
 ```bash
 cd deploy/terraform
 terraform output alb_dns_name
-terraform output admin_login_url
 ```
+
+**Security Note:** The ALB only accepts HTTPS connections from your whitelisted IP address. Access from other IPs will be blocked by the security group.
 
 ### Cleanup
 
@@ -257,7 +256,7 @@ This script will:
 1. Delete AgentCore runtimes (Unity & Glue MCP servers)
 2. Delete CodeBuild projects (created by toolkit)
 3. Empty all ECR repositories (including toolkit-created ones)
-4. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, Cognito, etc.)
+4. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, etc.)
 5. Remove local configuration files (.env, agentcore-config.json, etc.)
 
 ## Usage & Example Queries

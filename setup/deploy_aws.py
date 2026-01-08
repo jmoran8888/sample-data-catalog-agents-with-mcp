@@ -54,8 +54,87 @@ def get_terraform_output(output_name):
         sys.exit(1)
     return result.stdout.strip()
 
+def get_public_ip():
+    """Get the user's public IP address - REQUIRED for deployment"""
+    import requests
+    try:
+        response = requests.get('https://ifconfig.me', timeout=5)
+        return response.text.strip()
+    except:
+        try:
+            response = requests.get('https://api.ipify.org', timeout=5)
+            return response.text.strip()
+        except Exception as e:
+            print("❌ CRITICAL ERROR: Could not detect your public IP address")
+            print("   Both ifconfig.me and api.ipify.org are unreachable")
+            print("\n   To fix:")
+            print("   1. Check your internet connection")
+            print("   2. Or manually create deploy/terraform/terraform.tfvars with:")
+            print('      allowed_ip_address = "YOUR.IP.HERE"')
+            print("   3. Get your IP with: curl ifconfig.me")
+            sys.exit(1)
+
+def create_or_update_tfvars(ip_address):
+    """Create or update terraform.tfvars with IP address"""
+    tfvars_path = Path("deploy/terraform/terraform.tfvars")
+    
+    # Default configuration
+    tfvars_content = f"""aws_region = "us-east-1"
+environment = "dev"
+
+# IP Whitelist - Restrict access to your IP only
+allowed_ip_address = "{ip_address}"
+"""
+    
+    if tfvars_path.exists():
+        # Read existing file
+        with open(tfvars_path, 'r') as f:
+            existing_content = f.read()
+        
+        # Check if IP is already set
+        if 'allowed_ip_address' in existing_content and ip_address in existing_content:
+            print(f"✓ terraform.tfvars already has your IP: {ip_address}")
+            return
+        
+        # Update IP address in existing file
+        import re
+        if 'allowed_ip_address' in existing_content:
+            # Replace existing IP
+            updated_content = re.sub(
+                r'allowed_ip_address\s*=\s*"[^"]*"',
+                f'allowed_ip_address = "{ip_address}"',
+                existing_content
+            )
+            with open(tfvars_path, 'w') as f:
+                f.write(updated_content)
+            print(f"✓ Updated IP address in terraform.tfvars: {ip_address}")
+        else:
+            # Add IP address to existing file
+            with open(tfvars_path, 'a') as f:
+                f.write(f'\n# IP Whitelist - Restrict access to your IP only\n')
+                f.write(f'allowed_ip_address = "{ip_address}"\n')
+            print(f"✓ Added IP address to terraform.tfvars: {ip_address}")
+    else:
+        # Create new file
+        with open(tfvars_path, 'w') as f:
+            f.write(tfvars_content)
+        print(f"✓ Created terraform.tfvars with your IP: {ip_address}")
+
 def main():
     print("🚀 Starting Complete AWS Deployment\n")
+    
+    # Step 0: Auto-detect and configure IP address
+    print("=" * 60)
+    print("STEP 0: Configuring IP Whitelist")
+    print("=" * 60)
+    
+    print("Detecting your public IP address...")
+    ip_address = get_public_ip()  # Exits if detection fails
+    
+    print(f"✓ Detected IP: {ip_address}")
+    create_or_update_tfvars(ip_address)
+    print("\n⚠️  Security Note: ALB will only accept connections from this IP address")
+    print()
     
     # Step 1: Deploy Terraform Infrastructure
     print("=" * 60)
@@ -79,7 +158,7 @@ def main():
         print("   Create deploy/terraform/terraform.tfvars to avoid prompts (see README)")
     
     print("\nApplying Terraform configuration (this may take 5-10 minutes)...")
-    print("⏳ Creating VPC, subnets, RDS, ECS cluster, ALB, Cognito...")
+    print("⏳ Creating VPC, subnets, RDS, ECS cluster, ALB with IP whitelisting...")
     run_command("terraform apply -auto-approve", cwd=str(terraform_dir), show_output=True)
     
     print("✅ Infrastructure deployed\n")
@@ -237,14 +316,12 @@ def main():
     print()
     
     # Final summary
-    admin_login_url = get_terraform_output('admin_login_url')
-    
     print("=" * 60)
     print("🎉 DEPLOYMENT COMPLETE!")
     print("=" * 60)
     print(f"\n📱 Access your application:")
     print(f"   Application URL: https://{alb_dns}")
-    print(f"   Login URL: {admin_login_url}")
+    print(f"\n� Security: Access restricted to IP address in terraform.tfvars")
     print(f"\n🔐 Runtime IDs saved to .env file")
     unity_id = mcp_config.get('unity_mcp', {}).get('runtime_id', 'N/A')
     glue_id = mcp_config.get('glue_mcp', {}).get('runtime_id', 'N/A')

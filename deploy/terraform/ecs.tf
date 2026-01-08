@@ -44,23 +44,21 @@ resource "aws_security_group" "ecs_tasks" {
 }
 
 # Security Group for ALB
+# Note: Ingress rules are managed in security_whitelist.tf for IP-based access control
 resource "aws_security_group" "alb" {
   name_prefix = "catalog-agents-alb-"
   vpc_id      = aws_vpc.main.id
 
+  # HTTP redirect (always allow for redirect to HTTPS)
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "HTTP redirect to HTTPS"
   }
 
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # HTTPS access controlled by security_whitelist.tf based on allowed_ip_address variable
 
   egress {
     from_port   = 0

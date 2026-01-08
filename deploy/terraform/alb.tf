@@ -101,7 +101,7 @@ resource "aws_acm_certificate" "alb" {
   }
 }
 
-# ALB Listener with HTTPS and Cognito Authentication
+# ALB Listener with HTTPS (no authentication - security via IP whitelisting)
 resource "aws_lb_listener" "main" {
   load_balancer_arn = aws_lb.main.arn
   port              = "443"

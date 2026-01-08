@@ -1,15 +1,18 @@
 # IP Whitelist for ALB Access
-# For production use, restrict access to specific IP addresses
+# REQUIRED: This variable must be set in terraform.tfvars
 
 variable "allowed_ip_address" {
-  description = "Your IP address to allow access (get with: curl ifconfig.me)"
+  description = "Your IP address to allow access (auto-detected by deploy_aws.py)"
   type        = string
-  default     = ""  # Set this to your IP address (e.g., "1.2.3.4")
+  
+  validation {
+    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}$", var.allowed_ip_address))
+    error_message = "The allowed_ip_address must be a valid IPv4 address (e.g., '1.2.3.4'). Run deploy_aws.py to auto-detect your IP."
+  }
 }
 
 # Restrict ALB HTTPS access to whitelisted IP only
 resource "aws_security_group_rule" "alb_https_whitelist" {
-  count             = var.allowed_ip_address != "" ? 1 : 0
   type              = "ingress"
   from_port         = 443
   to_port           = 443
@@ -17,16 +20,4 @@ resource "aws_security_group_rule" "alb_https_whitelist" {
   cidr_blocks       = ["${var.allowed_ip_address}/32"]
   security_group_id = aws_security_group.alb.id
   description       = "Allow HTTPS from whitelisted IP only"
-}
-
-# If no IP whitelist is set, allow from anywhere (NOT RECOMMENDED for production)
-resource "aws_security_group_rule" "alb_https_public" {
-  count             = var.allowed_ip_address == "" ? 1 : 0
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.alb.id
-  description       = "Allow HTTPS from anywhere - SET allowed_ip_address for security!"
 }
