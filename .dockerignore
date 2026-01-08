@@ -65,3 +65,11 @@ tests/
 
 # Keep wheelhouse for offline installations
 # wheelhouse/
+<<<<<<< HEAD
+=======
+
+# Monorepo directories
+cdk/
+terraform/
+mcp/lambda/
+>>>>>>> aws-infra

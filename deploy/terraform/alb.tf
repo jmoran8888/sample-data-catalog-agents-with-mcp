@@ -101,7 +101,11 @@ resource "aws_acm_certificate" "alb" {
   }
 }
 
+<<<<<<< HEAD
 # ALB Listener with HTTPS and Cognito Authentication
+=======
+# ALB Listener with HTTPS (no authentication - security via IP whitelisting)
+>>>>>>> aws-infra
 resource "aws_lb_listener" "main" {
   load_balancer_arn = aws_lb.main.arn
   port              = "443"
@@ -110,6 +114,7 @@ resource "aws_lb_listener" "main" {
   certificate_arn   = aws_acm_certificate.alb.arn
 
   default_action {
+<<<<<<< HEAD
     type = "authenticate-cognito"
     order = 1
 
@@ -123,6 +128,9 @@ resource "aws_lb_listener" "main" {
   default_action {
     type             = "forward"
     order           = 2
+=======
+    type             = "forward"
+>>>>>>> aws-infra
     target_group_arn = aws_lb_target_group.streamlit.arn
   }
 
@@ -157,12 +165,17 @@ resource "aws_lb_listener" "redirect" {
   }
 }
 
+<<<<<<< HEAD
 # ALB Listener Rule for Unity Catalog API (with auth)
+=======
+# ALB Listener Rule for Unity Catalog API
+>>>>>>> aws-infra
 resource "aws_lb_listener_rule" "unity_catalog" {
   listener_arn = aws_lb_listener.main.arn
   priority     = 100
 
   action {
+<<<<<<< HEAD
     type = "authenticate-cognito"
     order = 1
 
@@ -176,6 +189,9 @@ resource "aws_lb_listener_rule" "unity_catalog" {
   action {
     type             = "forward"
     order           = 2
+=======
+    type             = "forward"
+>>>>>>> aws-infra
     target_group_arn = aws_lb_target_group.unity_catalog.arn
   }
 

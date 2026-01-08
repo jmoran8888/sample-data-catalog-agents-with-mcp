@@ -17,6 +17,9 @@ AGENTCORE_DEPLOYMENT_FIX.md
 CLEANUP_SUMMARY.md
 SECURE_DEPLOYMENT.md
 
+# CDK infrastructure (from another feature branch)
+infrastructure-v2/
+
 # Python
 __pycache__/
 *.pyc

@@ -108,22 +108,34 @@ resource "aws_ecr_repository" "glue_mcp" {
 }
 
 # Security Group for AgentCore Runtime
+<<<<<<< HEAD
+=======
+# AgentCore only needs outbound access to AWS services
+>>>>>>> aws-infra
 resource "aws_security_group" "agentcore_runtime" {
   name_prefix = "catalog-agents-agentcore-"
   vpc_id      = aws_vpc.main.id
 
+<<<<<<< HEAD
   ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+=======
+  # No inbound rules - AgentCore is invoked via AWS API, not direct network access
+>>>>>>> aws-infra
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+<<<<<<< HEAD
+=======
+    description = "Allow outbound to AWS services"
+>>>>>>> aws-infra
   }
 
   tags = {

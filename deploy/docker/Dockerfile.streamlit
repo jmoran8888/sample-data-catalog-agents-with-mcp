@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 FROM --platform=linux/amd64 python:3.11-slim
+=======
+FROM python:3.11-slim
+>>>>>>> aws-infra
 
 WORKDIR /app
 

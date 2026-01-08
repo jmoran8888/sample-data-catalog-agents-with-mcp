@@ -46,6 +46,7 @@ variable "db_password" {
   sensitive   = true
   default     = "ChangeThisSecurePassword123!"
 }
+<<<<<<< HEAD
 
 variable "admin_email" {
   description = "Admin user email for Cognito"
@@ -57,3 +58,5 @@ variable "admin_temp_password" {
   type        = string
   sensitive   = true
 }
+=======
+>>>>>>> aws-infra

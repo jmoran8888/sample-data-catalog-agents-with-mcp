@@ -5,8 +5,23 @@ Simplified script to add sample tables to Unity Catalog using basic types.
 
 import requests
 import json
+<<<<<<< HEAD
 
 BASE_URL = "http://localhost:8080/api/2.1/unity-catalog"
+=======
+import os
+import urllib3
+
+# Get BASE_URL from environment variable or use localhost default
+BASE_URL = os.environ.get('UNITY_CATALOG_URL', 'http://localhost:8080/api/2.1/unity-catalog')
+
+# Disable SSL warnings if requested
+if os.environ.get('DISABLE_SSL_VERIFY'):
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    VERIFY_SSL = False
+else:
+    VERIFY_SSL = True
+>>>>>>> aws-infra
 
 def create_table(catalog_name, schema_name, table_name, columns, comment):
     """Create a table in Unity Catalog"""
@@ -21,7 +36,11 @@ def create_table(catalog_name, schema_name, table_name, columns, comment):
         "comment": comment
     }
     
+<<<<<<< HEAD
     response = requests.post(url, json=data)
+=======
+    response = requests.post(url, json=data, verify=VERIFY_SSL)
+>>>>>>> aws-infra
     if response.status_code == 201:
         print(f"✓ Created table: {catalog_name}.{schema_name}.{table_name}")
     elif response.status_code == 409:

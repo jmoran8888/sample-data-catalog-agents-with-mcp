@@ -54,9 +54,94 @@ def get_terraform_output(output_name):
         sys.exit(1)
     return result.stdout.strip()
 
+<<<<<<< HEAD
 def main():
     print("🚀 Starting Complete AWS Deployment\n")
     
+=======
+def get_public_ip():
+    """Get the user's public IP address - REQUIRED for deployment"""
+    import requests
+    try:
+        response = requests.get('https://ifconfig.me', timeout=5)
+        return response.text.strip()
+    except:
+        try:
+            response = requests.get('https://api.ipify.org', timeout=5)
+            return response.text.strip()
+        except Exception as e:
+            print("❌ CRITICAL ERROR: Could not detect your public IP address")
+            print("   Both ifconfig.me and api.ipify.org are unreachable")
+            print("\n   To fix:")
+            print("   1. Check your internet connection")
+            print("   2. Or manually create deploy/terraform/terraform.tfvars with:")
+            print('      allowed_ip_address = "YOUR.IP.HERE"')
+            print("   3. Get your IP with: curl ifconfig.me")
+            sys.exit(1)
+
+def create_or_update_tfvars(ip_address):
+    """Create or update terraform.tfvars with IP address"""
+    tfvars_path = Path("deploy/terraform/terraform.tfvars")
+    
+    # Default configuration
+    tfvars_content = f"""aws_region = "us-east-1"
+environment = "dev"
+
+# IP Whitelist - Restrict access to your IP only
+allowed_ip_address = "{ip_address}"
+"""
+    
+    if tfvars_path.exists():
+        # Read existing file
+        with open(tfvars_path, 'r') as f:
+            existing_content = f.read()
+        
+        # Check if IP is already set
+        if 'allowed_ip_address' in existing_content and ip_address in existing_content:
+            print(f"✓ terraform.tfvars already has your IP: {ip_address}")
+            return
+        
+        # Update IP address in existing file
+        import re
+        if 'allowed_ip_address' in existing_content:
+            # Replace existing IP
+            updated_content = re.sub(
+                r'allowed_ip_address\s*=\s*"[^"]*"',
+                f'allowed_ip_address = "{ip_address}"',
+                existing_content
+            )
+            with open(tfvars_path, 'w') as f:
+                f.write(updated_content)
+            print(f"✓ Updated IP address in terraform.tfvars: {ip_address}")
+        else:
+            # Add IP address to existing file
+            with open(tfvars_path, 'a') as f:
+                f.write(f'\n# IP Whitelist - Restrict access to your IP only\n')
+                f.write(f'allowed_ip_address = "{ip_address}"\n')
+            print(f"✓ Added IP address to terraform.tfvars: {ip_address}")
+    else:
+        # Create new file
+        with open(tfvars_path, 'w') as f:
+            f.write(tfvars_content)
+        print(f"✓ Created terraform.tfvars with your IP: {ip_address}")
+
+def main():
+    print("🚀 Starting Complete AWS Deployment\n")
+    
+    # Step 0: Auto-detect and configure IP address
+    print("=" * 60)
+    print("STEP 0: Configuring IP Whitelist")
+    print("=" * 60)
+    
+    print("Detecting your public IP address...")
+    ip_address = get_public_ip()  # Exits if detection fails
+    
+    print(f"✓ Detected IP: {ip_address}")
+    create_or_update_tfvars(ip_address)
+    print("\n⚠️  Security Note: ALB will only accept connections from this IP address")
+    print()
+    
+>>>>>>> aws-infra
     # Step 1: Deploy Terraform Infrastructure
     print("=" * 60)
     print("STEP 1: Deploying Terraform Infrastructure")
@@ -70,8 +155,21 @@ def main():
     print("Initializing Terraform...")
     run_command("terraform init", cwd=str(terraform_dir), show_output=True)
     
+<<<<<<< HEAD
     print("\nApplying Terraform configuration (this may take 5-10 minutes)...")
     print("⏳ Creating VPC, subnets, RDS, ECS cluster, ALB, Cognito...")
+=======
+    # Check if terraform.tfvars exists
+    tfvars_path = terraform_dir / "terraform.tfvars"
+    if tfvars_path.exists():
+        print("✓ Using terraform.tfvars for configuration")
+    else:
+        print("⚠️  No terraform.tfvars found - you'll be prompted for variables")
+        print("   Create deploy/terraform/terraform.tfvars to avoid prompts (see README)")
+    
+    print("\nApplying Terraform configuration (this may take 5-10 minutes)...")
+    print("⏳ Creating VPC, subnets, RDS, ECS cluster, ALB with IP whitelisting...")
+>>>>>>> aws-infra
     run_command("terraform apply -auto-approve", cwd=str(terraform_dir), show_output=True)
     
     print("✅ Infrastructure deployed\n")
@@ -95,7 +193,11 @@ def main():
     
     # Build and push Streamlit app only
     print("\n🐳 Building Streamlit App (may take 1-2 minutes)...")
+<<<<<<< HEAD
     run_command(f"docker build -f deploy/docker/Dockerfile.streamlit -t {streamlit_ecr_uri}:latest .", show_output=True)
+=======
+    run_command(f"docker build --platform linux/amd64 -f deploy/docker/Dockerfile.streamlit -t {streamlit_ecr_uri}:latest .", show_output=True)
+>>>>>>> aws-infra
     
     print("📤 Pushing Streamlit App to ECR...")
     run_command(f"docker push {streamlit_ecr_uri}:latest", show_output=True)
@@ -109,6 +211,7 @@ def main():
     print("\n⚠️  Note: AgentCore deployment uses bedrock-agentcore-starter-toolkit")
     print("   The toolkit will build containers from your Python code and deploy them.\n")
     
+<<<<<<< HEAD
     # Import and run the AgentCore deployment
     import importlib.util
     spec = importlib.util.spec_from_file_location("deploy_agentcore", "setup/deploy_agentcore.py")
@@ -116,6 +219,55 @@ def main():
     spec.loader.exec_module(agentcore_module)
     
     result = agentcore_module.deploy_mcp_servers()
+=======
+    # Run AgentCore deployments separately to avoid threading issues
+    print("Deploying Unity MCP (Step 3a)...")
+    result = subprocess.run(
+        [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'unity'],
+        check=False,
+        capture_output=True,
+        text=True
+    )
+    
+    # Show output
+    if result.stdout:
+        print(result.stdout)
+    
+    if result.returncode != 0:
+        print(f"\n❌ Unity MCP deployment failed")
+        if result.stderr:
+            print("STDERR:", result.stderr)
+        sys.exit(1)
+    
+    print("\n🧹 Cleaning up before next deployment...")
+    import os
+    for file in ['Dockerfile', '.dockerignore', '.bedrock_agentcore.yaml']:
+        if os.path.exists(file):
+            os.remove(file)
+            print(f"  ✓ Removed {file}")
+    
+    print("\nDeploying Glue MCP (Step 3b)...")
+    result = subprocess.run(
+        [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'glue'],
+        check=False,
+        capture_output=True,
+        text=True
+    )
+    
+    # Show output
+    if result.stdout:
+        print(result.stdout)
+    
+    if result.returncode != 0:
+        print(f"\n❌ Glue MCP deployment failed")
+        if result.stderr:
+            print("STDERR:", result.stderr)
+        sys.exit(1)
+    
+    # Load results from config file
+    with open('agentcore-config.json', 'r') as f:
+        mcp_config = json.load(f)
+>>>>>>> aws-infra
     
     print("✅ AgentCore deployment complete\n")
     
@@ -166,6 +318,7 @@ def main():
     os.environ['UNITY_CATALOG_URL'] = unity_api_url
     
     print("\nCreating Unity Catalog sample tables...")
+<<<<<<< HEAD
     try:
         # Import and run the Unity setup script
         import importlib.util
@@ -197,21 +350,54 @@ def main():
         print(f"⚠️  Warning: Could not populate Unity Catalog: {e}")
         print("   You can manually run: python setup/setup_unity_simple.py")
         print("   (Update BASE_URL in the script first)")
+=======
+    # Run as subprocess with environment variable (cleaner approach)
+    os.environ['UNITY_CATALOG_URL'] = unity_api_url
+    os.environ['DISABLE_SSL_VERIFY'] = '1'
+    
+    result = subprocess.run(
+        [sys.executable, 'setup/setup_unity_simple.py'],
+        capture_output=True,
+        text=True,
+        env=os.environ
+    )
+    
+    if result.returncode == 0:
+        print("✅ Unity Catalog sample data created")
+    else:
+        print(f"⚠️  Warning: Could not populate Unity Catalog")
+        if result.stderr:
+            print(f"   Error: {result.stderr}")
+        print(f"   You can manually run: python setup/setup_unity_simple.py")
+        print(f"   (Set UNITY_CATALOG_URL environment variable)")
+>>>>>>> aws-infra
     
     print()
     
     # Final summary
+<<<<<<< HEAD
     admin_login_url = get_terraform_output('admin_login_url')
     
+=======
+>>>>>>> aws-infra
     print("=" * 60)
     print("🎉 DEPLOYMENT COMPLETE!")
     print("=" * 60)
     print(f"\n📱 Access your application:")
     print(f"   Application URL: https://{alb_dns}")
+<<<<<<< HEAD
     print(f"   Login URL: {admin_login_url}")
     print(f"\n🔐 Runtime IDs saved to .env file")
     print(f"   Unity MCP: {result['unity_runtime_id']}")
     print(f"   Glue MCP: {result['glue_runtime_id']}")
+=======
+    print(f"\n� Security: Access restricted to IP address in terraform.tfvars")
+    print(f"\n🔐 Runtime IDs saved to .env file")
+    unity_id = mcp_config.get('unity_mcp', {}).get('runtime_id', 'N/A')
+    glue_id = mcp_config.get('glue_mcp', {}).get('runtime_id', 'N/A')
+    print(f"   Unity MCP: {unity_id}")
+    print(f"   Glue MCP: {glue_id}")
+>>>>>>> aws-infra
     print(f"\n⏳ Note: Allow a few minutes for ECS service to fully start")
 
 if __name__ == "__main__":

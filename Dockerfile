@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+=======
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+>>>>>>> aws-infra
 WORKDIR /app
 
 # All environment variables in one layer
