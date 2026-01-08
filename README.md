@@ -54,15 +54,9 @@ Follow the setup instructions below for local development and testing.
 Deploy to AWS with complete managed infrastructure:
 - **ECS Fargate**: Runs Unity Catalog and Streamlit applications
 - **RDS PostgreSQL**: Metadata storage
-<<<<<<< HEAD
-- **Application Load Balancer**: Traffic routing with Cognito authentication
-- **AWS Bedrock AgentCore Runtime**: Executes MCP servers
-- **Amazon Cognito**: User authentication
-=======
 - **Application Load Balancer**: Traffic routing with IP-based access control
 - **AWS Bedrock AgentCore Runtime**: Executes MCP servers
 - **Security Group Whitelisting**: IP-based authentication for secure access
->>>>>>> aws-infra
 - **VPC**: Isolated network with public/private subnets
 
 **See "AWS Deployment" section below for complete instructions.**
@@ -149,9 +143,6 @@ Access at: http://localhost:8501
 
 ### Prerequisites
 
-<<<<<<< HEAD
-1. **Python 3.9+** with pip
-=======
 1. **Python 3.9+** with pip **and virtual environment (REQUIRED)**
    ```bash
    # Create and activate virtual environment
@@ -163,18 +154,14 @@ Access at: http://localhost:8501
    pip install boto3 requests bedrock-agentcore-starter-toolkit
    ```
 
->>>>>>> aws-infra
 2. **AWS CLI** configured with appropriate permissions
 3. **Terraform** >= 1.0
 4. **Docker** for building container images
 
 Required AWS permissions: ECS, ECR, RDS, VPC, IAM, CloudWatch, Bedrock AgentCore, CodeBuild
 
-<<<<<<< HEAD
-=======
 **⚠️ Important**: Always use a virtual environment for AWS deployments to ensure consistent package versions and avoid threading issues with the AgentCore toolkit.
 
->>>>>>> aws-infra
 ### How AgentCore Deployment Works
 
 This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP servers to AWS Bedrock AgentCore:
@@ -199,33 +186,20 @@ This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP server
 
 **Note:** All toolkit-created resources are automatically cleaned up by `cleanup_aws.py`.
 
-<<<<<<< HEAD
-=======
 ### Configuration
 
-Before deployment, create a `terraform.tfvars` file:
-
-```bash
-# Get your current IP address
-MY_IP=$(curl -s ifconfig.me)
-
-# Create deploy/terraform/terraform.tfvars
-cat > deploy/terraform/terraform.tfvars << EOF
-aws_region = "us-east-1"
-environment = "dev"
-
-# IP Whitelist - REQUIRED: Restrict access to your IP only
-allowed_ip_address = "$MY_IP"
-EOF
-```
+**No manual configuration required!** The deployment script automatically:
+- Detects your public IP address
+- Creates/updates `deploy/terraform/terraform.tfvars` with your IP
+- Configures the ALB to accept connections only from your IP
 
 **⚠️ Security Notes**: 
-- This file is in `.gitignore` - never commit it
-- The ALB will only be accessible from the IP address you specify in `allowed_ip_address`
-- This is the primary security mechanism - ensure you set a valid IP address
-- Update `allowed_ip_address` if your IP changes and run `terraform apply`
+- Your IP address is automatically detected and whitelisted
+- The ALB will only be accessible from your detected IP address
+- This is the primary security mechanism
+- If your IP changes later, re-run `python setup/deploy_aws.py` or manually update `allowed_ip_address` in `deploy/terraform/terraform.tfvars` and run `terraform apply`
+- The `terraform.tfvars` file is in `.gitignore` - never commit it
 
->>>>>>> aws-infra
 ### Deployment
 
 ```bash
@@ -234,47 +208,22 @@ python setup/deploy_aws.py
 ```
 
 This single script automatically:
-<<<<<<< HEAD
-1. Deploys Terraform infrastructure (VPC, ECS, RDS, ALB, Cognito)
-=======
 1. Deploys Terraform infrastructure (VPC, ECS, RDS, ALB with IP whitelisting)
->>>>>>> aws-infra
 2. Builds and pushes Streamlit Docker image to ECR
 3. Deploys MCP servers to AgentCore Runtime (toolkit builds MCP images)
 4. Updates ECS services with configuration
 5. Populates both AWS Glue and Unity catalogs with sample data
-<<<<<<< HEAD
-6. Provides access URLs and credentials
-=======
 6. Provides access URLs
->>>>>>> aws-infra
 
 ### Accessing the Application
 
 After deployment completes, the script will output:
 - **Application URL**: `https://<alb-dns-name>`
-<<<<<<< HEAD
-- **Login URL**: Cognito authentication page
 
 **To access:**
-1. Open the Login URL provided by the deployment script
-2. Sign in with your Cognito credentials
-3. You'll be redirected to the Streamlit application
-4. Use the web interface to query both catalogs
-
-**To get URLs later:**
-```bash
-cd deploy/terraform
-terraform output alb_dns_name
-terraform output admin_login_url
-```
-
-=======
-
-**To access:**
-1. Open the Application URL in your browser
-2. Access is restricted to the IP address you specified in `allowed_ip_address`
-3. If your IP changes, update the `terraform.tfvars` file and run `terraform apply`
+1. Open the Application URL in your browser (already configured for your IP)
+2. Access is automatically restricted to the IP address detected during deployment
+3. If your IP changes, re-run `python setup/deploy_aws.py` (it will auto-update your IP)
 4. Use the web interface to query both catalogs
 
 **To get URL later:**
@@ -283,9 +232,8 @@ cd deploy/terraform
 terraform output alb_dns_name
 ```
 
-**Security Note:** The ALB only accepts HTTPS connections from your whitelisted IP address. Access from other IPs will be blocked by the security group.
+**Security Note:** The ALB only accepts HTTPS connections from your automatically whitelisted IP address. Access from other IPs will be blocked by the security group.
 
->>>>>>> aws-infra
 ### Cleanup
 
 ⚠️ **Warning**: Destroys ALL resources and data. This action CANNOT be undone.
@@ -298,11 +246,7 @@ This script will:
 1. Delete AgentCore runtimes (Unity & Glue MCP servers)
 2. Delete CodeBuild projects (created by toolkit)
 3. Empty all ECR repositories (including toolkit-created ones)
-<<<<<<< HEAD
-4. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, Cognito, etc.)
-=======
 4. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, etc.)
->>>>>>> aws-infra
 5. Remove local configuration files (.env, agentcore-config.json, etc.)
 
 ## Usage & Example Queries
