@@ -12,6 +12,10 @@ tfplan
 .bedrock_agentcore.yaml
 agentcore-config.json
 
+# AgentCore toolkit auto-generated files
+Dockerfile
+.dockerignore
+
 # Internal documentation (for reference only, not for open source)
 AGENTCORE_DEPLOYMENT_FIX.md
 CLEANUP_SUMMARY.md
