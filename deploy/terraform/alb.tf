@@ -110,22 +110,7 @@ resource "aws_lb_listener" "main" {
   certificate_arn   = aws_acm_certificate.alb.arn
 
   default_action {
-    type = "authenticate-cognito"
-    order = 1
-
-    authenticate_cognito {
-      user_pool_arn              = aws_cognito_user_pool.main.arn
-      user_pool_client_id        = aws_cognito_user_pool_client.main.id
-      user_pool_domain           = aws_cognito_user_pool_domain.main.domain
-      session_cookie_name        = "AWSELBAuthSessionCookie"
-      session_timeout            = 86400
-      on_unauthenticated_request = "authenticate"
-    }
-  }
-
-  default_action {
     type             = "forward"
-    order           = 2
     target_group_arn = aws_lb_target_group.streamlit.arn
   }
 
@@ -160,28 +145,13 @@ resource "aws_lb_listener" "redirect" {
   }
 }
 
-# ALB Listener Rule for Unity Catalog API (with auth)
+# ALB Listener Rule for Unity Catalog API
 resource "aws_lb_listener_rule" "unity_catalog" {
   listener_arn = aws_lb_listener.main.arn
   priority     = 100
 
   action {
-    type = "authenticate-cognito"
-    order = 1
-
-    authenticate_cognito {
-      user_pool_arn              = aws_cognito_user_pool.main.arn
-      user_pool_client_id        = aws_cognito_user_pool_client.main.id
-      user_pool_domain           = aws_cognito_user_pool_domain.main.domain
-      session_cookie_name        = "AWSELBAuthSessionCookie"
-      session_timeout            = 86400
-      on_unauthenticated_request = "authenticate"
-    }
-  }
-
-  action {
     type             = "forward"
-    order           = 2
     target_group_arn = aws_lb_target_group.unity_catalog.arn
   }
 

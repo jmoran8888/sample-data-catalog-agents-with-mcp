@@ -188,19 +188,28 @@ This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP server
 
 ### Configuration
 
-Before deployment, create a `terraform.tfvars` file to avoid entering credentials each time:
+Before deployment, create a `terraform.tfvars` file:
 
 ```bash
+# Get your current IP address
+MY_IP=$(curl -s ifconfig.me)
+
 # Create deploy/terraform/terraform.tfvars
 cat > deploy/terraform/terraform.tfvars << EOF
 admin_email = "your-email@example.com"
 admin_temp_password = "YourSecurePassword123!"
 aws_region = "us-east-1"
 environment = "dev"
+
+# IP Whitelist - Restrict access to your IP only
+allowed_ip_address = "$MY_IP"
 EOF
 ```
 
-**⚠️ Security Note**: This file is already in `.gitignore` - never commit it to version control!
+**⚠️ Security Notes**: 
+- This file is in `.gitignore` - never commit it
+- The ALB will only be accessible from the IP address you specify
+- Update `allowed_ip_address` if your IP changes
 
 ### Deployment
 

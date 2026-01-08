@@ -46,14 +46,3 @@ variable "db_password" {
   sensitive   = true
   default     = "ChangeThisSecurePassword123!"
 }
-
-variable "admin_email" {
-  description = "Admin user email for Cognito"
-  type        = string
-}
-
-variable "admin_temp_password" {
-  description = "Temporary password for admin user"
-  type        = string
-  sensitive   = true
-}

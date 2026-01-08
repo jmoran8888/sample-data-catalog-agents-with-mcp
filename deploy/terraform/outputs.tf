@@ -43,25 +43,6 @@ output "unity_catalog_api_url" {
   value       = "https://${aws_lb.main.dns_name}/api/2.1/unity-catalog"
 }
 
-output "cognito_user_pool_id" {
-  description = "Cognito User Pool ID"
-  value       = aws_cognito_user_pool.main.id
-}
-
-output "cognito_user_pool_client_id" {
-  description = "Cognito User Pool Client ID"
-  value       = aws_cognito_user_pool_client.main.id
-}
-
-output "cognito_domain" {
-  description = "Cognito User Pool Domain"
-  value       = aws_cognito_user_pool_domain.main.domain
-}
-
-output "admin_login_url" {
-  description = "Admin login URL"
-  value       = "https://${aws_cognito_user_pool_domain.main.domain}.auth.${var.aws_region}.amazoncognito.com/login?client_id=${aws_cognito_user_pool_client.main.id}&response_type=code&scope=email+openid+profile&redirect_uri=https://${aws_lb.main.dns_name}/oauth2/idpresponse"
-}
 
 output "ecr_repository_url" {
   description = "ECR repository URL for the Streamlit app"
