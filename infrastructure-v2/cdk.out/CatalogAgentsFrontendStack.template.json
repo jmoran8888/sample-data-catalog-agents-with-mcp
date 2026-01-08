@@ -1,0 +1,276 @@
+{
+ "Description": "Frontend authentication (Cognito)",
+ "Resources": {
+  "CatalogAgentsUserPoolA3126AB7": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_phone_number",
+       "Priority": 1
+      },
+      {
+       "Name": "verified_email",
+       "Priority": 2
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": true
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 8,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": true,
+      "RequireUppercase": true
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     }
+    ],
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolName": "catalog-agents-users",
+    "UserPoolTags": {
+     "Environment": "dev",
+     "FISTarget": "true",
+     "ManagedBy": "CDK",
+     "Project": "catalog-agents-demo",
+     "Repository": "sample-data-catalog-agents-with-mcp"
+    },
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsFrontendStack/CatalogAgentsUserPool/Resource"
+   }
+  },
+  "CatalogAgentsUserPoolDomainE0A4AA40": {
+   "Type": "AWS::Cognito::UserPoolDomain",
+   "Properties": {
+    "Domain": "catalog-agents-12721418",
+    "UserPoolId": {
+     "Ref": "CatalogAgentsUserPoolA3126AB7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsFrontendStack/CatalogAgentsUserPoolDomain/Resource"
+   }
+  },
+  "CatalogAgentsUserPoolClientB3E1D396": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AllowedOAuthFlows": [
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "email",
+     "openid",
+     "profile"
+    ],
+    "CallbackURLs": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "https://",
+        {
+         "Fn::ImportValue": "CatalogAgentsComputeStack:ExportsOutputFnGetAttCatalogAgentsALBBD0C889ADNSName15784CC7"
+        },
+        "/oauth2/idpresponse"
+       ]
+      ]
+     }
+    ],
+    "ClientName": "catalog-agents-client",
+    "GenerateSecret": true,
+    "LogoutURLs": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "https://",
+        {
+         "Fn::ImportValue": "CatalogAgentsComputeStack:ExportsOutputFnGetAttCatalogAgentsALBBD0C889ADNSName15784CC7"
+        },
+        "/"
+       ]
+      ]
+     }
+    ],
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "UserPoolId": {
+     "Ref": "CatalogAgentsUserPoolA3126AB7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsFrontendStack/CatalogAgentsUserPoolClient/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/21SXW/bMAz8LdXj4Hit+5a3IC2GAkUXLEhfhmGQLdplK4seRSVLDf/3yV9p0+7JxJE83R2dpdn1dXp5oQ9+UZiXhcU8bbeii5ckQr8LqhwKpe3OA2+I7M9Whal80DWopfqiEuWxcnduZVF78GrZKqg1WrUUDtAlSgehR2Asj597Hmy5jeu75tbp3IJRy1JbD4lqtPcHYrMhi8WwWaO7B1fJ0/Qsw5+ADPd0AC7i0yPpCd81zX/xG6xQ/Adwe6xzsv5Nl2hnNJuVCGMeZPDV9eM17bWdRSkDXpiOqvuVrEs3x5TMxQ1Ft+5dapP0Kdix3XszQ7VhKPHvMNOdM46TJ961RXDymTec9d+dqAIHrAW2UDDIbJ5WoU+zVaWlw3C5eKsnYnzVguTWZOAbaydvsRTU9FGMJrS1efxVdmxnyFJFQU5AvxGahljA3JmoCOW4YdqjAZ4mzlyOsrse+h6kCbF0UUP67L/usyzNrtKri2ePuOAQuWpIf4zff0nVPAzHAgAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsFrontendStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "AlbDnsName": {
+   "Description": "Application Load Balancer DNS Name",
+   "Value": {
+    "Fn::ImportValue": "CatalogAgentsComputeStack:ExportsOutputFnGetAttCatalogAgentsALBBD0C889ADNSName15784CC7"
+   },
+   "Export": {
+    "Name": "CatalogAgentsFrontendStack-AlbDnsName"
+   }
+  },
+  "AlbUrl": {
+   "Description": "Application URL (HTTPS)",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Fn::ImportValue": "CatalogAgentsComputeStack:ExportsOutputFnGetAttCatalogAgentsALBBD0C889ADNSName15784CC7"
+      }
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsFrontendStack-AlbUrl"
+   }
+  },
+  "CognitoUserPoolId": {
+   "Description": "Cognito User Pool ID",
+   "Value": {
+    "Ref": "CatalogAgentsUserPoolA3126AB7"
+   },
+   "Export": {
+    "Name": "CatalogAgentsFrontendStack-CognitoUserPoolId"
+   }
+  },
+  "CognitoUserPoolClientId": {
+   "Description": "Cognito User Pool Client ID",
+   "Value": {
+    "Ref": "CatalogAgentsUserPoolClientB3E1D396"
+   },
+   "Export": {
+    "Name": "CatalogAgentsFrontendStack-CognitoUserPoolClientId"
+   }
+  },
+  "CognitoUserPoolDomain": {
+   "Description": "Cognito User Pool Domain",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "CatalogAgentsUserPoolDomainE0A4AA40"
+      },
+      ".auth.us-east-1.amazoncognito.com"
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsFrontendStack-CognitoUserPoolDomain"
+   }
+  },
+  "StreamlitUrl": {
+   "Description": "Streamlit Application URL",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Fn::ImportValue": "CatalogAgentsComputeStack:ExportsOutputFnGetAttCatalogAgentsALBBD0C889ADNSName15784CC7"
+      }
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsFrontendStack-StreamlitUrl"
+   }
+  },
+  "UnityCatalogUrl": {
+   "Description": "Unity Catalog API URL",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Fn::ImportValue": "CatalogAgentsComputeStack:ExportsOutputFnGetAttCatalogAgentsALBBD0C889ADNSName15784CC7"
+      },
+      "/api/2.1/unity-catalog"
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsFrontendStack-UnityCatalogUrl"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

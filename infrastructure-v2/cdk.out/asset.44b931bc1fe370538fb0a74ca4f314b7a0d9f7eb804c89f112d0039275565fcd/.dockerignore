@@ -1,0 +1,55 @@
+# CDK output directories
+infrastructure-v2/cdk.out/
+infrastructure-v2/node_modules/
+infrastructure-v2/.git/
+
+# Terraform state and modules
+deploy/terraform/.terraform/
+deploy/terraform/terraform.tfstate*
+deploy/terraform/.terraform.lock.hcl
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Other infrastructure code
+infrastructure/
+reference/
+.kiro/
+
+# Documentation
+*.md
+!README.md
+
+# Test files
+test_*.py
+*_test.py
+tests/

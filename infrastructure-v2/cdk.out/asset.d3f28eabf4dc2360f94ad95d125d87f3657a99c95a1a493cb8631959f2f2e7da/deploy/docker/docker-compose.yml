@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: unitycatalog
+      POSTGRES_USER: unitycatalog
+      POSTGRES_PASSWORD: unitycatalog
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unitycatalog"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  unity-catalog:
+    image: unitycatalog/unitycatalog:latest
+    ports:
+      - "8080:8080"
+    environment:
+      UNITY_CATALOG_DB_URL: jdbc:postgresql://postgres:5432/unitycatalog
+      UNITY_CATALOG_DB_USER: unitycatalog
+      UNITY_CATALOG_DB_PASSWORD: unitycatalog
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/2.1/unity-catalog/catalogs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  streamlit-app:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile.streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      UNITY_CATALOG_URL: http://unity-catalog:8080/api/2.1/unity-catalog
+      AWS_DEFAULT_REGION: us-east-1
+    depends_on:
+      unity-catalog:
+        condition: service_healthy
+    volumes:
+      - ~/.aws:/root/.aws:ro
+
+volumes:
+  postgres_data:

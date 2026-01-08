@@ -1,0 +1,36 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200": {
+      "displayName": "CatalogAgentsNetworkStack/Custom::VpcRestrictDefaultSGCustomResourceProvider Code",
+      "source": {
+        "path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "127214182942-us-east-1-c76e2817": {
+          "bucketName": "cdk-hnb659fds-assets-127214182942-us-east-1",
+          "objectKey": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-file-publishing-role-127214182942-us-east-1"
+        }
+      }
+    },
+    "9e531431d417fa67e1be7a1a9c5e08b9e523a8c368ac4adc6de201979b9c5260": {
+      "displayName": "CatalogAgentsNetworkStack Template",
+      "source": {
+        "path": "CatalogAgentsNetworkStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "127214182942-us-east-1-98244dd7": {
+          "bucketName": "cdk-hnb659fds-assets-127214182942-us-east-1",
+          "objectKey": "9e531431d417fa67e1be7a1a9c5e08b9e523a8c368ac4adc6de201979b9c5260.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-file-publishing-role-127214182942-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

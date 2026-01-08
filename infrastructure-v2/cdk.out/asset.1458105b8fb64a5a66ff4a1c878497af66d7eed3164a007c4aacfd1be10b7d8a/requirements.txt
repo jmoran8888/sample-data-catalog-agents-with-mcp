@@ -1,0 +1,12 @@
+awscli
+boto3
+strands-agents
+strands-agents-tools 
+strands-agents-builder
+requests
+mcp
+streamlit
+fastmcp
+starlette
+python-dotenv
+bedrock-agentcore-starter-toolkit

@@ -1,0 +1,4378 @@
+{
+  "version": "48.0.0",
+  "artifacts": {
+    "CatalogAgentsNetworkStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CatalogAgentsNetworkStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CatalogAgentsNetworkStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://127214182942/us-east-1",
+      "properties": {
+        "templateFile": "CatalogAgentsNetworkStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-deploy-role-127214182942-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-cfn-exec-role-127214182942-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-127214182942-us-east-1/9e531431d417fa67e1be7a1a9c5e08b9e523a8c368ac4adc6de201979b9c5260.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CatalogAgentsNetworkStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-lookup-role-127214182942-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CatalogAgentsNetworkStack.assets"
+      ],
+      "metadata": {
+        "/CatalogAgentsNetworkStack": [
+          {
+            "type": "aws:cdk:info",
+            "data": "Using AgentCore-compatible AZs for us-east-1: us-east-1a, us-east-1b, us-east-1d",
+            "trace": [
+              "Annotations.addMessage (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/annotations.js:1:2066)",
+              "Annotations.addInfo (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1443)",
+              "new NetworkStack (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/lib/network-stack.ts:45:32)",
+              "Object.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/bin/infrastructure-v2.ts:25:22)",
+              "Module._compile (node:internal/modules/cjs/loader:1706:14)",
+              "Module.m._compile (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/index.ts:1618:23)",
+              "node:internal/modules/cjs/loader:1839:10",
+              "Object.require.extensions.<computed> [as .ts] (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/index.ts:1621:12)",
+              "Module.load (node:internal/modules/cjs/loader:1441:32)",
+              "Function._load (node:internal/modules/cjs/loader:1263:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:328:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:237:24)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)",
+              "phase4 (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:649:14)",
+              "bootstrap (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:95:10)",
+              "main (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:55:10)",
+              "Object.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:800:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1706:14)",
+              "Object.<anonymous> (node:internal/modules/cjs/loader:1839:10)",
+              "Module.load (node:internal/modules/cjs/loader:1441:32)",
+              "Function._load (node:internal/modules/cjs/loader:1263:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:328:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:237:24)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)",
+              "node:internal/main/run_main_module:36:49"
+            ]
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpcName": "*",
+              "ipAddresses": "*",
+              "maxAzs": "*",
+              "natGateways": "*",
+              "enableDnsHostnames": true,
+              "enableDnsSupport": true,
+              "subnetConfiguration": [
+                {
+                  "name": "*",
+                  "subnetType": "Public",
+                  "cidrMask": "*",
+                  "mapPublicIpOnLaunch": true
+                },
+                {
+                  "name": "*",
+                  "subnetType": "Private",
+                  "cidrMask": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcFA833CAA"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addNatGateway": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet1Subnet16D40AFF"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet1RouteTable597DD12C"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet1RouteTableAssociation3A830236"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet1DefaultRoute465AA574"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet1EIPF745F504"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet1NATGateway562FA0F8"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet2SubnetE759286D"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet2RouteTable3FB6EBCF"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet2RouteTableAssociationB7E6635D"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPublicSubnet2DefaultRoute8F4AC71D"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": false,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": false,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPrivateSubnet1SubnetE3A98E42"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPrivateSubnet1RouteTable20639EDB"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPrivateSubnet1RouteTableAssociationD9EEDEE1"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPrivateSubnet1DefaultRouteAAA21B2B"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": false,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": false,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPrivateSubnet2Subnet64FECC7B"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPrivateSubnet2RouteTableB929BF1D"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPrivateSubnet2RouteTableAssociation8D2A85F7"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcPrivateSubnet2DefaultRouteE8765A5B"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcIGWAC82F300"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcVPCGW27781F13"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/RestrictDefaultSecurityGroupCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/RestrictDefaultSecurityGroupCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcRestrictDefaultSecurityGroupCustomResource0FF4318C"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/S3Endpoint": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "service": {
+                "name": "*"
+              },
+              "subnets": [
+                {
+                  "subnetType": "Private"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CatalogAgentsVpc/S3Endpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsVpcS3EndpointAA57EBCE"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Custom::VpcRestrictDefaultSGCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/RdsSecurityGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "description": "*",
+              "securityGroupName": "*",
+              "allowAllOutbound": true
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                "*",
+                {},
+                "*"
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsNetworkStack/RdsSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RdsSecurityGroup632A77E4"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/RdsSecurityGroup/from CatalogAgentsNetworkStackEcsSecurityGroup013F55FD:5432": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RdsSecurityGroupfromCatalogAgentsNetworkStackEcsSecurityGroup013F55FD5432636DE27E"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/EcsSecurityGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "description": "*",
+              "securityGroupName": "*",
+              "allowAllOutbound": true
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                "*",
+                {},
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                "*",
+                {},
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                "*",
+                {},
+                "*",
+                false
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                "*",
+                {},
+                "*",
+                false
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsNetworkStack/EcsSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcsSecurityGroup44008BF1"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/EcsSecurityGroup/from CatalogAgentsNetworkStackAlbSecurityGroupE7D1FD78:8080": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcsSecurityGroupfromCatalogAgentsNetworkStackAlbSecurityGroupE7D1FD78808029CBDDB2"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/EcsSecurityGroup/from CatalogAgentsNetworkStackAlbSecurityGroupE7D1FD78:8501": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcsSecurityGroupfromCatalogAgentsNetworkStackAlbSecurityGroupE7D1FD78850120848BFD"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/AlbSecurityGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "description": "*",
+              "securityGroupName": "*",
+              "allowAllOutbound": true
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                {
+                  "canInlineRule": true,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                {
+                  "canInlineRule": true,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                {
+                  "canInlineRule": true,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*",
+                false
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEgressRule": [
+                {
+                  "canInlineRule": true,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*",
+                false
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:warning",
+            "data": "Ignoring Egress rule since 'allowAllOutbound' is set to true; To add customized rules, set allowAllOutbound=false on the SecurityGroup [ack: @aws-cdk/aws-ec2:ipv4IgnoreEgressRule]",
+            "trace": [
+              "Annotations.addMessage (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/annotations.js:1:2066)",
+              "Annotations.addWarningV2 (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/annotations.js:1:984)",
+              "WrappedClass.addEgressRule (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-ec2/lib/security-group.js:1:11164)",
+              "WrappedClass.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/metadata-resource.js:1:2200)",
+              "/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-ec2/lib/connections.js:1:2011",
+              "ReactiveList.forEachAndForever (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-ec2/lib/connections.js:1:6094)",
+              "/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-ec2/lib/connections.js:1:1972",
+              "ReactiveList.forEachAndForever (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-ec2/lib/connections.js:1:6094)",
+              "Connections.allowTo (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-ec2/lib/connections.js:1:1900)",
+              "Connections.allowToAnyIpv4 (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-ec2/lib/connections.js:1:3647)",
+              "AuthenticateCognitoAction.bind (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2-actions/lib/cognito-action.js:1:2089)",
+              "WrappedClass.setDefaultAction (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-listener.js:1:16465)",
+              "new ApplicationListener2 (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-listener.js:1:11119)",
+              "new ApplicationListener2 (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/prop-injectable.js:1:681)",
+              "WrappedClass.addListener (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-load-balancer.js:1:20011)",
+              "WrappedClass.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/metadata-resource.js:1:2200)",
+              "new ComputeStack (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/lib/compute-stack.ts:335:36)",
+              "Object.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/bin/infrastructure-v2.ts:49:22)",
+              "Module._compile (node:internal/modules/cjs/loader:1706:14)",
+              "Module.m._compile (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/index.ts:1618:23)",
+              "node:internal/modules/cjs/loader:1839:10",
+              "Object.require.extensions.<computed> [as .ts] (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/index.ts:1621:12)",
+              "Module.load (node:internal/modules/cjs/loader:1441:32)",
+              "Function._load (node:internal/modules/cjs/loader:1263:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:328:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:237:24)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)",
+              "phase4 (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:649:14)",
+              "bootstrap (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:95:10)",
+              "main (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:55:10)",
+              "Object.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:800:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1706:14)",
+              "Object.<anonymous> (node:internal/modules/cjs/loader:1839:10)",
+              "Module.load (node:internal/modules/cjs/loader:1441:32)",
+              "Function._load (node:internal/modules/cjs/loader:1263:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:328:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:237:24)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)",
+              "node:internal/main/run_main_module:36:49"
+            ]
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                {
+                  "canInlineRule": true,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*",
+                false
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEgressRule": [
+                {
+                  "canInlineRule": true,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*",
+                false
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEgressRule": [
+                "*",
+                {},
+                "*",
+                true
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEgressRule": [
+                "*",
+                {},
+                "*",
+                true
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsNetworkStack/AlbSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AlbSecurityGroup86A59E99"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/McpSecurityGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "description": "*",
+              "securityGroupName": "*",
+              "allowAllOutbound": true
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                {
+                  "canInlineRule": true,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*"
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsNetworkStack/McpSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpSecurityGroup887B4E2B"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/VpcId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcId"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/PublicSubnetIds": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PublicSubnetIds"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/PrivateSubnetIds": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PrivateSubnetIds"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Exports/Output{\"Ref\":\"CatalogAgentsVpcPrivateSubnet1SubnetE3A98E42\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefCatalogAgentsVpcPrivateSubnet1SubnetE3A98E4231E53C2E"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Exports/Output{\"Ref\":\"CatalogAgentsVpcPrivateSubnet2Subnet64FECC7B\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefCatalogAgentsVpcPrivateSubnet2Subnet64FECC7B2B36EC21"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Exports/Output{\"Fn::GetAtt\":[\"RdsSecurityGroup632A77E4\",\"GroupId\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttRdsSecurityGroup632A77E4GroupId9D343172"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Exports/Output{\"Fn::GetAtt\":[\"AlbSecurityGroup86A59E99\",\"GroupId\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttAlbSecurityGroup86A59E99GroupIdE3A37BC7"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Exports/Output{\"Ref\":\"CatalogAgentsVpcPublicSubnet1Subnet16D40AFF\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefCatalogAgentsVpcPublicSubnet1Subnet16D40AFF0D43A75A"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Exports/Output{\"Ref\":\"CatalogAgentsVpcPublicSubnet2SubnetE759286D\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefCatalogAgentsVpcPublicSubnet2SubnetE759286DB3651B76"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Exports/Output{\"Ref\":\"CatalogAgentsVpcFA833CAA\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefCatalogAgentsVpcFA833CAAD41BF131"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Exports/Output{\"Fn::GetAtt\":[\"EcsSecurityGroup44008BF1\",\"GroupId\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/Exports/Output{\"Fn::GetAtt\":[\"McpSecurityGroup887B4E2B\",\"GroupId\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttMcpSecurityGroup887B4E2BGroupIdF0E0210F"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CatalogAgentsNetworkStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CatalogAgentsNetworkStack"
+    },
+    "CatalogAgentsDataStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CatalogAgentsDataStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CatalogAgentsDataStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://127214182942/us-east-1",
+      "properties": {
+        "templateFile": "CatalogAgentsDataStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-deploy-role-127214182942-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-cfn-exec-role-127214182942-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-127214182942-us-east-1/3d9097122fd276affc427a1aab1fe62f7b2cc1279021e2150bbc282821a87adb.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CatalogAgentsDataStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-lookup-role-127214182942-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CatalogAgentsNetworkStack",
+        "CatalogAgentsDataStack.assets"
+      ],
+      "metadata": {
+        "/CatalogAgentsDataStack/RdsSubnetGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "vpc": "*",
+              "vpcSubnets": {
+                "subnets": [
+                  "*",
+                  "*"
+                ]
+              },
+              "subnetGroupName": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsDataStack/RdsSubnetGroup/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RdsSubnetGroup"
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "engine": {
+                "engineType": "*",
+                "engineVersion": {
+                  "fullVersion": "*",
+                  "majorVersion": "*"
+                },
+                "parameterGroupFamily": "*",
+                "singleUserRotationApplication": "*",
+                "engineFamily": "*",
+                "defaultUsername": "*",
+                "supportedLogTypes": "*"
+              },
+              "clusterIdentifier": "*",
+              "defaultDatabaseName": "*",
+              "credentials": "*",
+              "vpc": "*",
+              "vpcSubnets": {
+                "subnets": [
+                  "*",
+                  "*"
+                ]
+              },
+              "securityGroups": [
+                "*"
+              ],
+              "serverlessV2MinCapacity": "*",
+              "serverlessV2MaxCapacity": "*",
+              "writer": "*",
+              "storageEncrypted": true,
+              "backup": {
+                "retention": "*"
+              },
+              "deletionProtection": false,
+              "removalPolicy": "destroy"
+            }
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster/Subnets": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "vpc": "*",
+              "vpcSubnets": {
+                "subnets": [
+                  "*",
+                  "*"
+                ]
+              },
+              "removalPolicy": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster/Subnets/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityCatalogClusterSubnets65AD8A78"
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster/Secret": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "encryptionKey": "*",
+              "secretName": "*",
+              "replicaRegions": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "username": "*",
+              "secretName": "*",
+              "encryptionKey": "*",
+              "excludeCharacters": "*",
+              "replaceOnPasswordCriteriaChanges": true,
+              "replicaRegions": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster/Secret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsDataStackUnityCatalogClusterSecretAFE11D5B3fdaad7efa858a3daf9490cf0a702aeb"
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster/Secret/Attachment": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "secret": "*",
+              "target": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster/Secret/Attachment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityCatalogClusterSecretAttachmentA618BC08"
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityCatalogCluster4B381C1B"
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster/writer": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsDataStack/UnityCatalogCluster/writer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityCatalogClusterwriterCF9504D5"
+          }
+        ],
+        "/CatalogAgentsDataStack/GlueDataBucket": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "bucketName": "*",
+              "versioned": true,
+              "encryption": "S3_MANAGED",
+              "removalPolicy": "destroy",
+              "autoDeleteObjects": true,
+              "blockPublicAccess": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsDataStack/GlueDataBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueDataBucket278CFAC6"
+          }
+        ],
+        "/CatalogAgentsDataStack/GlueDataBucket/Policy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "bucket": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsDataStack/GlueDataBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueDataBucketPolicy37FB1A91"
+          }
+        ],
+        "/CatalogAgentsDataStack/GlueDataBucket/AutoDeleteObjectsCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsDataStack/GlueDataBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueDataBucketAutoDeleteObjectsCustomResource345992C0"
+          }
+        ],
+        "/CatalogAgentsDataStack/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/CatalogAgentsDataStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/CatalogAgentsDataStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/CatalogAgentsDataStack/CustomerDatabase": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomerDatabase"
+          }
+        ],
+        "/CatalogAgentsDataStack/SalesDatabase": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SalesDatabase"
+          }
+        ],
+        "/CatalogAgentsDataStack/AnalyticsDatabase": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AnalyticsDatabase"
+          }
+        ],
+        "/CatalogAgentsDataStack/CustomerProfileTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomerProfileTable"
+          }
+        ],
+        "/CatalogAgentsDataStack/CustomerOrdersTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomerOrdersTable"
+          }
+        ],
+        "/CatalogAgentsDataStack/DailySalesSummaryTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DailySalesSummaryTable"
+          }
+        ],
+        "/CatalogAgentsDataStack/RdsClusterEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RdsClusterEndpoint"
+          }
+        ],
+        "/CatalogAgentsDataStack/RdsClusterArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RdsClusterArn"
+          }
+        ],
+        "/CatalogAgentsDataStack/RdsSecretArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RdsSecretArn"
+          }
+        ],
+        "/CatalogAgentsDataStack/GlueDataBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueDataBucketName"
+          }
+        ],
+        "/CatalogAgentsDataStack/GlueDatabases": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueDatabases"
+          }
+        ],
+        "/CatalogAgentsDataStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CatalogAgentsDataStack/Exports/Output{\"Ref\":\"UnityCatalogClusterSecretAttachmentA618BC08\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefUnityCatalogClusterSecretAttachmentA618BC08ACB3306A"
+          }
+        ],
+        "/CatalogAgentsDataStack/Exports/Output{\"Fn::GetAtt\":[\"UnityCatalogCluster4B381C1B\",\"Endpoint.Address\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttUnityCatalogCluster4B381C1BEndpointAddress668213D6"
+          }
+        ],
+        "/CatalogAgentsDataStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CatalogAgentsDataStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CatalogAgentsDataStack"
+    },
+    "CatalogAgentsComputeStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CatalogAgentsComputeStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CatalogAgentsComputeStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://127214182942/us-east-1",
+      "properties": {
+        "templateFile": "CatalogAgentsComputeStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-deploy-role-127214182942-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-cfn-exec-role-127214182942-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-127214182942-us-east-1/5882a153342f055c95a72ab97a247f495eddade02076a1a6aeffac1e1708179b.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CatalogAgentsComputeStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-lookup-role-127214182942-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CatalogAgentsDataStack",
+        "CatalogAgentsNetworkStack",
+        "CatalogAgentsComputeStack.assets"
+      ],
+      "metadata": {
+        "/CatalogAgentsComputeStack/CatalogAgentsCluster": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "clusterName": "*",
+              "vpc": "*",
+              "containerInsights": true
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsCluster/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsClusterAE06EB6F"
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskExecutionRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "roleName": "*",
+              "managedPolicies": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskExecutionRole/ImportTaskExecutionRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TaskExecutionRole250D2532"
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskExecutionRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskExecutionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TaskExecutionRoleDefaultPolicyA84DD1B0"
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "roleName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskRole/ImportTaskRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TaskRole30FC0FBB"
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/TaskRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TaskRoleDefaultPolicy07FC53DE"
+          }
+        ],
+        "/CatalogAgentsComputeStack/UnityCatalogLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "logGroupName": "*",
+              "retention": 7,
+              "removalPolicy": "destroy"
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/UnityCatalogLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityCatalogLogGroup13C2E10B"
+          }
+        ],
+        "/CatalogAgentsComputeStack/StreamlitLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "logGroupName": "*",
+              "retention": 7,
+              "removalPolicy": "destroy"
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/StreamlitLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamlitLogGroup244B869E"
+          }
+        ],
+        "/CatalogAgentsComputeStack/UnityCatalogTaskDef": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsComputeStack/UnityCatalogTaskDef/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityCatalogTaskDefB1FFACD1"
+          }
+        ],
+        "/CatalogAgentsComputeStack/StreamlitTaskDef": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsComputeStack/StreamlitTaskDef/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamlitTaskDef5B70B2C4"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsALB": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsALB/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsALBBD0C889A"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsALB/HttpListener": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsALB/HttpListener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsALBHttpListenerB61163A7"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsALB/HttpsListener": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsALB/HttpsListener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsALBHttpsListener8269F983"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsALB/HttpsListener/UnityCatalogActionRule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsALBHttpsListenerUnityCatalogActionRule7EEBB837"
+          }
+        ],
+        "/CatalogAgentsComputeStack/UnityCatalogTargetGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityCatalogTargetGroup49231EE4"
+          }
+        ],
+        "/CatalogAgentsComputeStack/StreamlitTargetGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamlitTargetGroup56CF25C5"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsUserPool": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "userPoolName": "*",
+              "signInAliases": {
+                "email": true
+              },
+              "autoVerify": {
+                "email": true
+              },
+              "selfSignUpEnabled": false,
+              "passwordPolicy": {
+                "minLength": "*",
+                "requireLowercase": true,
+                "requireUppercase": true,
+                "requireDigits": true,
+                "requireSymbols": true
+              },
+              "standardAttributes": {},
+              "removalPolicy": "destroy"
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsUserPool/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsUserPoolA3126AB7"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsUserPoolDomain": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "userPool": "*",
+              "cognitoDomain": {
+                "domainPrefix": "*"
+              }
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsUserPoolDomain/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsUserPoolDomainE0A4AA40"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsUserPoolClient": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "userPool": "*",
+              "userPoolClientName": "*",
+              "generateSecret": true,
+              "oAuth": {
+                "flows": {
+                  "authorizationCodeGrant": true
+                },
+                "scopes": "*",
+                "callbackUrls": "*",
+                "logoutUrls": "*"
+              },
+              "supportedIdentityProviders": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsComputeStack/CatalogAgentsUserPoolClient/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CatalogAgentsUserPoolClientB3E1D396"
+          }
+        ],
+        "/CatalogAgentsComputeStack/UnityCatalogService": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsComputeStack/UnityCatalogService/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityCatalogService23EC2489"
+          }
+        ],
+        "/CatalogAgentsComputeStack/StreamlitService": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsComputeStack/StreamlitService/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamlitServiceFCD0A2A5"
+          }
+        ],
+        "/CatalogAgentsComputeStack/AlbDnsName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AlbDnsName"
+          }
+        ],
+        "/CatalogAgentsComputeStack/ApplicationUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApplicationUrl"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CognitoUserPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CognitoUserPoolId"
+          }
+        ],
+        "/CatalogAgentsComputeStack/EcsClusterName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcsClusterName"
+          }
+        ],
+        "/CatalogAgentsComputeStack/StreamlitImageInfo": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamlitImageInfo"
+          }
+        ],
+        "/CatalogAgentsComputeStack/UnityCatalogServiceName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityCatalogServiceName"
+          }
+        ],
+        "/CatalogAgentsComputeStack/StreamlitServiceName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamlitServiceName"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CatalogAgentsComputeStack/Exports/Output{\"Fn::GetAtt\":[\"CatalogAgentsALBBD0C889A\",\"DNSName\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttCatalogAgentsALBBD0C889ADNSName15784CC7"
+          }
+        ],
+        "/CatalogAgentsComputeStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CatalogAgentsComputeStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CatalogAgentsComputeStack"
+    },
+    "CatalogAgentsMcpRuntimeStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CatalogAgentsMcpRuntimeStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CatalogAgentsMcpRuntimeStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://127214182942/us-east-1",
+      "properties": {
+        "templateFile": "CatalogAgentsMcpRuntimeStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-deploy-role-127214182942-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-cfn-exec-role-127214182942-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-127214182942-us-east-1/bb20367d962a782b92471f72f9d151bb9ce581133fe2681e51313749dc3bb2e1.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CatalogAgentsMcpRuntimeStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-lookup-role-127214182942-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CatalogAgentsComputeStack",
+        "CatalogAgentsNetworkStack",
+        "CatalogAgentsMcpRuntimeStack.assets"
+      ],
+      "metadata": {
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpRuntimeRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "roleName": "*",
+              "managedPolicies": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpRuntimeRole/ImportUnityMcpRuntimeRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpRuntimeRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityMcpRuntimeRole8F13A5E2"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpRuntimeRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpRuntimeRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityMcpRuntimeRoleDefaultPolicy8BDBFD95"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpRuntime": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:info",
+            "data": "Container URI validation skipped as it contains unresolved CDK tokens. The URI will be validated at deployment time.",
+            "trace": [
+              "Annotations.addMessage (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/annotations.js:1:2066)",
+              "Annotations.addInfo (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1443)",
+              "WrappedClass.validateContainerUri (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/@aws-cdk/aws-bedrock-agentcore-alpha/lib/runtime/runtime.ts:730:28)",
+              "WrappedClass.renderAgentRuntimeArtifact (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/@aws-cdk/aws-bedrock-agentcore-alpha/lib/runtime/runtime.ts:458:14)",
+              "Object.produce (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/@aws-cdk/aws-bedrock-agentcore-alpha/lib/runtime/runtime.ts:323:29)",
+              "LazyAny.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/lazy.js:1:4170)",
+              "LazyAny.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/lazy.js:1:4778)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/resolvable.js:1:1543)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:4299)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:2909)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:3218)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/resolvable.js:1:1584)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:4299)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:2909)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:3218)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/resolvable.js:1:1584)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:4299)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:2909)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:3218)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:3218)",
+              "findTokens (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:4061)",
+              "findAllReferences (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/refs.js:1:4841)",
+              "resolveReferences (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/refs.js:1:1556)",
+              "prepareApp (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/prepare-app.js:1:806)",
+              "synthesize (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1862)",
+              "App.synth (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/stage.js:1:2912)",
+              "Object.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/bin/infrastructure-v2.ts:92:5)",
+              "Module._compile (node:internal/modules/cjs/loader:1706:14)",
+              "Module.m._compile (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/index.ts:1618:23)",
+              "node:internal/modules/cjs/loader:1839:10",
+              "Object.require.extensions.<computed> [as .ts] (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/index.ts:1621:12)",
+              "Module.load (node:internal/modules/cjs/loader:1441:32)",
+              "Function._load (node:internal/modules/cjs/loader:1263:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:328:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:237:24)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)",
+              "phase4 (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:649:14)",
+              "bootstrap (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:95:10)",
+              "main (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:55:10)",
+              "Object.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:800:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1706:14)",
+              "Object.<anonymous> (node:internal/modules/cjs/loader:1839:10)",
+              "Module.load (node:internal/modules/cjs/loader:1441:32)",
+              "Function._load (node:internal/modules/cjs/loader:1263:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:328:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:237:24)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)",
+              "node:internal/main/run_main_module:36:49"
+            ]
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpRuntime/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityMcpRuntime1DE3F2E4"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpRuntimeRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "roleName": "*",
+              "managedPolicies": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpRuntimeRole/ImportGlueMcpRuntimeRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpRuntimeRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueMcpRuntimeRole9E7C1CC3"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpRuntimeRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpRuntimeRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueMcpRuntimeRoleDefaultPolicy43648E54"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpRuntime": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:info",
+            "data": "Container URI validation skipped as it contains unresolved CDK tokens. The URI will be validated at deployment time.",
+            "trace": [
+              "Annotations.addMessage (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/annotations.js:1:2066)",
+              "Annotations.addInfo (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1443)",
+              "WrappedClass.validateContainerUri (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/@aws-cdk/aws-bedrock-agentcore-alpha/lib/runtime/runtime.ts:730:28)",
+              "WrappedClass.renderAgentRuntimeArtifact (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/@aws-cdk/aws-bedrock-agentcore-alpha/lib/runtime/runtime.ts:458:14)",
+              "Object.produce (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/@aws-cdk/aws-bedrock-agentcore-alpha/lib/runtime/runtime.ts:323:29)",
+              "LazyAny.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/lazy.js:1:4170)",
+              "LazyAny.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/lazy.js:1:4778)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/resolvable.js:1:1543)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:4299)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:2909)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:3218)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/resolvable.js:1:1584)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:4299)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:2909)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:3218)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/resolvable.js:1:1584)",
+              "RememberingTokenResolver.resolveToken (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:4299)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:2909)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:3218)",
+              "Object.resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:1187)",
+              "resolve (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:3218)",
+              "findTokens (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/resolve.js:1:4061)",
+              "findAllReferences (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/refs.js:1:4841)",
+              "resolveReferences (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/refs.js:1:1556)",
+              "prepareApp (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/prepare-app.js:1:806)",
+              "synthesize (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1862)",
+              "App.synth (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/aws-cdk-lib/core/lib/stage.js:1:2912)",
+              "Object.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/bin/infrastructure-v2.ts:92:5)",
+              "Module._compile (node:internal/modules/cjs/loader:1706:14)",
+              "Module.m._compile (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/index.ts:1618:23)",
+              "node:internal/modules/cjs/loader:1839:10",
+              "Object.require.extensions.<computed> [as .ts] (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/index.ts:1621:12)",
+              "Module.load (node:internal/modules/cjs/loader:1441:32)",
+              "Function._load (node:internal/modules/cjs/loader:1263:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:328:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:237:24)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)",
+              "phase4 (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:649:14)",
+              "bootstrap (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:95:10)",
+              "main (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:55:10)",
+              "Object.<anonymous> (/Users/jenfmor/SourceCode/sample-data-catalog-agents-with-mcp/infrastructure-v2/node_modules/ts-node/src/bin.ts:800:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1706:14)",
+              "Object.<anonymous> (node:internal/modules/cjs/loader:1839:10)",
+              "Module.load (node:internal/modules/cjs/loader:1441:32)",
+              "Function._load (node:internal/modules/cjs/loader:1263:12)",
+              "TracingChannel.traceSync (node:diagnostics_channel:328:14)",
+              "wrapModuleLoad (node:internal/modules/cjs/loader:237:24)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)",
+              "node:internal/main/run_main_module:36:49"
+            ]
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpRuntime/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueMcpRuntimeF55AC605"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpProxyRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpProxyRole/ImportUnityMcpProxyRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpProxyRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityMcpProxyRole6B22235B"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpProxyRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpProxyRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityMcpProxyRoleDefaultPolicyA06586D0"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpProxyLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "logGroupName": "*",
+              "retention": 14,
+              "removalPolicy": "destroy"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpProxyLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityMcpProxyLogGroup7BD3BF86"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpProxy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "runtime": "*",
+              "handler": "*",
+              "code": "*",
+              "role": "*",
+              "timeout": "*",
+              "memorySize": "*",
+              "environment": "*",
+              "logGroup": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpProxy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityMcpProxy041150C1"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpProxyRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpProxyRole/ImportGlueMcpProxyRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpProxyRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueMcpProxyRole7D4D1A60"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpProxyRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpProxyRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueMcpProxyRoleDefaultPolicy66B2A8F8"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpProxyLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "logGroupName": "*",
+              "retention": 14,
+              "removalPolicy": "destroy"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpProxyLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueMcpProxyLogGroup2AE8CBFD"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpProxy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "runtime": "*",
+              "handler": "*",
+              "code": "*",
+              "role": "*",
+              "timeout": "*",
+              "memorySize": "*",
+              "environment": "*",
+              "logGroup": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpProxy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueMcpProxy14C1F937"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "restApiName": "*",
+              "description": "*",
+              "defaultCorsPreflightOptions": {
+                "allowOrigins": "*",
+                "allowMethods": "*",
+                "allowHeaders": "*"
+              }
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApi7472703D"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Deployment": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "api": "*",
+              "retainDeployments": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiDeployment80948E2E7ee4b8498a875f7e8d607b4444dedfae"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/DeploymentStage.prod": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "deployment": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiDeploymentStageprodD5546CD7"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiEndpoint725598DE"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiOPTIONS0C579F9F"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunityDC26113E"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunityOPTIONS3CC997EF"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/databases": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/databases/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitydatabases3A8C4826"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/databases/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/databases/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitydatabasesOPTIONS047D3F7A"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/databases/GET": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizationType": "*"
+              }
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/databases/GET/ApiPermission.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..unity.databases": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitydatabasesGETApiPermissionCatalogAgentsMcpRuntimeStackMcpApiB506141EGETunitydatabases86D82883"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/databases/GET/ApiPermission.Test.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..unity.databases": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitydatabasesGETApiPermissionTestCatalogAgentsMcpRuntimeStackMcpApiB506141EGETunitydatabases41F5F249"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/databases/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitydatabasesGET8FC1215E"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesD6E57EE9"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesOPTIONSA6A106CC"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabaseAF297977"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabaseOPTIONS16CB5427"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/GET": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizationType": "*"
+              }
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/GET/ApiPermission.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..unity.tables.{database}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabaseGETApiPermissionCatalogAgentsMcpRuntimeStackMcpApiB506141EGETunitytablesdatabaseC45E92BE"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/GET/ApiPermission.Test.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..unity.tables.{database}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabaseGETApiPermissionTestCatalogAgentsMcpRuntimeStackMcpApiB506141EGETunitytablesdatabaseC6E62DBD"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabaseGET715E1C75"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/{table}": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/{table}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabasetable60A3C7F1"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/{table}/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/{table}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabasetableOPTIONS11D7EDEB"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/{table}/GET": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizationType": "*"
+              }
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/{table}/GET/ApiPermission.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..unity.tables.{database}.{table}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabasetableGETApiPermissionCatalogAgentsMcpRuntimeStackMcpApiB506141EGETunitytablesdatabasetable886C6B91"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/{table}/GET/ApiPermission.Test.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..unity.tables.{database}.{table}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabasetableGETApiPermissionTestCatalogAgentsMcpRuntimeStackMcpApiB506141EGETunitytablesdatabasetable47EDDE7C"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/unity/tables/{database}/{table}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiunitytablesdatabasetableGET9B02D2D2"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiglue577C155E"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiglueOPTIONS18270BE6"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/databases": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/databases/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluedatabasesE9C0703B"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/databases/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/databases/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluedatabasesOPTIONSFAC205DC"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/databases/GET": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizationType": "*"
+              }
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/databases/GET/ApiPermission.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..glue.databases": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluedatabasesGETApiPermissionCatalogAgentsMcpRuntimeStackMcpApiB506141EGETgluedatabasesA01BECFF"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/databases/GET/ApiPermission.Test.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..glue.databases": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluedatabasesGETApiPermissionTestCatalogAgentsMcpRuntimeStackMcpApiB506141EGETgluedatabases30275068"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/databases/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluedatabasesGET1C785876"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetables059359B3"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesOPTIONS5316F80F"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabase70D8316B"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabaseOPTIONS952CC30E"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/GET": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizationType": "*"
+              }
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/GET/ApiPermission.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..glue.tables.{database}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabaseGETApiPermissionCatalogAgentsMcpRuntimeStackMcpApiB506141EGETgluetablesdatabaseD8340168"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/GET/ApiPermission.Test.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..glue.tables.{database}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabaseGETApiPermissionTestCatalogAgentsMcpRuntimeStackMcpApiB506141EGETgluetablesdatabaseF91AFDFD"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabaseGET48DC3262"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/{table}": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/{table}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabasetable65561C16"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/{table}/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/{table}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabasetableOPTIONS24D01F1F"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/{table}/GET": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizationType": "*"
+              }
+            }
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/{table}/GET/ApiPermission.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..glue.tables.{database}.{table}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabasetableGETApiPermissionCatalogAgentsMcpRuntimeStackMcpApiB506141EGETgluetablesdatabasetable4AFD0A56"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/{table}/GET/ApiPermission.Test.CatalogAgentsMcpRuntimeStackMcpApiB506141E.GET..glue.tables.{database}.{table}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabasetableGETApiPermissionTestCatalogAgentsMcpRuntimeStackMcpApiB506141EGETgluetablesdatabasetable6AEB89E0"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApi/Default/glue/tables/{database}/{table}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApigluetablesdatabasetableGET07AFC45E"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpRuntimeArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityMcpRuntimeArn"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpRuntimeArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueMcpRuntimeArn"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/McpApiUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "McpApiUrl"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/UnityMcpEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UnityMcpEndpoint"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/GlueMcpEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlueMcpEndpoint"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CatalogAgentsMcpRuntimeStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CatalogAgentsMcpRuntimeStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "aws-cdk-lib/feature-flag-report": {
+      "type": "cdk:feature-flag-report",
+      "properties": {
+        "module": "aws-cdk-lib",
+        "flags": {
+          "@aws-cdk/aws-signer:signingProfileNamePassedToCfn": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Pass signingProfileName to CfnSigningProfile"
+          },
+          "@aws-cdk/core:newStyleStackSynthesis": {
+            "recommendedValue": true,
+            "explanation": "Switch to new stack synthesis method which enables CI/CD",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/core:stackRelativeExports": {
+            "recommendedValue": true,
+            "explanation": "Name exports based on the construct paths relative to the stack, rather than the global construct path",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-ecs-patterns:secGroupsDisablesImplicitOpenListener": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Disable implicit openListener when custom security groups are provided"
+          },
+          "@aws-cdk/aws-rds:lowercaseDbIdentifier": {
+            "recommendedValue": true,
+            "explanation": "Force lowercasing of RDS Cluster names in CDK",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-apigateway:usagePlanKeyOrderInsensitiveId": {
+            "recommendedValue": true,
+            "explanation": "Allow adding/removing multiple UsagePlanKeys independently",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-lambda:recognizeVersionProps": {
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to opt in to the updated logical id calculation for Lambda Version created using the  `fn.currentVersion`.",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-lambda:recognizeLayerVersion": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to opt in to the updated logical id calculation for Lambda Version created using the `fn.currentVersion`."
+          },
+          "@aws-cdk/aws-cloudfront:defaultSecurityPolicyTLSv1.2_2021": {
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to have cloudfront distributions use the security policy TLSv1.2_2021 by default.",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/core:checkSecretUsage": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this flag to make it impossible to accidentally use SecretValues in unsafe locations"
+          },
+          "@aws-cdk/core:target-partitions": {
+            "userValue": [
+              "aws",
+              "aws-cn"
+            ],
+            "recommendedValue": [
+              "aws",
+              "aws-cn"
+            ],
+            "explanation": "What regions to include in lookup tables of environment agnostic stacks"
+          },
+          "@aws-cdk-containers/ecs-service-extensions:enableDefaultLogDriver": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "ECS extensions will automatically add an `awslogs` driver if no logging is specified"
+          },
+          "@aws-cdk/aws-ec2:uniqueImdsv2TemplateName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to have Launch Templates generated by the `InstanceRequireImdsv2Aspect` use unique names."
+          },
+          "@aws-cdk/aws-ecs:arnFormatIncludesClusterName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "ARN format used by ECS. In the new ARN format, the cluster name is part of the resource ID."
+          },
+          "@aws-cdk/aws-iam:minimizePolicies": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Minimize IAM policies by combining Statements"
+          },
+          "@aws-cdk/core:validateSnapshotRemovalPolicy": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Error on snapshot removal policies on resources that do not support it."
+          },
+          "@aws-cdk/aws-codepipeline:crossAccountKeyAliasStackSafeResourceName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Generate key aliases that include the stack name"
+          },
+          "@aws-cdk/aws-s3:createDefaultLoggingPolicy": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this feature flag to create an S3 bucket policy by default in cases where an AWS service would automatically create the Policy if one does not exist."
+          },
+          "@aws-cdk/aws-sns-subscriptions:restrictSqsDescryption": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Restrict KMS key policy for encrypted Queues a bit more"
+          },
+          "@aws-cdk/aws-apigateway:disableCloudWatchRole": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Make default CloudWatch Role behavior safe for multiple API Gateways in one environment"
+          },
+          "@aws-cdk/core:enablePartitionLiterals": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Make ARNs concrete if AWS partition is known"
+          },
+          "@aws-cdk/aws-events:eventsTargetQueueSameAccount": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Event Rules may only push to encrypted SQS queues in the same account"
+          },
+          "@aws-cdk/aws-ecs:disableExplicitDeploymentControllerForCircuitBreaker": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Avoid setting the \"ECS\" deployment controller when adding a circuit breaker"
+          },
+          "@aws-cdk/aws-iam:importedRoleStackSafeDefaultPolicyName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable this feature to create default policy names for imported roles that depend on the stack the role is in."
+          },
+          "@aws-cdk/aws-s3:serverAccessLogsUseBucketPolicy": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Use S3 Bucket Policy instead of ACLs for Server Access Logging"
+          },
+          "@aws-cdk/aws-route53-patters:useCertificate": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Use the official `Certificate` resource instead of `DnsValidatedCertificate`"
+          },
+          "@aws-cdk/customresources:installLatestAwsSdkDefault": {
+            "userValue": false,
+            "recommendedValue": false,
+            "explanation": "Whether to install the latest SDK by default in AwsCustomResource"
+          },
+          "@aws-cdk/aws-rds:databaseProxyUniqueResourceName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Use unique resource name for Database Proxy"
+          },
+          "@aws-cdk/aws-codedeploy:removeAlarmsFromDeploymentGroup": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Remove CloudWatch alarms from deployment group"
+          },
+          "@aws-cdk/aws-apigateway:authorizerChangeDeploymentLogicalId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Include authorizer configuration in the calculation of the API deployment logical ID."
+          },
+          "@aws-cdk/aws-ec2:launchTemplateDefaultUserData": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Define user data for a launch template by default when a machine image is provided."
+          },
+          "@aws-cdk/aws-secretsmanager:useAttachedSecretResourcePolicyForSecretTargetAttachments": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "SecretTargetAttachments uses the ResourcePolicy of the attached Secret."
+          },
+          "@aws-cdk/aws-redshift:columnId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Whether to use an ID to track Redshift column changes"
+          },
+          "@aws-cdk/aws-stepfunctions-tasks:enableEmrServicePolicyV2": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable AmazonEMRServicePolicy_v2 managed policies"
+          },
+          "@aws-cdk/aws-ec2:restrictDefaultSecurityGroup": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Restrict access to the VPC default security group"
+          },
+          "@aws-cdk/aws-apigateway:requestValidatorUniqueId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Generate a unique id for each RequestValidator added to a method"
+          },
+          "@aws-cdk/aws-kms:aliasNameRef": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "KMS Alias name and keyArn will have implicit reference to KMS Key"
+          },
+          "@aws-cdk/aws-kms:applyImportedAliasPermissionsToPrincipal": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enable grant methods on Aliases imported by name to use kms:ResourceAliases condition"
+          },
+          "@aws-cdk/aws-autoscaling:generateLaunchTemplateInsteadOfLaunchConfig": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Generate a launch template when creating an AutoScalingGroup"
+          },
+          "@aws-cdk/core:includePrefixInUniqueNameGeneration": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Include the stack prefix in the stack name generation process"
+          },
+          "@aws-cdk/aws-efs:denyAnonymousAccess": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "EFS denies anonymous clients accesses"
+          },
+          "@aws-cdk/aws-opensearchservice:enableOpensearchMultiAzWithStandby": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enables support for Multi-AZ with Standby deployment for opensearch domains"
+          },
+          "@aws-cdk/aws-lambda-nodejs:useLatestRuntimeVersion": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enables aws-lambda-nodejs.Function to use the latest available NodeJs runtime as the default"
+          },
+          "@aws-cdk/aws-efs:mountTargetOrderInsensitiveLogicalId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, mount targets will have a stable logicalId that is linked to the associated subnet."
+          },
+          "@aws-cdk/aws-rds:auroraClusterChangeScopeOfInstanceParameterGroupWithEachParameters": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, a scope of InstanceParameterGroup for AuroraClusterInstance with each parameters will change."
+          },
+          "@aws-cdk/aws-appsync:useArnForSourceApiAssociationIdentifier": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, will always use the arn for identifiers for CfnSourceApiAssociation in the GraphqlApi construct rather than id."
+          },
+          "@aws-cdk/aws-rds:preventRenderingDeprecatedCredentials": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, creating an RDS database cluster from a snapshot will only render credentials for snapshot credentials."
+          },
+          "@aws-cdk/aws-codepipeline-actions:useNewDefaultBranchForCodeCommitSource": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the CodeCommit source action is using the default branch name 'main'."
+          },
+          "@aws-cdk/aws-cloudwatch-actions:changeLambdaPermissionLogicalIdForLambdaAction": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the logical ID of a Lambda permission for a Lambda action includes an alarm ID."
+          },
+          "@aws-cdk/aws-codepipeline:crossAccountKeysDefaultValueToFalse": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enables Pipeline to set the default value for crossAccountKeys to false."
+          },
+          "@aws-cdk/aws-codepipeline:defaultPipelineTypeToV2": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Enables Pipeline to set the default pipeline type to V2."
+          },
+          "@aws-cdk/aws-kms:reduceCrossAccountRegionPolicyScope": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, IAM Policy created from KMS key grant will reduce the resource scope to this key only."
+          },
+          "@aws-cdk/pipelines:reduceAssetRoleTrustScope": {
+            "recommendedValue": true,
+            "explanation": "Remove the root account principal from PipelineAssetsFileRole trust policy",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-eks:nodegroupNameAttribute": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, nodegroupName attribute of the provisioned EKS NodeGroup will not have the cluster name prefix."
+          },
+          "@aws-cdk/aws-ec2:ebsDefaultGp3Volume": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the default volume type of the EBS volume will be GP3"
+          },
+          "@aws-cdk/aws-ecs:removeDefaultDeploymentAlarm": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, remove default deployment alarm settings"
+          },
+          "@aws-cdk/custom-resources:logApiResponseDataPropertyTrueDefault": {
+            "userValue": false,
+            "recommendedValue": false,
+            "explanation": "When enabled, the custom resource used for `AwsCustomResource` will configure the `logApiResponseData` property as true by default"
+          },
+          "@aws-cdk/aws-s3:keepNotificationInImportedBucket": {
+            "userValue": false,
+            "recommendedValue": false,
+            "explanation": "When enabled, Adding notifications to a bucket in the current stack will not remove notification from imported stack."
+          },
+          "@aws-cdk/aws-stepfunctions-tasks:useNewS3UriParametersForBedrockInvokeModelTask": {
+            "recommendedValue": true,
+            "explanation": "When enabled, use new props for S3 URI field in task definition of state machine for bedrock invoke model.",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/core:explicitStackTags": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, stack tags need to be assigned explicitly on a Stack."
+          },
+          "@aws-cdk/aws-ecs:reduceEc2FargateCloudWatchPermissions": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, we will only grant the necessary permissions when users specify cloudwatch log group through logConfiguration"
+          },
+          "@aws-cdk/aws-dynamodb:resourcePolicyPerReplica": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled will allow you to specify a resource policy per replica, and not copy the source table policy to all replicas"
+          },
+          "@aws-cdk/aws-ec2:ec2SumTImeoutEnabled": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, initOptions.timeout and resourceSignalTimeout values will be summed together."
+          },
+          "@aws-cdk/aws-appsync:appSyncGraphQLAPIScopeLambdaPermission": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, a Lambda authorizer Permission created when using GraphqlApi will be properly scoped with a SourceArn."
+          },
+          "@aws-cdk/aws-rds:setCorrectValueForDatabaseInstanceReadReplicaInstanceResourceId": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the value of property `instanceResourceId` in construct `DatabaseInstanceReadReplica` will be set to the correct value which is `DbiResourceId` instead of currently `DbInstanceArn`"
+          },
+          "@aws-cdk/core:cfnIncludeRejectComplexResourceUpdateCreatePolicyIntrinsics": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, CFN templates added with `cfn-include` will error if the template contains Resource Update or Create policies with CFN Intrinsics that include non-primitive values."
+          },
+          "@aws-cdk/aws-lambda-nodejs:sdkV3ExcludeSmithyPackages": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, both `@aws-sdk` and `@smithy` packages will be excluded from the Lambda Node.js 18.x runtime to prevent version mismatches in bundled applications."
+          },
+          "@aws-cdk/aws-stepfunctions-tasks:fixRunEcsTaskPolicy": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the resource of IAM Run Ecs policy generated by SFN EcsRunTask will reference the definition, instead of constructing ARN."
+          },
+          "@aws-cdk/aws-ec2:bastionHostUseAmazonLinux2023ByDefault": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the BastionHost construct will use the latest Amazon Linux 2023 AMI, instead of Amazon Linux 2."
+          },
+          "@aws-cdk/core:aspectStabilization": {
+            "recommendedValue": true,
+            "explanation": "When enabled, a stabilization loop will be run when invoking Aspects during synthesis.",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-route53-targets:userPoolDomainNameMethodWithoutCustomResource": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, use a new method for DNS Name of user pool domain target without creating a custom resource."
+          },
+          "@aws-cdk/aws-elasticloadbalancingV2:albDualstackWithoutPublicIpv4SecurityGroupRulesDefault": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the default security group ingress rules will allow IPv6 ingress from anywhere"
+          },
+          "@aws-cdk/aws-iam:oidcRejectUnauthorizedConnections": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the default behaviour of OIDC provider will reject unauthorized connections"
+          },
+          "@aws-cdk/core:enableAdditionalMetadataCollection": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, CDK will expand the scope of usage data collected to better inform CDK development and improve communication for security concerns and emerging issues."
+          },
+          "@aws-cdk/aws-lambda:createNewPoliciesWithAddToRolePolicy": {
+            "userValue": false,
+            "recommendedValue": false,
+            "explanation": "[Deprecated] When enabled, Lambda will create new inline policies with AddToRolePolicy instead of adding to the Default Policy Statement"
+          },
+          "@aws-cdk/aws-s3:setUniqueReplicationRoleName": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, CDK will automatically generate a unique role name that is used for s3 object replication."
+          },
+          "@aws-cdk/pipelines:reduceStageRoleTrustScope": {
+            "recommendedValue": true,
+            "explanation": "Remove the root account principal from Stage addActions trust policy",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-events:requireEventBusPolicySid": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, grantPutEventsTo() will use resource policies with Statement IDs for service principals."
+          },
+          "@aws-cdk/core:aspectPrioritiesMutating": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When set to true, Aspects added by the construct library on your behalf will be given a priority of MUTATING."
+          },
+          "@aws-cdk/aws-dynamodb:retainTableReplica": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, table replica will be default to the removal policy of source table unless specified otherwise."
+          },
+          "@aws-cdk/cognito:logUserPoolClientSecretValue": {
+            "recommendedValue": false,
+            "explanation": "When disabled, the value of the user pool client secret will not be logged in the custom resource lambda function logs."
+          },
+          "@aws-cdk/pipelines:reduceCrossAccountActionRoleTrustScope": {
+            "recommendedValue": true,
+            "explanation": "When enabled, scopes down the trust policy for the cross-account action role",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-stepfunctions:useDistributedMapResultWriterV2": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the resultWriterV2 property of DistributedMap will be used insted of resultWriter"
+          },
+          "@aws-cdk/s3-notifications:addS3TrustKeyPolicyForSnsSubscriptions": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Add an S3 trust policy to a KMS key resource policy for SNS subscriptions."
+          },
+          "@aws-cdk/aws-ec2:requirePrivateSubnetsForEgressOnlyInternetGateway": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, the EgressOnlyGateway resource is only created if private subnets are defined in the dual-stack VPC."
+          },
+          "@aws-cdk/aws-ec2-alpha:useResourceIdForVpcV2Migration": {
+            "recommendedValue": false,
+            "explanation": "When enabled, use resource IDs for VPC V2 migration"
+          },
+          "@aws-cdk/aws-s3:publicAccessBlockedByDefault": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, setting any combination of options for BlockPublicAccess will automatically set true for any options not defined."
+          },
+          "@aws-cdk/aws-lambda:useCdkManagedLogGroup": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "When enabled, CDK creates and manages loggroup for the lambda function"
+          },
+          "@aws-cdk/aws-elasticloadbalancingv2:networkLoadBalancerWithSecurityGroupByDefault": {
+            "recommendedValue": true,
+            "explanation": "When enabled, Network Load Balancer will be created with a security group by default."
+          },
+          "@aws-cdk/aws-stepfunctions-tasks:httpInvokeDynamicJsonPathEndpoint": {
+            "recommendedValue": true,
+            "explanation": "When enabled, allows using a dynamic apiEndpoint with JSONPath format in HttpInvoke tasks.",
+            "unconfiguredBehavesLike": {
+              "v2": true
+            }
+          },
+          "@aws-cdk/aws-ecs-patterns:uniqueTargetGroupId": {
+            "recommendedValue": true,
+            "explanation": "When enabled, ECS patterns will generate unique target group IDs to prevent conflicts during load balancer replacement"
+          },
+          "@aws-cdk/aws-route53-patterns:useDistribution": {
+            "recommendedValue": true,
+            "explanation": "Use the `Distribution` resource instead of `CloudFrontWebDistribution`"
+          }
+        }
+      }
+    }
+  },
+  "minimumCliVersion": "2.1033.0"
+}

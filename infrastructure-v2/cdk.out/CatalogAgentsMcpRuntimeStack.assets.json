@@ -1,0 +1,67 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "20b6a8592d9a538079863abf809d8e9f964a3b74775871bb55df23866a397f96": {
+      "displayName": "UnityMcpProxy/Code",
+      "source": {
+        "path": "asset.20b6a8592d9a538079863abf809d8e9f964a3b74775871bb55df23866a397f96",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "127214182942-us-east-1-2d8b3648": {
+          "bucketName": "cdk-hnb659fds-assets-127214182942-us-east-1",
+          "objectKey": "20b6a8592d9a538079863abf809d8e9f964a3b74775871bb55df23866a397f96.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-file-publishing-role-127214182942-us-east-1"
+        }
+      }
+    },
+    "bb20367d962a782b92471f72f9d151bb9ce581133fe2681e51313749dc3bb2e1": {
+      "displayName": "CatalogAgentsMcpRuntimeStack Template",
+      "source": {
+        "path": "CatalogAgentsMcpRuntimeStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "127214182942-us-east-1-ca7f9e49": {
+          "bucketName": "cdk-hnb659fds-assets-127214182942-us-east-1",
+          "objectKey": "bb20367d962a782b92471f72f9d151bb9ce581133fe2681e51313749dc3bb2e1.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-file-publishing-role-127214182942-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {
+    "c28c0366b5343aa0951ff36b4e23afc3a371eba3f0be495b29d4bcda6e0d5197": {
+      "displayName": "UnityMcpRuntime/AgentRuntimeArtifact",
+      "source": {
+        "directory": "asset.c28c0366b5343aa0951ff36b4e23afc3a371eba3f0be495b29d4bcda6e0d5197",
+        "dockerFile": "mcp/unity-catalog-server/Dockerfile"
+      },
+      "destinations": {
+        "127214182942-us-east-1-8ad3d8f0": {
+          "repositoryName": "cdk-hnb659fds-container-assets-127214182942-us-east-1",
+          "imageTag": "c28c0366b5343aa0951ff36b4e23afc3a371eba3f0be495b29d4bcda6e0d5197",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-image-publishing-role-127214182942-us-east-1"
+        }
+      }
+    },
+    "d75fb0a477dafbdd94f437880b1551b9cd57fe648900aa4d469bf37b12f0c378": {
+      "displayName": "GlueMcpRuntime/AgentRuntimeArtifact",
+      "source": {
+        "directory": "asset.d75fb0a477dafbdd94f437880b1551b9cd57fe648900aa4d469bf37b12f0c378",
+        "dockerFile": "mcp/glue-catalog-server/Dockerfile"
+      },
+      "destinations": {
+        "127214182942-us-east-1-253bc300": {
+          "repositoryName": "cdk-hnb659fds-container-assets-127214182942-us-east-1",
+          "imageTag": "d75fb0a477dafbdd94f437880b1551b9cd57fe648900aa4d469bf37b12f0c378",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-image-publishing-role-127214182942-us-east-1"
+        }
+      }
+    }
+  }
+}

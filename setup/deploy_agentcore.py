@@ -6,6 +6,7 @@ Deploy MCP Servers to Amazon Bedrock AgentCore Runtime using the Toolkit
 import sys
 import time
 import json
+import argparse
 from pathlib import Path
 
 try:
@@ -18,8 +19,8 @@ except ImportError:
 
 def get_terraform_output(output_name):
     """Get output from Terraform"""
-    import subprocess
-    result = subprocess.run(
+    import subprocess as sp
+    result = sp.run(
         ['terraform', 'output', '-raw', output_name],
         cwd='deploy/terraform',
         capture_output=True,
@@ -91,8 +92,12 @@ def deploy_mcp_server(server_name, entrypoint_file, agent_execution_role, region
         'runtime': runtime
     }
 
-def deploy_mcp_servers():
-    """Deploy both Unity and Glue MCP servers to AgentCore Runtime"""
+def deploy_mcp_servers(agent_type=None):
+    """Deploy MCP servers to AgentCore Runtime
+    
+    Args:
+        agent_type: 'unity', 'glue', or None (both)
+    """
     
     print(f"\n🚀 Starting AgentCore MCP Server Deployment")
     print(f"   Using bedrock-agentcore-starter-toolkit\n")
@@ -115,69 +120,89 @@ def deploy_mcp_servers():
     print(f"  Execution Role: {role_arn}")
     print(f"  Region: {aws_region}")
     print(f"  Unique Suffix: {unique_suffix}")
+    if agent_type:
+        print(f"  Deploying: {agent_type} MCP only")
     
     results = {}
     
     # Deploy Unity Catalog MCP Server
-    try:
-        unity_result = deploy_mcp_server(
-            server_name=f'unityCatalogMcp_{unique_suffix}',
-            entrypoint_file='mcp/unity_catalog_mcp_server.py',
-            agent_execution_role=role_arn,
-            region=aws_region
-        )
-        results['unity'] = unity_result
-    except Exception as e:
-        print(f"\n❌ Unity Catalog MCP deployment failed: {e}")
-        sys.exit(1)
+    if not agent_type or agent_type == 'unity':
+        try:
+            unity_result = deploy_mcp_server(
+                server_name=f'unity_catalog_mcp_{unique_suffix}',
+                entrypoint_file='mcp/unity_catalog_mcp_server.py',
+                agent_execution_role=role_arn,
+                region=aws_region
+            )
+            results['unity'] = unity_result
+        except Exception as e:
+            print(f"\n❌ Unity Catalog MCP deployment failed: {e}")
+            sys.exit(1)
     
     # Deploy Glue Catalog MCP Server
-    try:
-        glue_result = deploy_mcp_server(
-            server_name=f'glueCatalogMcp_{unique_suffix}',
-            entrypoint_file='mcp/glue_catalog_mcp_server.py',
-            agent_execution_role=role_arn,
-            region=aws_region
-        )
-        results['glue'] = glue_result
-    except Exception as e:
-        print(f"\n❌ Glue Catalog MCP deployment failed: {e}")
-        sys.exit(1)
+    if not agent_type or agent_type == 'glue':
+        try:
+            glue_result = deploy_mcp_server(
+                server_name=f'glue_catalog_mcp_{unique_suffix}',
+                entrypoint_file='mcp/glue_catalog_mcp_server.py',
+                agent_execution_role=role_arn,
+                region=aws_region
+            )
+            results['glue'] = glue_result
+        except Exception as e:
+            print(f"\n❌ Glue Catalog MCP deployment failed: {e}")
+            sys.exit(1)
     
-    # Save runtime IDs to environment file
-    env_content = f"""UNITY_MCP_RUNTIME_ID={results['unity']['runtime_id']}
-GLUE_MCP_RUNTIME_ID={results['glue']['runtime_id']}
-UNITY_MCP_ARN={results['unity']['runtime_arn']}
-GLUE_MCP_ARN={results['glue']['runtime_arn']}
-"""
+    # Load existing config if it exists (for incremental deployments)
+    existing_config = {}
+    if Path('agentcore-config.json').exists():
+        with open('agentcore-config.json', 'r') as f:
+            existing_config = json.load(f)
     
-    Path('.env').write_text(env_content)
-    print(f"\n📝 Environment variables saved to .env file")
+    # Build env content and config based on what was deployed
+    env_lines = []
+    config = existing_config.copy()
     
-    # Save full configuration
-    config = {
-        'unity_mcp': {
+    if 'unity' in results:
+        env_lines.extend([
+            f"UNITY_MCP_RUNTIME_ID={results['unity']['runtime_id']}",
+            f"UNITY_MCP_ARN={results['unity']['runtime_arn']}"
+        ])
+        config['unity_mcp'] = {
             'runtime_id': results['unity']['runtime_id'],
             'runtime_arn': results['unity']['runtime_arn'],
             'region': aws_region
-        },
-        'glue_mcp': {
+        }
+    
+    if 'glue' in results:
+        env_lines.extend([
+            f"GLUE_MCP_RUNTIME_ID={results['glue']['runtime_id']}",
+            f"GLUE_MCP_ARN={results['glue']['runtime_arn']}"
+        ])
+        config['glue_mcp'] = {
             'runtime_id': results['glue']['runtime_id'],
             'runtime_arn': results['glue']['runtime_arn'],
             'region': aws_region
         }
-    }
+    
+    env_content = '\n'.join(env_lines) + '\n'
+    
+    Path('.env').write_text(env_content)
+    print(f"\n📝 Environment variables saved to .env file")
     
     Path('agentcore-config.json').write_text(json.dumps(config, indent=2))
     print(f"📝 Full configuration saved to agentcore-config.json")
     
-    # Update ECS task definition with runtime IDs
-    print(f"\n🔄 Updating ECS task definition with AgentCore runtime IDs...")
-    try:
-        update_ecs_task_definition(results['unity']['runtime_id'], results['glue']['runtime_id'])
-    except Exception as e:
-        print(f"⚠️  Warning: Failed to update ECS task definition: {e}")
-        print("   You may need to update it manually")
+    # Update ECS task definition with runtime IDs (only if both deployed)
+    if 'unity' in results and 'glue' in results:
+        print(f"\n🔄 Updating ECS task definition with AgentCore runtime IDs...")
+        try:
+            update_ecs_task_definition(results['unity']['runtime_id'], results['glue']['runtime_id'])
+        except Exception as e:
+            print(f"⚠️  Warning: Failed to update ECS task definition: {e}")
+            print("   You may need to update it manually")
+    elif agent_type:
+        print(f"\nℹ️  Skipping ECS update - deploy both agents to update ECS task definition")
     
     return results
 
@@ -242,26 +267,40 @@ def update_ecs_task_definition(unity_runtime_id, glue_runtime_id):
     print(f"   ✅ Updated streamlit-app-service with new task definition")
 
 if __name__ == "__main__":
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Deploy MCP servers to AgentCore')
+    parser.add_argument('--agent', choices=['unity', 'glue'], 
+                        help='Deploy specific agent (unity or glue). If not specified, deploys both.')
+    args = parser.parse_args()
+    
     try:
-        results = deploy_mcp_servers()
+        results = deploy_mcp_servers(agent_type=args.agent)
         
         print(f"\n{'='*60}")
         print(f"🎉 DEPLOYMENT COMPLETE!")
         print(f"{'='*60}")
         print(f"\n📋 Summary:")
-        print(f"  Unity MCP Runtime:")
-        print(f"    ID:  {results['unity']['runtime_id']}")
-        print(f"    ARN: {results['unity']['runtime_arn']}")
-        print(f"\n  Glue MCP Runtime:")
-        print(f"    ID:  {results['glue']['runtime_id']}")
-        print(f"    ARN: {results['glue']['runtime_arn']}")
+        
+        if 'unity' in results:
+            print(f"  Unity MCP Runtime:")
+            print(f"    ID:  {results['unity']['runtime_id']}")
+            print(f"    ARN: {results['unity']['runtime_arn']}")
+        
+        if 'glue' in results:
+            print(f"\n  Glue MCP Runtime:")
+            print(f"    ID:  {results['glue']['runtime_id']}")
+            print(f"    ARN: {results['glue']['runtime_arn']}")
+        
         print(f"\n✓ Configuration files saved:")
         print(f"  - .env (environment variables)")
         print(f"  - agentcore-config.json (full configuration)")
-        print(f"  - .bedrock_agentcore.yaml (toolkit state)")
-        print(f"\n🚀 Your application is now configured to use AgentCore MCP servers")
-        alb_dns = get_terraform_output('alb_dns_name')
-        print(f"   Access via: https://{alb_dns}")
+        if Path('.bedrock_agentcore.yaml').exists():
+            print(f"  - .bedrock_agentcore.yaml (toolkit state)")
+        
+        if 'unity' in results and 'glue' in results:
+            print(f"\n🚀 Your application is now configured to use AgentCore MCP servers")
+            alb_dns = get_terraform_output('alb_dns_name')
+            print(f"   Access via: https://{alb_dns}")
         print(f"{'='*60}\n")
         
     except Exception as e:

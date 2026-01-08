@@ -70,6 +70,14 @@ def main():
     print("Initializing Terraform...")
     run_command("terraform init", cwd=str(terraform_dir), show_output=True)
     
+    # Check if terraform.tfvars exists
+    tfvars_path = terraform_dir / "terraform.tfvars"
+    if tfvars_path.exists():
+        print("✓ Using terraform.tfvars for configuration")
+    else:
+        print("⚠️  No terraform.tfvars found - you'll be prompted for variables")
+        print("   Create deploy/terraform/terraform.tfvars to avoid prompts (see README)")
+    
     print("\nApplying Terraform configuration (this may take 5-10 minutes)...")
     print("⏳ Creating VPC, subnets, RDS, ECS cluster, ALB, Cognito...")
     run_command("terraform apply -auto-approve", cwd=str(terraform_dir), show_output=True)
@@ -95,7 +103,7 @@ def main():
     
     # Build and push Streamlit app only
     print("\n🐳 Building Streamlit App (may take 1-2 minutes)...")
-    run_command(f"docker build -f deploy/docker/Dockerfile.streamlit -t {streamlit_ecr_uri}:latest .", show_output=True)
+    run_command(f"docker build --platform linux/amd64 -f deploy/docker/Dockerfile.streamlit -t {streamlit_ecr_uri}:latest .", show_output=True)
     
     print("📤 Pushing Streamlit App to ECR...")
     run_command(f"docker push {streamlit_ecr_uri}:latest", show_output=True)
@@ -109,13 +117,53 @@ def main():
     print("\n⚠️  Note: AgentCore deployment uses bedrock-agentcore-starter-toolkit")
     print("   The toolkit will build containers from your Python code and deploy them.\n")
     
-    # Import and run the AgentCore deployment
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("deploy_agentcore", "setup/deploy_agentcore.py")
-    agentcore_module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(agentcore_module)
+    # Run AgentCore deployments separately to avoid threading issues
+    print("Deploying Unity MCP (Step 3a)...")
+    result = subprocess.run(
+        [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'unity'],
+        check=False,
+        capture_output=True,
+        text=True
+    )
     
-    result = agentcore_module.deploy_mcp_servers()
+    # Show output
+    if result.stdout:
+        print(result.stdout)
+    
+    if result.returncode != 0:
+        print(f"\n❌ Unity MCP deployment failed")
+        if result.stderr:
+            print("STDERR:", result.stderr)
+        sys.exit(1)
+    
+    print("\n🧹 Cleaning up before next deployment...")
+    import os
+    for file in ['Dockerfile', '.dockerignore', '.bedrock_agentcore.yaml']:
+        if os.path.exists(file):
+            os.remove(file)
+            print(f"  ✓ Removed {file}")
+    
+    print("\nDeploying Glue MCP (Step 3b)...")
+    result = subprocess.run(
+        [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'glue'],
+        check=False,
+        capture_output=True,
+        text=True
+    )
+    
+    # Show output
+    if result.stdout:
+        print(result.stdout)
+    
+    if result.returncode != 0:
+        print(f"\n❌ Glue MCP deployment failed")
+        if result.stderr:
+            print("STDERR:", result.stderr)
+        sys.exit(1)
+    
+    # Load results from config file
+    with open('agentcore-config.json', 'r') as f:
+        mcp_config = json.load(f)
     
     print("✅ AgentCore deployment complete\n")
     
@@ -166,37 +214,25 @@ def main():
     os.environ['UNITY_CATALOG_URL'] = unity_api_url
     
     print("\nCreating Unity Catalog sample tables...")
-    try:
-        # Import and run the Unity setup script
-        import importlib.util
-        spec = importlib.util.spec_from_file_location("setup_unity", "setup/setup_unity_simple.py")
-        unity_setup = importlib.util.module_from_spec(spec)
-        
-        # Patch the BASE_URL in the module before executing
-        import sys
-        original_argv = sys.argv
-        sys.argv = ['setup_unity_simple.py']
-        
-        # Read and modify the script to use our URL
-        with open('setup/setup_unity_simple.py', 'r') as f:
-            script_content = f.read()
-        
-        # Replace BASE_URL with our deployed endpoint
-        script_content = script_content.replace(
-            'BASE_URL = "http://localhost:8080/api/2.1/unity-catalog"',
-            f'BASE_URL = "{unity_api_url}"'
-        )
-        
-        # Execute the modified script
-        exec(script_content, {'__name__': '__main__'})
-        
-        sys.argv = original_argv
-        
+    # Run as subprocess with environment variable (cleaner approach)
+    os.environ['UNITY_CATALOG_URL'] = unity_api_url
+    os.environ['DISABLE_SSL_VERIFY'] = '1'
+    
+    result = subprocess.run(
+        [sys.executable, 'setup/setup_unity_simple.py'],
+        capture_output=True,
+        text=True,
+        env=os.environ
+    )
+    
+    if result.returncode == 0:
         print("✅ Unity Catalog sample data created")
-    except Exception as e:
-        print(f"⚠️  Warning: Could not populate Unity Catalog: {e}")
-        print("   You can manually run: python setup/setup_unity_simple.py")
-        print("   (Update BASE_URL in the script first)")
+    else:
+        print(f"⚠️  Warning: Could not populate Unity Catalog")
+        if result.stderr:
+            print(f"   Error: {result.stderr}")
+        print(f"   You can manually run: python setup/setup_unity_simple.py")
+        print(f"   (Set UNITY_CATALOG_URL environment variable)")
     
     print()
     
@@ -210,8 +246,10 @@ def main():
     print(f"   Application URL: https://{alb_dns}")
     print(f"   Login URL: {admin_login_url}")
     print(f"\n🔐 Runtime IDs saved to .env file")
-    print(f"   Unity MCP: {result['unity_runtime_id']}")
-    print(f"   Glue MCP: {result['glue_runtime_id']}")
+    unity_id = mcp_config.get('unity_mcp', {}).get('runtime_id', 'N/A')
+    glue_id = mcp_config.get('glue_mcp', {}).get('runtime_id', 'N/A')
+    print(f"   Unity MCP: {unity_id}")
+    print(f"   Glue MCP: {glue_id}")
     print(f"\n⏳ Note: Allow a few minutes for ECS service to fully start")
 
 if __name__ == "__main__":

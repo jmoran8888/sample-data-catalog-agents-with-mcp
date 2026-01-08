@@ -1,0 +1,1157 @@
+{
+ "Description": "Compute layer (ECS, Unity Catalog, Streamlit, ALB with Cognito)",
+ "Resources": {
+  "CatalogAgentsClusterAE06EB6F": {
+   "Type": "AWS::ECS::Cluster",
+   "Properties": {
+    "ClusterName": "catalog-agents-cluster",
+    "ClusterSettings": [
+     {
+      "Name": "containerInsights",
+      "Value": "enabled"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/CatalogAgentsCluster/Resource"
+   }
+  },
+  "TaskExecutionRole250D2532": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+    ],
+    "RoleName": "catalog-agents-ecs-task-execution-role",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/TaskExecutionRole/Resource"
+   }
+  },
+  "TaskExecutionRoleDefaultPolicyA84DD1B0": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::ImportValue": "CatalogAgentsDataStack:ExportsOutputRefUnityCatalogClusterSecretAttachmentA618BC08ACB3306A"
+       }
+      },
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StreamlitLogGroup244B869E",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "UnityCatalogLogGroup13C2E10B",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+       ],
+       "Effect": "Allow",
+       "Resource": "arn:aws:ecr:us-east-1:127214182942:repository/cdk-hnb659fds-container-assets-127214182942-us-east-1"
+      },
+      {
+       "Action": "ecr:GetAuthorizationToken",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "TaskExecutionRoleDefaultPolicyA84DD1B0",
+    "Roles": [
+     {
+      "Ref": "TaskExecutionRole250D2532"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/TaskExecutionRole/DefaultPolicy/Resource"
+   }
+  },
+  "TaskRole30FC0FBB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "RoleName": "catalog-agents-ecs-task-role",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/TaskRole/Resource"
+   }
+  },
+  "TaskRoleDefaultPolicy07FC53DE": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "glue:GetDatabase",
+        "glue:GetDatabases",
+        "glue:GetPartition",
+        "glue:GetPartitions",
+        "glue:GetTable",
+        "glue:GetTables",
+        "glue:SearchTables"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:bedrock:*:*:inference-profile/*",
+        "arn:aws:bedrock:*::foundation-model/*"
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "TaskRoleDefaultPolicy07FC53DE",
+    "Roles": [
+     {
+      "Ref": "TaskRole30FC0FBB"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/TaskRole/DefaultPolicy/Resource"
+   }
+  },
+  "UnityCatalogLogGroup13C2E10B": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/ecs/unity-catalog",
+    "RetentionInDays": 7,
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/UnityCatalogLogGroup/Resource"
+   }
+  },
+  "StreamlitLogGroup244B869E": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/ecs/streamlit-app",
+    "RetentionInDays": 7,
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/StreamlitLogGroup/Resource"
+   }
+  },
+  "UnityCatalogTaskDefB1FFACD1": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "UNITY_CATALOG_DB_URL",
+        "Value": {
+         "Fn::Join": [
+          "",
+          [
+           "jdbc:postgresql://",
+           {
+            "Fn::ImportValue": "CatalogAgentsDataStack:ExportsOutputFnGetAttUnityCatalogCluster4B381C1BEndpointAddress668213D6"
+           },
+           ":5432/unitycatalog"
+          ]
+         ]
+        }
+       }
+      ],
+      "Essential": true,
+      "Image": "unitycatalog/unitycatalog:latest",
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "UnityCatalogLogGroup13C2E10B"
+        },
+        "awslogs-stream-prefix": "ecs",
+        "awslogs-region": "us-east-1"
+       }
+      },
+      "Name": "unity-catalog",
+      "PortMappings": [
+       {
+        "ContainerPort": 8080,
+        "Protocol": "tcp"
+       }
+      ],
+      "Secrets": [
+       {
+        "Name": "UNITY_CATALOG_DB_USER",
+        "ValueFrom": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "CatalogAgentsDataStack:ExportsOutputRefUnityCatalogClusterSecretAttachmentA618BC08ACB3306A"
+           },
+           ":username::"
+          ]
+         ]
+        }
+       },
+       {
+        "Name": "UNITY_CATALOG_DB_PASSWORD",
+        "ValueFrom": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "CatalogAgentsDataStack:ExportsOutputRefUnityCatalogClusterSecretAttachmentA618BC08ACB3306A"
+           },
+           ":password::"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ],
+    "Cpu": "1024",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "TaskExecutionRole250D2532",
+      "Arn"
+     ]
+    },
+    "Family": "unity-catalog",
+    "Memory": "2048",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "TaskRole30FC0FBB",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/UnityCatalogTaskDef/Resource"
+   }
+  },
+  "StreamlitTaskDef5B70B2C4": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "UNITY_CATALOG_URL",
+        "Value": "http://unity-catalog.local:8080/api/2.1/unity-catalog"
+       },
+       {
+        "Name": "AWS_DEFAULT_REGION",
+        "Value": "us-east-1"
+       }
+      ],
+      "Essential": true,
+      "Image": {
+       "Fn::Sub": "127214182942.dkr.ecr.us-east-1.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-127214182942-us-east-1:b0c478d07915e97457ac23188c81af2fed113079ee781b9c6dd4c08d5adb8c8f"
+      },
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "StreamlitLogGroup244B869E"
+        },
+        "awslogs-stream-prefix": "ecs",
+        "awslogs-region": "us-east-1"
+       }
+      },
+      "Name": "streamlit-app",
+      "PortMappings": [
+       {
+        "ContainerPort": 8501,
+        "Protocol": "tcp"
+       }
+      ]
+     }
+    ],
+    "Cpu": "512",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "TaskExecutionRole250D2532",
+      "Arn"
+     ]
+    },
+    "Family": "streamlit-app",
+    "Memory": "1024",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "TaskRole30FC0FBB",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/StreamlitTaskDef/Resource"
+   }
+  },
+  "CatalogAgentsALBBD0C889A": {
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+   "Properties": {
+    "LoadBalancerAttributes": [
+     {
+      "Key": "deletion_protection.enabled",
+      "Value": "false"
+     }
+    ],
+    "Name": "catalog-agents-alb",
+    "Scheme": "internet-facing",
+    "SecurityGroups": [
+     {
+      "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputFnGetAttAlbSecurityGroup86A59E99GroupIdE3A37BC7"
+     }
+    ],
+    "Subnets": [
+     {
+      "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPublicSubnet1Subnet16D40AFF0D43A75A"
+     },
+     {
+      "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPublicSubnet2SubnetE759286DB3651B76"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "Type": "application"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/CatalogAgentsALB/Resource"
+   }
+  },
+  "CatalogAgentsALBHttpListenerB61163A7": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "RedirectConfig": {
+       "Port": "443",
+       "Protocol": "HTTP",
+       "StatusCode": "HTTP_301"
+      },
+      "Type": "redirect"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "CatalogAgentsALBBD0C889A"
+    },
+    "Port": 80,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/CatalogAgentsALB/HttpListener/Resource"
+   }
+  },
+  "CatalogAgentsALBHttpsListener8269F983": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "AuthenticateCognitoConfig": {
+       "UserPoolArn": {
+        "Fn::GetAtt": [
+         "CatalogAgentsUserPoolA3126AB7",
+         "Arn"
+        ]
+       },
+       "UserPoolClientId": {
+        "Ref": "CatalogAgentsUserPoolClientB3E1D396"
+       },
+       "UserPoolDomain": {
+        "Ref": "CatalogAgentsUserPoolDomainE0A4AA40"
+       }
+      },
+      "Order": 1,
+      "Type": "authenticate-cognito"
+     },
+     {
+      "Order": 2,
+      "TargetGroupArn": {
+       "Ref": "StreamlitTargetGroup56CF25C5"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "CatalogAgentsALBBD0C889A"
+    },
+    "Port": 443,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/CatalogAgentsALB/HttpsListener/Resource"
+   }
+  },
+  "CatalogAgentsALBHttpsListenerUnityCatalogActionRule7EEBB837": {
+   "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
+   "Properties": {
+    "Actions": [
+     {
+      "AuthenticateCognitoConfig": {
+       "UserPoolArn": {
+        "Fn::GetAtt": [
+         "CatalogAgentsUserPoolA3126AB7",
+         "Arn"
+        ]
+       },
+       "UserPoolClientId": {
+        "Ref": "CatalogAgentsUserPoolClientB3E1D396"
+       },
+       "UserPoolDomain": {
+        "Ref": "CatalogAgentsUserPoolDomainE0A4AA40"
+       }
+      },
+      "Order": 1,
+      "Type": "authenticate-cognito"
+     },
+     {
+      "Order": 2,
+      "TargetGroupArn": {
+       "Ref": "UnityCatalogTargetGroup49231EE4"
+      },
+      "Type": "forward"
+     }
+    ],
+    "Conditions": [
+     {
+      "Field": "path-pattern",
+      "PathPatternConfig": {
+       "Values": [
+        "/api/*",
+        "/docs/*",
+        "/openapi.json"
+       ]
+      }
+     }
+    ],
+    "ListenerArn": {
+     "Ref": "CatalogAgentsALBHttpsListener8269F983"
+    },
+    "Priority": 100
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/CatalogAgentsALB/HttpsListener/UnityCatalogActionRule/Resource"
+   }
+  },
+  "UnityCatalogTargetGroup49231EE4": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckIntervalSeconds": 30,
+    "HealthCheckPath": "/api/2.1/unity-catalog/catalogs",
+    "HealthCheckTimeoutSeconds": 5,
+    "HealthyThresholdCount": 2,
+    "Port": 8080,
+    "Protocol": "HTTP",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "TargetGroupAttributes": [
+     {
+      "Key": "deregistration_delay.timeout_seconds",
+      "Value": "30"
+     },
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "ip",
+    "UnhealthyThresholdCount": 3,
+    "VpcId": {
+     "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcFA833CAAD41BF131"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/UnityCatalogTargetGroup/Resource"
+   }
+  },
+  "StreamlitTargetGroup56CF25C5": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckIntervalSeconds": 30,
+    "HealthCheckPath": "/",
+    "HealthCheckTimeoutSeconds": 5,
+    "HealthyThresholdCount": 2,
+    "Port": 8501,
+    "Protocol": "HTTP",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "TargetGroupAttributes": [
+     {
+      "Key": "deregistration_delay.timeout_seconds",
+      "Value": "30"
+     },
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "ip",
+    "UnhealthyThresholdCount": 3,
+    "VpcId": {
+     "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcFA833CAAD41BF131"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/StreamlitTargetGroup/Resource"
+   }
+  },
+  "CatalogAgentsUserPoolA3126AB7": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_phone_number",
+       "Priority": 1
+      },
+      {
+       "Name": "verified_email",
+       "Priority": 2
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": true
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 8,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": true,
+      "RequireUppercase": true
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     }
+    ],
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolName": "catalog-agents-users",
+    "UserPoolTags": {
+     "Environment": "dev",
+     "ManagedBy": "CDK",
+     "Project": "catalog-agents-demo",
+     "Repository": "sample-data-catalog-agents-with-mcp"
+    },
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/CatalogAgentsUserPool/Resource"
+   }
+  },
+  "CatalogAgentsUserPoolDomainE0A4AA40": {
+   "Type": "AWS::Cognito::UserPoolDomain",
+   "Properties": {
+    "Domain": "catalog-agents-12721418",
+    "UserPoolId": {
+     "Ref": "CatalogAgentsUserPoolA3126AB7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/CatalogAgentsUserPoolDomain/Resource"
+   }
+  },
+  "CatalogAgentsUserPoolClientB3E1D396": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AllowedOAuthFlows": [
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "email",
+     "openid",
+     "profile"
+    ],
+    "CallbackURLs": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
+        {
+         "Fn::GetAtt": [
+          "CatalogAgentsALBBD0C889A",
+          "DNSName"
+         ]
+        },
+        "/oauth2/idpresponse"
+       ]
+      ]
+     }
+    ],
+    "ClientName": "catalog-agents-client",
+    "GenerateSecret": true,
+    "LogoutURLs": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
+        {
+         "Fn::GetAtt": [
+          "CatalogAgentsALBBD0C889A",
+          "DNSName"
+         ]
+        },
+        "/"
+       ]
+      ]
+     }
+    ],
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "UserPoolId": {
+     "Ref": "CatalogAgentsUserPoolA3126AB7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/CatalogAgentsUserPoolClient/Resource"
+   }
+  },
+  "UnityCatalogService23EC2489": {
+   "Type": "AWS::ECS::Service",
+   "Properties": {
+    "Cluster": {
+     "Ref": "CatalogAgentsClusterAE06EB6F"
+    },
+    "DeploymentConfiguration": {
+     "MaximumPercent": 200,
+     "MinimumHealthyPercent": 100
+    },
+    "DesiredCount": 1,
+    "EnableECSManagedTags": false,
+    "HealthCheckGracePeriodSeconds": 60,
+    "LaunchType": "FARGATE",
+    "LoadBalancers": [
+     {
+      "ContainerName": "unity-catalog",
+      "ContainerPort": 8080,
+      "TargetGroupArn": {
+       "Ref": "UnityCatalogTargetGroup49231EE4"
+      }
+     }
+    ],
+    "NetworkConfiguration": {
+     "AwsvpcConfiguration": {
+      "AssignPublicIp": "DISABLED",
+      "SecurityGroups": [
+       {
+        "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5"
+       }
+      ],
+      "Subnets": [
+       {
+        "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPrivateSubnet1SubnetE3A98E4231E53C2E"
+       },
+       {
+        "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPrivateSubnet2Subnet64FECC7B2B36EC21"
+       }
+      ]
+     }
+    },
+    "ServiceName": "unity-catalog-service",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "TaskDefinition": {
+     "Ref": "UnityCatalogTaskDefB1FFACD1"
+    }
+   },
+   "DependsOn": [
+    "CatalogAgentsALBHttpsListenerUnityCatalogActionRule7EEBB837",
+    "TaskRoleDefaultPolicy07FC53DE",
+    "TaskRole30FC0FBB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/UnityCatalogService/Service"
+   }
+  },
+  "StreamlitServiceFCD0A2A5": {
+   "Type": "AWS::ECS::Service",
+   "Properties": {
+    "Cluster": {
+     "Ref": "CatalogAgentsClusterAE06EB6F"
+    },
+    "DeploymentConfiguration": {
+     "MaximumPercent": 200,
+     "MinimumHealthyPercent": 100
+    },
+    "DesiredCount": 1,
+    "EnableECSManagedTags": false,
+    "HealthCheckGracePeriodSeconds": 60,
+    "LaunchType": "FARGATE",
+    "LoadBalancers": [
+     {
+      "ContainerName": "streamlit-app",
+      "ContainerPort": 8501,
+      "TargetGroupArn": {
+       "Ref": "StreamlitTargetGroup56CF25C5"
+      }
+     }
+    ],
+    "NetworkConfiguration": {
+     "AwsvpcConfiguration": {
+      "AssignPublicIp": "DISABLED",
+      "SecurityGroups": [
+       {
+        "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5"
+       }
+      ],
+      "Subnets": [
+       {
+        "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPrivateSubnet1SubnetE3A98E4231E53C2E"
+       },
+       {
+        "Fn::ImportValue": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPrivateSubnet2Subnet64FECC7B2B36EC21"
+       }
+      ]
+     }
+    },
+    "ServiceName": "streamlit-app-service",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "TaskDefinition": {
+     "Ref": "StreamlitTaskDef5B70B2C4"
+    }
+   },
+   "DependsOn": [
+    "CatalogAgentsALBHttpsListener8269F983",
+    "CatalogAgentsALBHttpsListenerUnityCatalogActionRule7EEBB837",
+    "TaskRoleDefaultPolicy07FC53DE",
+    "TaskRole30FC0FBB",
+    "UnityCatalogService23EC2489"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/StreamlitService/Service"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/81WWW8TMRD+LewjchcaHpD6lqZQRaogSlteogo59mRr4vUsPlLCav87Y+/RDUXllvpQ1Tv3fHNlkk9evcpfPuN37kjI7ZFW67y+9FxsGZE+1iBcXs90cB7sqs5E+3rHS8hOsucZy3aV6F4CjefKgJ0bp4pb77ITbwM0N2y2MZ0J9pbbgnu44m57BhtllFdoVkn/9/6S1UMzbNZHMKJ1Di/B7pSA1Vi7ozVM8TKvl6iBMuTOhRLk6T47qbPKKiNUxfVUCAzGd5m2MlFhKqKTRG5YZokygqbkhhcgF6iVUEBwRO83DSMnUl7hojeeBMjfqm5arif8b+dGUyoDb1B9lPm43afJ/VeA37v6Pf9/ifavO0tNF5NgLTk1Y+/jCiPngeuHZClpPD2UYOKEjdw+CfJ/TilB2KLXMI0FLacLLM4thopmV3fP0Qxa8KSeWuZ1/Cpxd1+VTILzFvepdf5cOQXVh9EwEPYjNSx4l5+h2NI+LGkNTCMl8vIlVOiUR7s/5Q5WNww0d14JjVyuuebUOabYTfJ6WlXkiscALoh3mni0hr/fgmMmGyspWrnmUOFQsRP4kdIyUJ+OZNL3SO6K9ir4lHK7iYfPhgksaPtiXl87sAtETbUJ3XMEL10JMzdTrQgGF6cfSq50dzVo6IPHD2DVZv+Q50BvLkn9unpj+FqDzE42XDtgWUXQ36GVfZnqrFTmAkzhb4eqfg7KwgXegRXkujU60K+r6of0M1Wo/qYNxMt9uUbt7uPy3Ehu5dR7q9bBp7yan/VODxPrH2dI2ZoRasOJTcC27JibTK+FpXv3pV2ChxZbycHuTCtq6Id2wwF/VKIilj6dT0HD0CeP0xDRrLONxrtUOarVLVr1NbXGDCWcW278PSwCqwhFmwTXek0/MK6t7kk0exj8QIgaoarQepBzGUfQ7xcWd0qC7SQOsmzDbhq2BIfBjs98GjtaIwXNVFR5H3wVfMMMxZh/ci92k0k+Oc6Pn31ySh1ZOjmqhHzZ/v8G3RVF+B0JAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsComputeStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "AlbDnsName": {
+   "Description": "Application Load Balancer DNS Name",
+   "Value": {
+    "Fn::GetAtt": [
+     "CatalogAgentsALBBD0C889A",
+     "DNSName"
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsComputeStack-AlbDnsName"
+   }
+  },
+  "ApplicationUrl": {
+   "Description": "Application URL (with Cognito auth)",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "http://",
+      {
+       "Fn::GetAtt": [
+        "CatalogAgentsALBBD0C889A",
+        "DNSName"
+       ]
+      },
+      ":443"
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsComputeStack-ApplicationUrl"
+   }
+  },
+  "CognitoUserPoolId": {
+   "Description": "Cognito User Pool ID",
+   "Value": {
+    "Ref": "CatalogAgentsUserPoolA3126AB7"
+   },
+   "Export": {
+    "Name": "CatalogAgentsComputeStack-CognitoUserPoolId"
+   }
+  },
+  "EcsClusterName": {
+   "Description": "ECS Cluster Name",
+   "Value": {
+    "Ref": "CatalogAgentsClusterAE06EB6F"
+   },
+   "Export": {
+    "Name": "CatalogAgentsComputeStack-EcsClusterName"
+   }
+  },
+  "StreamlitImageInfo": {
+   "Description": "Streamlit Image Build Info",
+   "Value": "Streamlit Docker image built and managed automatically by CDK",
+   "Export": {
+    "Name": "CatalogAgentsComputeStack-StreamlitImageInfo"
+   }
+  },
+  "UnityCatalogServiceName": {
+   "Description": "Unity Catalog ECS Service Name",
+   "Value": {
+    "Fn::GetAtt": [
+     "UnityCatalogService23EC2489",
+     "Name"
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsComputeStack-UnityCatalogServiceName"
+   }
+  },
+  "StreamlitServiceName": {
+   "Description": "Streamlit ECS Service Name",
+   "Value": {
+    "Fn::GetAtt": [
+     "StreamlitServiceFCD0A2A5",
+     "Name"
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsComputeStack-StreamlitServiceName"
+   }
+  },
+  "ExportsOutputFnGetAttCatalogAgentsALBBD0C889ADNSName15784CC7": {
+   "Value": {
+    "Fn::GetAtt": [
+     "CatalogAgentsALBBD0C889A",
+     "DNSName"
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsComputeStack:ExportsOutputFnGetAttCatalogAgentsALBBD0C889ADNSName15784CC7"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

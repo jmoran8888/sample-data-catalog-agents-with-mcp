@@ -1,0 +1,21 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "cbb25f0a516728b5a2279d87db38334bea806473ad0fc761c5eeb64ec61efe1f": {
+      "displayName": "CatalogAgentsFrontendStack Template",
+      "source": {
+        "path": "CatalogAgentsFrontendStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "127214182942-us-east-1-c0f9d603": {
+          "bucketName": "cdk-hnb659fds-assets-127214182942-us-east-1",
+          "objectKey": "cbb25f0a516728b5a2279d87db38334bea806473ad0fc761c5eeb64ec61efe1f.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-file-publishing-role-127214182942-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

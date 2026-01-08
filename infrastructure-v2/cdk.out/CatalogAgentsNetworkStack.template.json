@@ -1,0 +1,1179 @@
+{
+ "Description": "Network infrastructure for Data Catalog Agents",
+ "Resources": {
+  "CatalogAgentsVpcFA833CAA": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "catalog-agents-vpc"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/Resource"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet1Subnet16D40AFF": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/Subnet"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet1RouteTable597DD12C": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/RouteTable"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet1RouteTableAssociation3A830236": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CatalogAgentsVpcPublicSubnet1RouteTable597DD12C"
+    },
+    "SubnetId": {
+     "Ref": "CatalogAgentsVpcPublicSubnet1Subnet16D40AFF"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet1DefaultRoute465AA574": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "CatalogAgentsVpcIGWAC82F300"
+    },
+    "RouteTableId": {
+     "Ref": "CatalogAgentsVpcPublicSubnet1RouteTable597DD12C"
+    }
+   },
+   "DependsOn": [
+    "CatalogAgentsVpcVPCGW27781F13"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet1EIPF745F504": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/EIP"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet1NATGateway562FA0F8": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "CatalogAgentsVpcPublicSubnet1EIPF745F504",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "CatalogAgentsVpcPublicSubnet1Subnet16D40AFF"
+    },
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ]
+   },
+   "DependsOn": [
+    "CatalogAgentsVpcPublicSubnet1DefaultRoute465AA574",
+    "CatalogAgentsVpcPublicSubnet1RouteTableAssociation3A830236"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet1/NATGateway"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet2SubnetE759286D": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.1.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2/Subnet"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet2RouteTable3FB6EBCF": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2/RouteTable"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet2RouteTableAssociationB7E6635D": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CatalogAgentsVpcPublicSubnet2RouteTable3FB6EBCF"
+    },
+    "SubnetId": {
+     "Ref": "CatalogAgentsVpcPublicSubnet2SubnetE759286D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "CatalogAgentsVpcPublicSubnet2DefaultRoute8F4AC71D": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "CatalogAgentsVpcIGWAC82F300"
+    },
+    "RouteTableId": {
+     "Ref": "CatalogAgentsVpcPublicSubnet2RouteTable3FB6EBCF"
+    }
+   },
+   "DependsOn": [
+    "CatalogAgentsVpcVPCGW27781F13"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PublicSubnet2/DefaultRoute"
+   }
+  },
+  "CatalogAgentsVpcPrivateSubnet1SubnetE3A98E42": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.2.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1/Subnet"
+   }
+  },
+  "CatalogAgentsVpcPrivateSubnet1RouteTable20639EDB": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1/RouteTable"
+   }
+  },
+  "CatalogAgentsVpcPrivateSubnet1RouteTableAssociationD9EEDEE1": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CatalogAgentsVpcPrivateSubnet1RouteTable20639EDB"
+    },
+    "SubnetId": {
+     "Ref": "CatalogAgentsVpcPrivateSubnet1SubnetE3A98E42"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1/RouteTableAssociation"
+   }
+  },
+  "CatalogAgentsVpcPrivateSubnet1DefaultRouteAAA21B2B": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "CatalogAgentsVpcPublicSubnet1NATGateway562FA0F8"
+    },
+    "RouteTableId": {
+     "Ref": "CatalogAgentsVpcPrivateSubnet1RouteTable20639EDB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet1/DefaultRoute"
+   }
+  },
+  "CatalogAgentsVpcPrivateSubnet2Subnet64FECC7B": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.3.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2/Subnet"
+   }
+  },
+  "CatalogAgentsVpcPrivateSubnet2RouteTableB929BF1D": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2/RouteTable"
+   }
+  },
+  "CatalogAgentsVpcPrivateSubnet2RouteTableAssociation8D2A85F7": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CatalogAgentsVpcPrivateSubnet2RouteTableB929BF1D"
+    },
+    "SubnetId": {
+     "Ref": "CatalogAgentsVpcPrivateSubnet2Subnet64FECC7B"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2/RouteTableAssociation"
+   }
+  },
+  "CatalogAgentsVpcPrivateSubnet2DefaultRouteE8765A5B": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "CatalogAgentsVpcPublicSubnet1NATGateway562FA0F8"
+    },
+    "RouteTableId": {
+     "Ref": "CatalogAgentsVpcPrivateSubnet2RouteTableB929BF1D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/PrivateSubnet2/DefaultRoute"
+   }
+  },
+  "CatalogAgentsVpcIGWAC82F300": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "catalog-agents-vpc"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/IGW"
+   }
+  },
+  "CatalogAgentsVpcVPCGW27781F13": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "CatalogAgentsVpcIGWAC82F300"
+    },
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/VPCGW"
+   }
+  },
+  "CatalogAgentsVpcRestrictDefaultSecurityGroupCustomResource0FF4318C": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "CatalogAgentsVpcFA833CAA",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": "127214182942"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/RestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "CatalogAgentsVpcS3EndpointAA57EBCE": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "RouteTableIds": [
+     {
+      "Ref": "CatalogAgentsVpcPrivateSubnet1RouteTable20639EDB"
+     },
+     {
+      "Ref": "CatalogAgentsVpcPrivateSubnet2RouteTableB929BF1D"
+     }
+    ],
+    "ServiceName": {
+     "Fn::Join": [
+      "",
+      [
+       "com.amazonaws.",
+       {
+        "Ref": "AWS::Region"
+       },
+       ".s3"
+      ]
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Name",
+      "Value": "catalog-agents-vpc"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcEndpointType": "Gateway",
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CatalogAgentsVpc/S3Endpoint/Resource"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:ec2:us-east-1:127214182942:security-group/",
+             {
+              "Fn::GetAtt": [
+               "CatalogAgentsVpcFA833CAA",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-127214182942-us-east-1",
+     "S3Key": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
+    "aws:asset:property": "Code"
+   }
+  },
+  "RdsSecurityGroup632A77E4": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for Unity Catalog RDS",
+    "GroupName": "catalog-agents-rds-sg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/RdsSecurityGroup/Resource"
+   }
+  },
+  "RdsSecurityGroupfromCatalogAgentsNetworkStackEcsSecurityGroup013F55FD5432636DE27E": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow PostgreSQL from ECS tasks",
+    "FromPort": 5432,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "RdsSecurityGroup632A77E4",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "EcsSecurityGroup44008BF1",
+      "GroupId"
+     ]
+    },
+    "ToPort": 5432
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/RdsSecurityGroup/from CatalogAgentsNetworkStackEcsSecurityGroup013F55FD:5432"
+   }
+  },
+  "EcsSecurityGroup44008BF1": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for ECS tasks",
+    "GroupName": "catalog-agents-ecs-sg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/EcsSecurityGroup/Resource"
+   }
+  },
+  "EcsSecurityGroupfromCatalogAgentsNetworkStackAlbSecurityGroupE7D1FD78808029CBDDB2": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow traffic from ALB on Unity Catalog port",
+    "FromPort": 8080,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "EcsSecurityGroup44008BF1",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "AlbSecurityGroup86A59E99",
+      "GroupId"
+     ]
+    },
+    "ToPort": 8080
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/EcsSecurityGroup/from CatalogAgentsNetworkStackAlbSecurityGroupE7D1FD78:8080"
+   }
+  },
+  "EcsSecurityGroupfromCatalogAgentsNetworkStackAlbSecurityGroupE7D1FD78850120848BFD": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow traffic from ALB on Streamlit port",
+    "FromPort": 8501,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "EcsSecurityGroup44008BF1",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "AlbSecurityGroup86A59E99",
+      "GroupId"
+     ]
+    },
+    "ToPort": 8501
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/EcsSecurityGroup/from CatalogAgentsNetworkStackAlbSecurityGroupE7D1FD78:8501"
+   }
+  },
+  "AlbSecurityGroup86A59E99": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for Application Load Balancer",
+    "GroupName": "catalog-agents-alb-sg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow HTTP from anywhere",
+      "FromPort": 80,
+      "IpProtocol": "tcp",
+      "ToPort": 80
+     },
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow HTTPS from anywhere",
+      "FromPort": 443,
+      "IpProtocol": "tcp",
+      "ToPort": 443
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/AlbSecurityGroup/Resource"
+   }
+  },
+  "McpSecurityGroup887B4E2B": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for MCP AgentCore Runtimes",
+    "GroupName": "catalog-agents-mcp-sg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow HTTPS for MCP runtimes",
+      "FromPort": 443,
+      "IpProtocol": "tcp",
+      "ToPort": 443
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "catalog-agents-demo"
+     },
+     {
+      "Key": "Repository",
+      "Value": "sample-data-catalog-agents-with-mcp"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CatalogAgentsVpcFA833CAA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/McpSecurityGroup/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/9VWXW/TMBT9LcsjSgPrJB721pVqRIK1aqc9MFWT49x2Xt1r44+UUuW/Y8dJmxUYoDEUnuKc69x7fHNybvpJ/+wseXNCNrpH81WPsyzZzQyhq9hBd0D7ye5G0ttdVEh6RdYQnUevojhicpDnCrQGXSNr8mXwtblBYi6JgQ3ZNgggyTi8Q/1eaIMukQsYZaEVmVkphTINrm2GYIYCF2xpFTFMYHTuiOCBRdhyvZUemNiMM+pQynL1kejVnpgMoVSO8QOxSO9DiTJ+IplihTvAcbZyXs7j4QJvJsM4JJ1VTzlapCCMk4xxZrafBDZZXdvSvF77VBdc0F8y8/0t3g6PthOt2RJTF6l7P8ahgroxnlzcERYVkTy/2ovAvTcXmXeGYDdYBCkFAfnVVFgD1/5jOOAHbKC1oKxKsN/sF6N04i+HZse1dv+6MheE6w70/Hk0usOkIzSCClM0oJxcGg0Fj6vvBsYNhPs1oIlrxI2EEeZSMDRhNDQeCqpg1J2k5axlY626su8f2mzLV5u88QyoVa41l0pY+ahKDpoqJven8HVbe1tjinAuNgPOx9ZkwmJ+MH7nTykufUumlkMwKK+Oxqf+bbVnxOPq9f/Brhc+2S6ixMmJM4SABI+kAhGoL9X8EVhkny3UUi+fPG33cj7u+uilEv+HlEc/EaBP+dt7Oq7RMLjbPL4D6oJlPAUtrKJw6x6y2oj1HvCpqlFeA0fxiRIFy0FdEOfubvqDcf/lS4ZL/4w7pLSmjFHkkDzo10W/n/RPk9OTB81YT1k0bA3JNFy/ASNaYX/lCwAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CatalogAgentsNetworkStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "VpcId": {
+   "Description": "VPC ID",
+   "Value": {
+    "Ref": "CatalogAgentsVpcFA833CAA"
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack-VpcId"
+   }
+  },
+  "PublicSubnetIds": {
+   "Description": "Public Subnet IDs",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      {
+       "Ref": "CatalogAgentsVpcPublicSubnet1Subnet16D40AFF"
+      },
+      ",",
+      {
+       "Ref": "CatalogAgentsVpcPublicSubnet2SubnetE759286D"
+      }
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack-PublicSubnetIds"
+   }
+  },
+  "PrivateSubnetIds": {
+   "Description": "Private Subnet IDs",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      {
+       "Ref": "CatalogAgentsVpcPrivateSubnet1SubnetE3A98E42"
+      },
+      ",",
+      {
+       "Ref": "CatalogAgentsVpcPrivateSubnet2Subnet64FECC7B"
+      }
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack-PrivateSubnetIds"
+   }
+  },
+  "ExportsOutputRefCatalogAgentsVpcPrivateSubnet1SubnetE3A98E4231E53C2E": {
+   "Value": {
+    "Ref": "CatalogAgentsVpcPrivateSubnet1SubnetE3A98E42"
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPrivateSubnet1SubnetE3A98E4231E53C2E"
+   }
+  },
+  "ExportsOutputRefCatalogAgentsVpcPrivateSubnet2Subnet64FECC7B2B36EC21": {
+   "Value": {
+    "Ref": "CatalogAgentsVpcPrivateSubnet2Subnet64FECC7B"
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPrivateSubnet2Subnet64FECC7B2B36EC21"
+   }
+  },
+  "ExportsOutputFnGetAttRdsSecurityGroup632A77E4GroupId9D343172": {
+   "Value": {
+    "Fn::GetAtt": [
+     "RdsSecurityGroup632A77E4",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack:ExportsOutputFnGetAttRdsSecurityGroup632A77E4GroupId9D343172"
+   }
+  },
+  "ExportsOutputFnGetAttAlbSecurityGroup86A59E99GroupIdE3A37BC7": {
+   "Value": {
+    "Fn::GetAtt": [
+     "AlbSecurityGroup86A59E99",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack:ExportsOutputFnGetAttAlbSecurityGroup86A59E99GroupIdE3A37BC7"
+   }
+  },
+  "ExportsOutputRefCatalogAgentsVpcPublicSubnet1Subnet16D40AFF0D43A75A": {
+   "Value": {
+    "Ref": "CatalogAgentsVpcPublicSubnet1Subnet16D40AFF"
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPublicSubnet1Subnet16D40AFF0D43A75A"
+   }
+  },
+  "ExportsOutputRefCatalogAgentsVpcPublicSubnet2SubnetE759286DB3651B76": {
+   "Value": {
+    "Ref": "CatalogAgentsVpcPublicSubnet2SubnetE759286D"
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcPublicSubnet2SubnetE759286DB3651B76"
+   }
+  },
+  "ExportsOutputRefCatalogAgentsVpcFA833CAAD41BF131": {
+   "Value": {
+    "Ref": "CatalogAgentsVpcFA833CAA"
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack:ExportsOutputRefCatalogAgentsVpcFA833CAAD41BF131"
+   }
+  },
+  "ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5": {
+   "Value": {
+    "Fn::GetAtt": [
+     "EcsSecurityGroup44008BF1",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack:ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5"
+   }
+  },
+  "ExportsOutputFnGetAttMcpSecurityGroup887B4E2BGroupIdF0E0210F": {
+   "Value": {
+    "Fn::GetAtt": [
+     "McpSecurityGroup887B4E2B",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "CatalogAgentsNetworkStack:ExportsOutputFnGetAttMcpSecurityGroup887B4E2BGroupIdF0E0210F"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

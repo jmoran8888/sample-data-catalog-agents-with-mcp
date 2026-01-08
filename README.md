@@ -143,12 +143,24 @@ Access at: http://localhost:8501
 
 ### Prerequisites
 
-1. **Python 3.9+** with pip
+1. **Python 3.9+** with pip **and virtual environment (REQUIRED)**
+   ```bash
+   # Create and activate virtual environment
+   python3 -m venv .venv-aws
+   source .venv-aws/bin/activate  # On Linux/macOS
+   # .venv-aws\Scripts\activate    # On Windows
+   
+   # Install deployment dependencies
+   pip install boto3 requests bedrock-agentcore-starter-toolkit
+   ```
+
 2. **AWS CLI** configured with appropriate permissions
 3. **Terraform** >= 1.0
 4. **Docker** for building container images
 
 Required AWS permissions: ECS, ECR, RDS, VPC, IAM, CloudWatch, Bedrock AgentCore, CodeBuild
+
+**⚠️ Important**: Always use a virtual environment for AWS deployments to ensure consistent package versions and avoid threading issues with the AgentCore toolkit.
 
 ### How AgentCore Deployment Works
 
@@ -173,6 +185,22 @@ This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP server
 - Sample data automatically populated in both catalogs
 
 **Note:** All toolkit-created resources are automatically cleaned up by `cleanup_aws.py`.
+
+### Configuration
+
+Before deployment, create a `terraform.tfvars` file to avoid entering credentials each time:
+
+```bash
+# Create deploy/terraform/terraform.tfvars
+cat > deploy/terraform/terraform.tfvars << EOF
+admin_email = "your-email@example.com"
+admin_temp_password = "YourSecurePassword123!"
+aws_region = "us-east-1"
+environment = "dev"
+EOF
+```
+
+**⚠️ Security Note**: This file is already in `.gitignore` - never commit it to version control!
 
 ### Deployment
 

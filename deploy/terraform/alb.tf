@@ -114,9 +114,12 @@ resource "aws_lb_listener" "main" {
     order = 1
 
     authenticate_cognito {
-      user_pool_arn       = aws_cognito_user_pool.main.arn
-      user_pool_client_id = aws_cognito_user_pool_client.main.id
-      user_pool_domain    = aws_cognito_user_pool_domain.main.domain
+      user_pool_arn              = aws_cognito_user_pool.main.arn
+      user_pool_client_id        = aws_cognito_user_pool_client.main.id
+      user_pool_domain           = aws_cognito_user_pool_domain.main.domain
+      session_cookie_name        = "AWSELBAuthSessionCookie"
+      session_timeout            = 86400
+      on_unauthenticated_request = "authenticate"
     }
   }
 
@@ -167,9 +170,12 @@ resource "aws_lb_listener_rule" "unity_catalog" {
     order = 1
 
     authenticate_cognito {
-      user_pool_arn       = aws_cognito_user_pool.main.arn
-      user_pool_client_id = aws_cognito_user_pool_client.main.id
-      user_pool_domain    = aws_cognito_user_pool_domain.main.domain
+      user_pool_arn              = aws_cognito_user_pool.main.arn
+      user_pool_client_id        = aws_cognito_user_pool_client.main.id
+      user_pool_domain           = aws_cognito_user_pool_domain.main.domain
+      session_cookie_name        = "AWSELBAuthSessionCookie"
+      session_timeout            = 86400
+      on_unauthenticated_request = "authenticate"
     }
   }
 

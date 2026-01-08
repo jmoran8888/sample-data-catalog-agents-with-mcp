@@ -1,0 +1,38 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "5882a153342f055c95a72ab97a247f495eddade02076a1a6aeffac1e1708179b": {
+      "displayName": "CatalogAgentsComputeStack Template",
+      "source": {
+        "path": "CatalogAgentsComputeStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "127214182942-us-east-1-4b0bfb7e": {
+          "bucketName": "cdk-hnb659fds-assets-127214182942-us-east-1",
+          "objectKey": "5882a153342f055c95a72ab97a247f495eddade02076a1a6aeffac1e1708179b.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-file-publishing-role-127214182942-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {
+    "b0c478d07915e97457ac23188c81af2fed113079ee781b9c6dd4c08d5adb8c8f": {
+      "displayName": "StreamlitTaskDef/streamlit-app/AssetImage",
+      "source": {
+        "directory": "asset.b0c478d07915e97457ac23188c81af2fed113079ee781b9c6dd4c08d5adb8c8f",
+        "dockerFile": "Dockerfile.streamlit",
+        "platform": "linux/amd64"
+      },
+      "destinations": {
+        "127214182942-us-east-1-baf03f2d": {
+          "repositoryName": "cdk-hnb659fds-container-assets-127214182942-us-east-1",
+          "imageTag": "b0c478d07915e97457ac23188c81af2fed113079ee781b9c6dd4c08d5adb8c8f",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::127214182942:role/cdk-hnb659fds-image-publishing-role-127214182942-us-east-1"
+        }
+      }
+    }
+  }
+}

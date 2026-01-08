@@ -1,0 +1,92 @@
+{
+  "ecs_task_stop": {
+    "description": "Stop ECS tasks to test service resilience",
+    "roleArn": "arn:aws:iam::ACCOUNT_ID:role/FISExperimentRole",
+    "actions": {
+      "StopECSTasks": {
+        "actionId": "aws:ecs:stop-task",
+        "parameters": {
+          "clusterArn": "CLUSTER_ARN"
+        },
+        "targets": {
+          "Tasks": "ECSTasks"
+        }
+      }
+    },
+    "targets": {
+      "ECSTasks": {
+        "resourceType": "aws:ecs:task",
+        "resourceTags": {
+          "FISTarget": "true"
+        },
+        "selectionMode": "PERCENT(50)"
+      }
+    },
+    "stopConditions": [
+      {
+        "source": "aws:cloudwatch:alarm",
+        "value": "ALARM_ARN"
+      }
+    ],
+    "tags": {
+      "Name": "catalog-agents-ecs-task-stop",
+      "Environment": "dev",
+      "ExperimentType": "availability"
+    }
+  },
+  "network_latency": {
+    "description": "Add network latency to test application resilience",
+    "roleArn": "arn:aws:iam::ACCOUNT_ID:role/FISExperimentRole",
+    "actions": {
+      "AddNetworkLatency": {
+        "actionId": "aws:ec2:send-spot-instance-interruptions",
+        "parameters": {
+          "durationMinutes": "5"
+        },
+        "targets": {
+          "Instances": "EC2Instances"
+        }
+      }
+    },
+    "targets": {
+      "EC2Instances": {
+        "resourceType": "aws:ec2:instance",
+        "resourceTags": {
+          "FISTarget": "true"
+        },
+        "selectionMode": "COUNT(1)"
+      }
+    },
+    "tags": {
+      "Name": "catalog-agents-network-latency",
+      "Environment": "dev",
+      "ExperimentType": "network"
+    }
+  },
+  "rds_failover": {
+    "description": "Test RDS failover for database resilience",
+    "roleArn": "arn:aws:iam::ACCOUNT_ID:role/FISExperimentRole",
+    "actions": {
+      "RDSFailover": {
+        "actionId": "aws:rds:failover-db-cluster",
+        "targets": {
+          "DBClusters": "RDSClusters"
+        }
+      }
+    },
+    "targets": {
+      "RDSClusters": {
+        "resourceType": "aws:rds:cluster",
+        "resourceTags": {
+          "FISTarget": "true"
+        },
+        "selectionMode": "ALL"
+      }
+    },
+    "tags": {
+      "Name": "catalog-agents-rds-failover",
+      "Environment": "dev",
+      "ExperimentType": "database"
+    }
+  }
+}

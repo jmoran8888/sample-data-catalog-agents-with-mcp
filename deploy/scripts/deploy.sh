@@ -69,7 +69,10 @@ echo "✅ Infrastructure deployed successfully!"
 
 # Build and push Docker image
 echo "🐳 Building and pushing Docker image..."
-cd "$(dirname "$0")/../.."
+# Get absolute path to project root
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+cd "$PROJECT_ROOT"
 
 # Login to ECR
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URL
