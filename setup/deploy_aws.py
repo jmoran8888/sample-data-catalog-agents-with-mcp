@@ -200,19 +200,11 @@ def main():
     print("Deploying Unity MCP (Step 3a)...")
     result = subprocess.run(
         [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'unity'],
-        check=False,
-        capture_output=True,
-        text=True
+        check=False
     )
-    
-    # Show output
-    if result.stdout:
-        print(result.stdout)
     
     if result.returncode != 0:
         print(f"\n❌ Unity MCP deployment failed")
-        if result.stderr:
-            print("STDERR:", result.stderr)
         sys.exit(1)
     
     print("\n🧹 Cleaning up before next deployment...")
@@ -225,19 +217,11 @@ def main():
     print("\nDeploying Glue MCP (Step 3b)...")
     result = subprocess.run(
         [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'glue'],
-        check=False,
-        capture_output=True,
-        text=True
+        check=False
     )
-    
-    # Show output
-    if result.stdout:
-        print(result.stdout)
     
     if result.returncode != 0:
         print(f"\n❌ Glue MCP deployment failed")
-        if result.stderr:
-            print("STDERR:", result.stderr)
         sys.exit(1)
     
     # Load results from config file
