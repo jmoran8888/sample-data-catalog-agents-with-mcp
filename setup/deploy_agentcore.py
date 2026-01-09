@@ -305,12 +305,10 @@ if __name__ == "__main__":
         
         if 'unity' in results:
             print(f"  Unity MCP Runtime:")
-            print(f"    ID:  {results['unity']['runtime_id']}")
             print(f"    ARN: {results['unity']['runtime_arn']}")
         
         if 'glue' in results:
             print(f"\n  Glue MCP Runtime:")
-            print(f"    ID:  {results['glue']['runtime_id']}")
             print(f"    ARN: {results['glue']['runtime_arn']}")
         
         print(f"\n✓ Configuration files saved:")
