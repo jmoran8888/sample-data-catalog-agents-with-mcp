@@ -209,7 +209,8 @@ def main():
     
     print("\n🧹 Cleaning up before next deployment...")
     import os
-    for file in ['Dockerfile', '.dockerignore', '.bedrock_agentcore.yaml']:
+    # Keep .dockerignore so Glue uses the same optimized version as Unity
+    for file in ['Dockerfile', '.bedrock_agentcore.yaml']:
         if os.path.exists(file):
             os.remove(file)
             print(f"  ✓ Removed {file}")
