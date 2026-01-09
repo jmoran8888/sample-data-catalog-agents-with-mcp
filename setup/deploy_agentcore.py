@@ -45,7 +45,12 @@ def deploy_mcp_server(server_name, entrypoint_file, agent_execution_role, region
     runtime = Runtime()
     
     # Configure the runtime
-    print(f"Configuring {server_name}...")
+    print(f"[DEBUG] Configuring {server_name}...")
+    print(f"[DEBUG]   Entrypoint: {entrypoint_file}")
+    print(f"[DEBUG]   Execution Role: {agent_execution_role}")
+    print(f"[DEBUG]   Region: {region}")
+    print(f"[DEBUG]   Agent Name: {server_name}")
+    
     response = runtime.configure(
         entrypoint=entrypoint_file,
         auto_create_execution_role=False,
@@ -55,24 +60,36 @@ def deploy_mcp_server(server_name, entrypoint_file, agent_execution_role, region
         region=region,
         agent_name=server_name
     )
-    print(f"Configuration response: {response}")
+    print(f"[DEBUG] Configuration response: {response}")
     
     # Launch the runtime
-    print(f"\nLaunching {server_name}...")
+    print(f"\n[DEBUG] About to call runtime.launch() for {server_name}...")
+    launch_start = time.time()
     launch_result = runtime.launch()
+    launch_duration = time.time() - launch_start
+    print(f"[DEBUG] Launch completed in {launch_duration:.1f}s")
     print(f"Launch result: {launch_result}")
     
     # Wait for deployment to complete
-    print(f"\nWaiting for {server_name} deployment...")
+    print(f"\n[DEBUG] Starting status monitoring for {server_name}...")
+    status_check_start = time.time()
+    print(f"[DEBUG] Calling runtime.status()...")
     status_response = runtime.status()
+    print(f"[DEBUG] Initial status response received")
     status = status_response.endpoint['status']
+    print(f"[DEBUG] Initial status: {status}")
     end_statuses = ['READY', 'CREATE_FAILED', 'DELETE_FAILED', 'UPDATE_FAILED']
     
+    poll_count = 0
     while status not in end_statuses:
+        poll_count += 1
+        elapsed = time.time() - status_check_start
+        print(f"[DEBUG] Poll #{poll_count} - Waiting 10s (elapsed: {elapsed:.0f}s)...")
         time.sleep(10)
+        print(f"[DEBUG] Calling runtime.status() again...")
         status_response = runtime.status()
         status = status_response.endpoint['status']
-        print(f"Status: {status}")
+        print(f"[DEBUG] Status after {elapsed:.0f}s: {status}")
     
     if status != 'READY':
         raise Exception(f"{server_name} deployment failed with status: {status}")
