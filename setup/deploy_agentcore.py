@@ -136,7 +136,7 @@ def deploy_mcp_servers(agent_type=None):
                 entrypoint_file='mcp/unity_catalog_mcp_server.py',
                 agent_execution_role=role_arn,
                 region=aws_region,
-                display_name='Unity Catalog MCP Server'
+                display_name='Unity MCP (Step 3a)'
             )
             results['unity'] = unity_result
         except Exception as e:
@@ -151,7 +151,7 @@ def deploy_mcp_servers(agent_type=None):
                 entrypoint_file='mcp/glue_catalog_mcp_server.py',
                 agent_execution_role=role_arn,
                 region=aws_region,
-                display_name='Glue Catalog MCP Server'
+                display_name='Glue MCP (Step 3b)'
             )
             results['glue'] = glue_result
         except Exception as e:
