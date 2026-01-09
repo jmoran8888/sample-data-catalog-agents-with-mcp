@@ -295,14 +295,8 @@ def empty_ecr_repositories():
         
         # Get ECR repository names from Terraform
         repos = []
-        unity_ecr = get_terraform_output('unity_mcp_ecr_uri')
-        glue_ecr = get_terraform_output('glue_mcp_ecr_uri')
         streamlit_ecr = get_terraform_output('ecr_repository_url')
         
-        if unity_ecr:
-            repos.append(unity_ecr.split('/')[-1])
-        if glue_ecr:
-            repos.append(glue_ecr.split('/')[-1])
         if streamlit_ecr:
             repos.append(streamlit_ecr.split('/')[-1])
         

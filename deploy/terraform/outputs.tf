@@ -18,15 +18,9 @@ output "private_subnet_ids" {
   value       = jsonencode(aws_subnet.private[*].id)
 }
 
-output "unity_mcp_ecr_uri" {
-  description = "Unity MCP ECR Repository URI"
-  value       = aws_ecr_repository.unity_mcp.repository_url
-}
-
-output "glue_mcp_ecr_uri" {
-  description = "Glue MCP ECR Repository URI"
-  value       = aws_ecr_repository.glue_mcp.repository_url
-}
+# Note: MCP ECR repositories are created by bedrock-agentcore-starter-toolkit
+# with dynamic names like bedrock-agentcore-<agent_name>-<suffix>
+# They are not managed by Terraform
 
 output "alb_dns_name" {
   description = "DNS name of the load balancer"

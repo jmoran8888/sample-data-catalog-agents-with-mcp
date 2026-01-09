@@ -70,42 +70,11 @@ resource "aws_iam_role_policy" "agentcore_runtime" {
   })
 }
 
-# ECR Repository for MCP Server Images
-resource "aws_ecr_repository" "unity_mcp" {
-  name                 = "catalog-agents/unity-mcp"
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-
-  tags = {
-    Name        = "catalog-agents-unity-mcp"
-    Project     = "catalog-agents-demo"
-    Environment = var.environment
-    Owner       = var.owner
-    CostCenter  = var.cost_center
-    FISTarget   = "true"
-  }
-}
-
-resource "aws_ecr_repository" "glue_mcp" {
-  name                 = "catalog-agents/glue-mcp"
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-
-  tags = {
-    Name        = "catalog-agents-glue-mcp"
-    Project     = "catalog-agents-demo"
-    Environment = var.environment
-    Owner       = var.owner
-    CostCenter  = var.cost_center
-    FISTarget   = "true"
-  }
-}
+# Note: ECR repositories for MCP servers are automatically created by
+# the bedrock-agentcore-starter-toolkit with names like:
+# - bedrock-agentcore-unity_catalog_mcp_<suffix>
+# - bedrock-agentcore-glue_catalog_mcp_<suffix>
+# No need to pre-create them in Terraform.
 
 # Security Group for AgentCore Runtime
 # AgentCore only needs outbound access to AWS services
