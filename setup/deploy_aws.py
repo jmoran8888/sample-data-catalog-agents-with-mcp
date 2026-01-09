@@ -197,7 +197,7 @@ def main():
     print("   The toolkit will build containers from your Python code and deploy them.\n")
     
     # Run AgentCore deployments separately to avoid threading issues
-    print("Deploying Unity MCP (Step 3a)...")
+    print("Deploying Unity Catalog MCP Server...")
     result = subprocess.run(
         [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'unity'],
         check=False
@@ -215,7 +215,7 @@ def main():
             os.remove(file)
             print(f"  ✓ Removed {file}")
     
-    print("\nDeploying Glue MCP (Step 3b)...")
+    print("\nDeploying Glue Catalog MCP Server...")
     result = subprocess.run(
         [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'glue'],
         check=False
