@@ -68,8 +68,12 @@ tests/
 
 # ===== OPTIMIZATIONS TO REDUCE BUILD TIME =====
 
-# Deployment infrastructure (not needed in MCP container)
-deploy/
+# Deployment infrastructure (Terraform only - docker/scripts needed by Streamlit)
+deploy/terraform/
+deploy/scripts/
+deploy/fis/
+
+# CDK infrastructure from another branch
 infrastructure-v2/
 
 # Local Unity Catalog installation (can be very large)
@@ -84,15 +88,8 @@ CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 SECURITY.md
 
-# Container definition files (not needed inside container)
-Dockerfile
-Dockerfile.streamlit
-docker-compose.yml
-
 # Setup scripts (only for deployment, not runtime)
 setup/
 
-# Demo/test files (not needed in production MCP server)
-demo.py
+# Test files (not needed in production containers)
 test_*.py
-streamlit_demo*.py
