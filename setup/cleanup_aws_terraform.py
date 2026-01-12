@@ -86,10 +86,20 @@ def delete_agentcore_runtimes():
         print("Checking for AgentCore runtimes in your account...")
         
         region = get_terraform_output('aws_region', default='us-east-1')
-        client = boto3.client('bedrock-agentcore-control', region_name=region)
+        print(f"[DEBUG] Creating bedrock-agentcore-control client for region: {region}")
         
         try:
+            client = boto3.client('bedrock-agentcore-control', region_name=region)
+            print("[DEBUG] Client created successfully")
+        except Exception as e:
+            print(f"[DEBUG] Error creating client: {e}")
+            raise
+        
+        try:
+            print("[DEBUG] Calling list_agent_runtimes...")
             response = client.list_agent_runtimes(maxResults=100)
+            print(f"[DEBUG] API response received")
+            print(f"[DEBUG] Response keys: {response.keys()}")
             print(f"[DEBUG] Found {len(response.get('agentRuntimeSummaries', []))} total runtimes in account")
             
             for runtime in response.get('agentRuntimeSummaries', []):
