@@ -43,22 +43,19 @@ resource "aws_security_group" "ecs_tasks" {
   }
 }
 
-# Security Group for ALB
-# Note: Ingress rules are managed in security_whitelist.tf for IP-based access control
+# Security Group for ALB (Internal - accessed via SSM port forwarding)
 resource "aws_security_group" "alb" {
   name_prefix = "catalog-agents-alb-"
   vpc_id      = aws_vpc.main.id
 
-  # HTTP redirect (always allow for redirect to HTTPS)
+  # HTTPS access from within VPC (for SSM port forwarding)
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "HTTP redirect to HTTPS"
+    cidr_blocks = ["10.0.0.0/16"]
+    description = "HTTPS from VPC for SSM access"
   }
-
-  # HTTPS access controlled by security_whitelist.tf based on allowed_ip_address variable
 
   egress {
     from_port   = 0

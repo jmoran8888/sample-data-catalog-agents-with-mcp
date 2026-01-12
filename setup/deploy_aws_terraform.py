@@ -54,115 +54,11 @@ def get_terraform_output(output_name):
         sys.exit(1)
     return result.stdout.strip()
 
-def get_public_ip():
-    """Get the user's public IPv4 address - REQUIRED for deployment"""
-    import requests
-    import subprocess
-    
-    # Try IPv4-specific web endpoints first
-    try:
-        response = requests.get('https://api.ipify.org?format=text', timeout=5)
-        ip = response.text.strip()
-        if ':' not in ip:  # Verify it's IPv4
-            return ip
-    except:
-        pass
-    
-    try:
-        response = requests.get('https://ipv4.icanhazip.com', timeout=5)
-        ip = response.text.strip()
-        if ':' not in ip:  # Verify it's IPv4
-            return ip
-    except:
-        pass
-    
-    # Final fallback: Use curl -4 to force IPv4
-    try:
-        print("Trying curl -4 ifconfig.me for IPv4 address...")
-        result = subprocess.run(
-            ['curl', '-4', '-s', 'ifconfig.me'],
-            capture_output=True,
-            text=True,
-            timeout=5
-        )
-        if result.returncode == 0:
-            ip = result.stdout.strip()
-            if ':' not in ip and ip:  # Verify it's IPv4 and not empty
-                return ip
-    except:
-        pass
-    
-    # All methods failed
-    print("❌ CRITICAL ERROR: Could not detect your public IPv4 address")
-    print("   All detection methods failed (api.ipify.org, ipv4.icanhazip.com, curl -4)")
-    print("\n   To fix:")
-    print("   1. Check your internet connection")
-    print("   2. Manually create deploy/terraform/terraform.tfvars with:")
-    print('      allowed_ip_address = "YOUR.IPv4.HERE"')
-    print("   3. Get your IPv4 with: curl -4 ifconfig.me")
-    sys.exit(1)
-
-def create_or_update_tfvars(ip_address):
-    """Create or update terraform.tfvars with IP address"""
-    tfvars_path = Path("deploy/terraform/terraform.tfvars")
-    
-    # Default configuration
-    tfvars_content = f"""aws_region = "us-east-1"
-environment = "dev"
-
-# IP Whitelist - Restrict access to your IP only
-allowed_ip_address = "{ip_address}"
-"""
-    
-    if tfvars_path.exists():
-        # Read existing file
-        with open(tfvars_path, 'r') as f:
-            existing_content = f.read()
-        
-        # Check if IP is already set
-        if 'allowed_ip_address' in existing_content and ip_address in existing_content:
-            print(f"✓ terraform.tfvars already has your IP: {ip_address}")
-            return
-        
-        # Update IP address in existing file
-        import re
-        if 'allowed_ip_address' in existing_content:
-            # Replace existing IP
-            updated_content = re.sub(
-                r'allowed_ip_address\s*=\s*"[^"]*"',
-                f'allowed_ip_address = "{ip_address}"',
-                existing_content
-            )
-            with open(tfvars_path, 'w') as f:
-                f.write(updated_content)
-            print(f"✓ Updated IP address in terraform.tfvars: {ip_address}")
-        else:
-            # Add IP address to existing file
-            with open(tfvars_path, 'a') as f:
-                f.write(f'\n# IP Whitelist - Restrict access to your IP only\n')
-                f.write(f'allowed_ip_address = "{ip_address}"\n')
-            print(f"✓ Added IP address to terraform.tfvars: {ip_address}")
-    else:
-        # Create new file
-        with open(tfvars_path, 'w') as f:
-            f.write(tfvars_content)
-        print(f"✓ Created terraform.tfvars with your IP: {ip_address}")
 
 def main():
     print("🚀 Starting Complete AWS Deployment\n")
-    
-    # Step 0: Auto-detect and configure IP address
-    print("=" * 60)
-    print("STEP 0: Configuring IP Whitelist")
-    print("=" * 60)
-    
-    print("Detecting your public IP address...")
-    ip_address = get_public_ip()  # Exits if detection fails
-    
-    print(f"✓ Detected IP: {ip_address}")
-    create_or_update_tfvars(ip_address)
-    print("\n⚠️  Security Note: ALB will only accept connections from this IP address")
-    print()
+    print("⚠️  Note: ALB is internal and accessed via SSM port forwarding")
+    print("   See final instructions for CloudShell access setup\n")
     
     # Step 1: Deploy Terraform Infrastructure
     print("=" * 60)
@@ -332,15 +228,26 @@ def main():
     print("=" * 60)
     print("🎉 DEPLOYMENT COMPLETE!")
     print("=" * 60)
-    print(f"\n📱 Access your application:")
-    print(f"   Application URL: https://{alb_dns}")
-    print(f"\n� Security: Access restricted to IP address in terraform.tfvars")
+    print(f"\n📱 To access your application via SSM port forwarding:\n")
+    print("1. Open AWS Console → CloudShell")
+    print("2. Run this command in CloudShell:")
+    print(f"\n   aws ssm start-session \\")
+    print(f"     --document-name AWS-StartPortForwardingSessionToRemoteHost \\")
+    print(f"     --parameters '{{")
+    print(f"       \"host\":[\"{alb_dns}\"],")
+    print(f"       \"portNumber\":[\"443\"],")
+    print(f"       \"localPortNumber\":[\"8443\"]")
+    print(f"     }}' \\")
+    print(f"     --region us-east-1")
+    print(f"\n3. While tunnel is running, open in your browser: https://localhost:8443")
+    print(f"4. Accept the SSL warning (self-signed certificate - this is safe)")
     print(f"\n🔐 Runtime IDs saved to .env file")
     unity_id = mcp_config.get('unity_mcp', {}).get('runtime_id', 'N/A')
     glue_id = mcp_config.get('glue_mcp', {}).get('runtime_id', 'N/A')
     print(f"   Unity MCP: {unity_id}")
     print(f"   Glue MCP: {glue_id}")
     print(f"\n⏳ Note: Allow a few minutes for ECS service to fully start")
+    print(f"\n📖 For more details, see README.md section on SSM Access")
 
 if __name__ == "__main__":
     try:

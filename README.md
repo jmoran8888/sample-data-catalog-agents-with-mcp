@@ -54,10 +54,12 @@ Follow the setup instructions below for local development and testing.
 Deploy to AWS with complete managed infrastructure:
 - **ECS Fargate**: Runs Unity Catalog and Streamlit applications
 - **RDS PostgreSQL**: Metadata storage
-- **Application Load Balancer**: Traffic routing with IP-based access control
+- **Internal Application Load Balancer**: Private load balancer (not internet-facing)
+- **AWS Systems Manager (SSM)**: Secure access via port forwarding through CloudShell
 - **AWS Bedrock AgentCore Runtime**: Executes MCP servers
-- **Security Group Whitelisting**: IP-based authentication for secure access
 - **VPC**: Isolated network with public/private subnets
+
+**Access Method**: No public internet access - uses AWS SSM port forwarding through CloudShell (zero local setup required!)
 
 **See "AWS Deployment" section below for complete instructions.**
 **Review [SECURITY.md](SECURITY.md) before deploying.**
@@ -188,17 +190,15 @@ This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP server
 
 ### Configuration
 
-**No manual configuration required!** The deployment script automatically:
-- Detects your public IP address
-- Creates/updates `deploy/terraform/terraform.tfvars` with your IP
-- Configures the ALB to accept connections only from your IP
+**No manual configuration required!** The deployment script handles all infrastructure setup automatically.
 
 **⚠️ Security Notes**: 
-- Your IP address is automatically detected and whitelisted
-- The ALB will only be accessible from your detected IP address
-- This is the primary security mechanism
-- If your IP changes later, re-run `python setup/deploy_aws_terraform.py` or manually update `allowed_ip_address` in `deploy/terraform/terraform.tfvars` and run `terraform apply`
-- The `terraform.tfvars` file is in `.gitignore` - never commit it
+- ALB is **internal only** (not internet-facing)
+- Access via **AWS Systems Manager (SSM)** port forwarding
+- No public IP whitelisting needed
+- Works from any location with AWS credentials
+- Encrypted tunnels through AWS infrastructure
+- All access logged in CloudWatch for auditing
 
 ### Deployment
 
@@ -208,38 +208,115 @@ python setup/deploy_aws_terraform.py
 ```
 
 This single script automatically:
-1. Deploys Terraform infrastructure (VPC, ECS, RDS, ALB with IP whitelisting)
+1. Deploys Terraform infrastructure (VPC, ECS, RDS, internal ALB, SSM VPC endpoints)
 2. Builds and pushes Streamlit Docker image to ECR
 3. Deploys MCP servers to AgentCore Runtime (toolkit builds MCP images)
 4. Updates ECS services with configuration
 5. Populates both AWS Glue and Unity catalogs with sample data
-6. Provides access URLs
+6. Provides SSM access instructions
 
-### Accessing the Application
+### Accessing the Application via SSM Port Forwarding
 
-After deployment completes, the script will output:
-- **Application URL**: `https://<alb-dns-name>`
+The application uses an **internal ALB** (not publicly accessible) for enhanced security. Access is provided through AWS Systems Manager port forwarding.
 
-**To access:**
-1. Open the Application URL in your browser (already configured for your IP)
-2. **You'll see a security warning** because the ALB uses a self-signed HTTPS certificate
-   - Click "Advanced" or "Details" and proceed to the site
-   - This is expected and safe - it's your own deployment
-3. Access is automatically restricted to the IP address detected during deployment
-4. If your IP changes, re-run `python setup/deploy_aws_terraform.py` (it will auto-update your IP)
-5. Use the web interface to query both catalogs
+**Zero Local Setup Required** - Everything runs in AWS CloudShell!
 
-**To get URL later:**
+#### Step-by-Step Access Instructions:
+
+**Step 1: Get ALB DNS Name**
 ```bash
 cd deploy/terraform
 terraform output alb_dns_name
+# Example: internal-catalog-agents-alb-123456.us-east-1.elb.amazonaws.com
 ```
 
-**Security Notes:** 
-- The ALB uses HTTPS with a **self-signed certificate** (browser will show warning - safe to proceed)
-- The ALB only accepts HTTPS connections from your automatically whitelisted IP address
-- Access from other IPs will be blocked by the security group
-- For production use, replace with a real certificate (see Terraform alb.tf)
+**Step 2: Open AWS CloudShell**
+- Go to AWS Console (https://console.aws.amazon.com)
+- Click the CloudShell icon in the top navigation bar
+- Wait for CloudShell terminal to initialize (takes a few seconds)
+
+**Step 3: Start SSM Port Forwarding**
+
+In CloudShell, run this command (replace `<alb-dns>` with your actual ALB DNS):
+
+```bash
+aws ssm start-session \
+  --document-name AWS-StartPortForwardingSessionToRemoteHost \
+  --parameters '{
+    "host":["<alb-dns>"],
+    "portNumber":["443"],
+    "localPortNumber":["8443"]
+  }' \
+  --region us-east-1
+```
+
+**Example:**
+```bash
+aws ssm start-session \
+  --document-name AWS-StartPortForwardingSessionToRemoteHost \
+  --parameters '{
+    "host":["internal-catalog-agents-alb-123456.us-east-1.elb.amazonaws.com"],
+    "portNumber":["443"],
+    "localPortNumber":["8443"]
+  }' \
+  --region us-east-1
+```
+
+**Step 4: Access in Your Browser**
+
+While the tunnel is running in CloudShell, open your **local browser**:
+```
+https://localhost:8443
+```
+
+**Step 5: Accept SSL Warning**
+- Browser will show a security warning (self-signed certificate)
+- Click "Advanced" → "Proceed to localhost (unsafe)" or similar
+- **This is safe** - it's your own deployment with self-signed cert
+
+**Step 6: Use the Application**
+- Streamlit UI will load at `https://localhost:8443`
+- Query both Unity and Glue catalogs
+- View sample data and test agents
+
+#### Access Flow Diagram:
+```
+[Your Browser] → localhost:8443
+       ↓
+[SSM Tunnel in CloudShell] (encrypted)
+       ↓
+[Internal ALB] → port 443 (private VPC)
+       ↓
+[ECS Streamlit Service] → port 8501
+```
+
+#### Troubleshooting:
+
+**"command not found: aws"**
+- CloudShell has AWS CLI pre-installed, refresh the session
+
+**"Timeout" or connection fails:**
+- Ensure VPC endpoints deployed correctly
+- Check CloudWatch logs for errors
+- Verify ECS services are running: `aws ecs list-services --cluster catalog-agents-cluster --region us-east-1`
+
+**SSL certificate error persists:**
+- Normal for self-signed certificates
+- Safe to proceed - it's your own infrastructure
+
+**Keep tunnel running:**
+- Keep CloudShell window open
+- If you close it, re-run the SSM command
+- No data loss - just reconnects to existing infrastructure
+
+#### Security Benefits:
+
+✅ **No public internet exposure** - ALB is completely private
+✅ **No static IP required** - Works from anywhere with AWS credentials
+✅ **MFA compatible** - Uses your AWS IAM authentication (with MFA if enabled)
+✅ **Audit trail** - All SSM sessions logged in CloudWatch
+✅ **Zero local setup** - CloudShell has everything pre-installed
+✅ **Encrypted tunnels** - Traffic encrypted through AWS infrastructure
 
 ### Cleanup
 

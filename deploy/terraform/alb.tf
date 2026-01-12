@@ -1,10 +1,10 @@
-# Application Load Balancer
+# Application Load Balancer (Internal - accessed via SSM port forwarding)
 resource "aws_lb" "main" {
   name               = "catalog-agents-alb"
-  internal           = false
+  internal           = true
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
-  subnets            = aws_subnet.public[*].id
+  subnets            = aws_subnet.private[*].id
 
   enable_deletion_protection = false
 
