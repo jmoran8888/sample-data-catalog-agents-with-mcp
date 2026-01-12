@@ -199,7 +199,7 @@ def main():
     # Run AgentCore deployments separately to avoid threading issues
     print("Deploying Unity Catalog MCP Server...")
     result = subprocess.run(
-        [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'unity'],
+        [sys.executable, 'setup/deploy_aws_agentcore.py', '--agent', 'unity'],
         check=False
     )
     
@@ -217,7 +217,7 @@ def main():
     
     print("\nDeploying Glue Catalog MCP Server...")
     result = subprocess.run(
-        [sys.executable, 'setup/deploy_agentcore.py', '--agent', 'glue'],
+        [sys.executable, 'setup/deploy_aws_agentcore.py', '--agent', 'glue'],
         check=False
     )
     
