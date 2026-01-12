@@ -55,11 +55,11 @@ Deploy to AWS with complete managed infrastructure:
 - **ECS Fargate**: Runs Unity Catalog and Streamlit applications
 - **RDS PostgreSQL**: Metadata storage
 - **Internal Application Load Balancer**: Private load balancer (not internet-facing)
-- **AWS Systems Manager (SSM)**: Secure access via port forwarding through CloudShell
+- **AWS Systems Manager (SSM)**: Secure access via port forwarding
 - **AWS Bedrock AgentCore Runtime**: Executes MCP servers
 - **VPC**: Isolated network with public/private subnets
 
-**Access Method**: No public internet access - uses AWS SSM port forwarding through CloudShell (zero local setup required!)
+**Access Method**: No public internet access - uses AWS SSM port forwarding from your local machine (requires Session Manager plugin installation).
 
 **See "AWS Deployment" section below for complete instructions.**
 **Review [SECURITY.md](SECURITY.md) before deploying.**
@@ -219,7 +219,7 @@ This single script automatically:
 
 The application uses an **internal ALB** (not publicly accessible) for enhanced security. Access is provided through AWS Systems Manager port forwarding.
 
-**⚠️ Important**: SSM port forwarding must run on **your local machine**, not in CloudShell, so your browser can access localhost.
+**⚠️ Important**: SSM port forwarding must run on **your local machine** so your browser can access localhost.
 
 #### Prerequisites - One-Time Setup:
 
@@ -257,7 +257,7 @@ python setup/deploy_aws_terraform.py
 
 **Step 2: Copy the SSM Command from Output**
 
-At the end of deployment, the script outputs a ready-to-use SSM command with all values (bastion ID, ALB DNS, region) already filled in. Simply copy and paste it into your **local terminal** (not CloudShell).
+At the end of deployment, the script outputs a ready-to-use SSM command with all values (bastion ID, ALB DNS, region) already filled in. Simply copy and paste it into your **local terminal**.
 
 Example output:
 ```bash
@@ -319,7 +319,8 @@ This creates sample databases and tables in both catalogs that demonstrate the a
 #### Troubleshooting:
 
 **"command not found: aws"**
-- CloudShell has AWS CLI pre-installed, refresh the session
+- Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+- Configure your AWS credentials
 
 **"Timeout" or connection fails:**
 - Ensure VPC endpoints deployed correctly
@@ -341,7 +342,7 @@ This creates sample databases and tables in both catalogs that demonstrate the a
 ✅ **No static IP required** - Works from anywhere with AWS credentials
 ✅ **MFA compatible** - Uses your AWS IAM authentication (with MFA if enabled)
 ✅ **Audit trail** - All SSM sessions logged in CloudWatch
-✅ **Zero local setup** - CloudShell has everything pre-installed
+✅ **Minimal local setup** - Only AWS CLI and Session Manager plugin needed
 ✅ **Encrypted tunnels** - Traffic encrypted through AWS infrastructure
 
 ### Cleanup
