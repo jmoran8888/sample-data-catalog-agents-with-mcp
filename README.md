@@ -94,7 +94,7 @@ Install Unity Catalog [locally](https://github.com/unitycatalog/unitycatalog) an
 
 **For AWS Glue Catalog:**
 ```bash
-python setup/setup_glue_sample_data.py
+python setup/setup_glue_simple.py
 ```
 
 **For Unity Catalog:**
