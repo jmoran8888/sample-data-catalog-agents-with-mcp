@@ -49,7 +49,7 @@ This project supports two deployment modes:
 ### 1. Local Development (Quick Start)
 Follow the setup instructions below for local development and testing.
 
-### 2. AWS Production Deployment
+### 2. AWS Account Deployment
 
 Deploy to AWS with complete managed infrastructure:
 - **ECS Fargate**: Runs Unity Catalog and Streamlit applications
