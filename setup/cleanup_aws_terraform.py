@@ -165,14 +165,19 @@ def empty_ecr_repositories():
         except Exception as e:
             print(f"⚠️  Could not list ECR repositories: {e}")
         
-        # Delete project repos (catalog-agents/*)
+        # Empty project repos (catalog-agents/*) - Terraform will delete them
         if project_repos:
             print(f"Found {len(project_repos)} project ECR repositories")
             for repo_name in project_repos:
                 try:
-                    print(f"  Deleting: {repo_name}...")
-                    ecr_client.delete_repository(repositoryName=repo_name, force=True)
-                    print(f"  ✅ Deleted repository and all images")
+                    print(f"  Emptying: {repo_name}...")
+                    images = ecr_client.list_images(repositoryName=repo_name)
+                    image_ids = images.get('imageIds', [])
+                    if image_ids:
+                        ecr_client.batch_delete_image(repositoryName=repo_name, imageIds=image_ids)
+                        print(f"  ✅ Deleted {len(image_ids)} images (Terraform will delete repo)")
+                    else:
+                        print(f"  ℹ️  No images to delete")
                 except ecr_client.exceptions.RepositoryNotFoundException:
                     print(f"  ℹ️  Repository not found")
                 except Exception as e:
