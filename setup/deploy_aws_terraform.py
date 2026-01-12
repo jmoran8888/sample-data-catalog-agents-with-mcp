@@ -218,62 +218,22 @@ def main():
     
     print("✅ ECS services updated\n")
     
-    # Step 5: Populate Unity Catalog with Sample Data
+    # Step 5: Sample Data Population Instructions
     print("=" * 60)
-    print("STEP 5: Populating Unity Catalog with Sample Data")
+    print("STEP 5: Sample Data Population")
     print("=" * 60)
     
     alb_dns = get_terraform_output('alb_dns_name')
-    unity_api_url = f"https://{alb_dns}/api/2.1/unity-catalog"
     
-    print(f"Unity Catalog API: {unity_api_url}")
-    print("Waiting for Unity Catalog service to be ready...")
+    print("\n⚠️  Note: ALB is internal - cannot populate data from local machine")
+    print("   Sample data will be populated after you connect via SSM\n")
     
-    # Wait for Unity Catalog service to be healthy
-    import time
-    max_retries = 30
-    for i in range(max_retries):
-        try:
-            import requests
-            response = requests.get(f"https://{alb_dns}/health", timeout=5, verify=False)
-            if response.status_code == 200:
-                print("✅ Unity Catalog service is ready")
-                break
-        except:
-            pass
-        
-        if i < max_retries - 1:
-            print(f"   Waiting... ({i+1}/{max_retries})")
-            time.sleep(10)
-        else:
-            print("⚠️  Timeout waiting for Unity Catalog - continuing anyway")
-    
-    # Set environment variable for Unity setup script
-    import os
-    os.environ['UNITY_CATALOG_URL'] = unity_api_url
-    
-    print("\nCreating Unity Catalog sample tables...")
-    # Run as subprocess with environment variable (cleaner approach)
-    os.environ['UNITY_CATALOG_URL'] = unity_api_url
-    os.environ['DISABLE_SSL_VERIFY'] = '1'
-    
-    result = subprocess.run(
-        [sys.executable, 'setup/setup_unity_simple.py'],
-        capture_output=True,
-        text=True,
-        env=os.environ
-    )
-    
-    if result.returncode == 0:
-        print("✅ Unity Catalog sample data created")
-    else:
-        print(f"⚠️  Warning: Could not populate Unity Catalog")
-        if result.stderr:
-            print(f"   Error: {result.stderr}")
-        print(f"   You can manually run: python setup/setup_unity_simple.py")
-        print(f"   (Set UNITY_CATALOG_URL environment variable)")
-    
-    print()
+    print("After connecting via SSM port forwarding (see instructions below),")
+    print("you can populate Unity Catalog with sample data by running:")
+    print(f"\n   export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog")
+    print(f"   export DISABLE_SSL_VERIFY=1")
+    print(f"   python setup/setup_unity_simple.py")
+    print("\nOr wait 2-3 minutes for services to fully start, then access Streamlit UI\n")
     
     # Final summary
     print("=" * 60)
