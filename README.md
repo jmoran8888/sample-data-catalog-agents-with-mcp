@@ -381,22 +381,7 @@ This script will:
 5. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, ECR, etc.)
 6. Remove local configuration files (.env, agentcore-config.json, etc.)
 
-## Usage & Example Queries
-
-### Command Line (Local Development Only)
-
-```bash
-python demo.py --agent unity    # Unity catalog agent
-python demo.py --agent glue     # AWS Glue catalog agent  
-python demo.py --agent unified  # Unified catalog agent
-```
-
-### Streamlit Web UI
-
-**Local:** http://localhost:8501 (after running `streamlit run streamlit_demo.py`)  
-**AWS:** Get URL from terraform: `cd deploy/terraform && terraform output streamlit_url`
-
-### Example Queries
+## Example Queries
 
 **For AWS Glue Catalog:**
 - "List all databases in the Glue catalog"
