@@ -184,7 +184,7 @@ This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP server
 - AgentCore runtime instances
 - Sample data automatically populated in both catalogs
 
-**Note:** All toolkit-created resources are automatically cleaned up by `cleanup_aws.py`.
+**Note:** All toolkit-created resources are automatically cleaned up by `cleanup_aws_terraform.py`.
 
 ### Configuration
 
@@ -197,14 +197,14 @@ This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP server
 - Your IP address is automatically detected and whitelisted
 - The ALB will only be accessible from your detected IP address
 - This is the primary security mechanism
-- If your IP changes later, re-run `python setup/deploy_aws.py` or manually update `allowed_ip_address` in `deploy/terraform/terraform.tfvars` and run `terraform apply`
+- If your IP changes later, re-run `python setup/deploy_aws_terraform.py` or manually update `allowed_ip_address` in `deploy/terraform/terraform.tfvars` and run `terraform apply`
 - The `terraform.tfvars` file is in `.gitignore` - never commit it
 
 ### Deployment
 
 ```bash
 # Complete automated deployment
-python setup/deploy_aws.py
+python setup/deploy_aws_terraform.py
 ```
 
 This single script automatically:
@@ -223,7 +223,7 @@ After deployment completes, the script will output:
 **To access:**
 1. Open the Application URL in your browser (already configured for your IP)
 2. Access is automatically restricted to the IP address detected during deployment
-3. If your IP changes, re-run `python setup/deploy_aws.py` (it will auto-update your IP)
+3. If your IP changes, re-run `python setup/deploy_aws_terraform.py` (it will auto-update your IP)
 4. Use the web interface to query both catalogs
 
 **To get URL later:**
@@ -239,7 +239,7 @@ terraform output alb_dns_name
 ⚠️ **Warning**: Destroys ALL resources and data. This action CANNOT be undone.
 
 ```bash
-python setup/cleanup_aws.py
+python setup/cleanup_aws_terraform.py
 ```
 
 This script will:
