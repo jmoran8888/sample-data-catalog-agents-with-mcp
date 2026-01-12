@@ -58,7 +58,7 @@ def get_terraform_output(output_name):
 def main():
     print("🚀 Starting Complete AWS Deployment\n")
     print("⚠️  Note: ALB is internal and accessed via SSM port forwarding")
-    print("   See final instructions for CloudShell access setup\n")
+    print("   See final instructions for local SSM access setup\n")
     
     # Check if AWS_PROFILE is set
     import os
@@ -249,7 +249,7 @@ def main():
     print("🎉 DEPLOYMENT COMPLETE!")
     print("=" * 60)
     print(f"\n📱 To access your application via SSM port forwarding:\n")
-    print("Run this command in your **local terminal**:")
+    print("1. Copy and run this command in your **local terminal**:")
     print(f"\n   aws ssm start-session \\")
     print(f"     --target {bastion_id} \\")
     print(f"     --document-name AWS-StartPortForwardingSessionToRemoteHost \\")
