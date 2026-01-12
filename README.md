@@ -227,12 +227,10 @@ aws ssm start-session \
 
 Then in a new terminal (keep SSM running):
 ```bash
-export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog
-export DISABLE_SSL_VERIFY=1
-python setup/setup_unity_simple.py
+python setup/setup_unity_simple.py --port 8443
 ```
 
-Note: Environment variables needed because Unity is accessed via SSM tunnel at port 8443 (not the default 8080).
+Note: Port 8443 used for AWS SSM tunnel access (local development uses default 8080).
 
 ### 5. Run the Application
 
