@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """
 Complete AWS Cleanup Script
-Removes all deployed resources including AgentCore runtimes, Terraform infrastructure, and ECR images
+Removes all deployed resources including CodeBuild, ECR, and Terraform infrastructure
+
+NOTE: AgentCore runtimes must be deleted manually before running this script.
+See README.md for instructions.
 """
 
 import boto3
@@ -39,142 +42,10 @@ def get_terraform_output(output_name, default=None):
         return output
     return default
 
-def delete_agentcore_runtimes():
-    """Delete AgentCore runtimes"""
-    print("\n" + "=" * 60)
-    print("STEP 1: Deleting AgentCore Runtimes")
-    print("=" * 60)
-    
-    try:
-        import boto3
-        
-        # Get region first and show it
-        region = get_terraform_output('aws_region', default='us-east-1')
-        print(f"[DEBUG] Using AWS region: {region}")
-        
-        # Load runtime IDs from config file or .env
-        runtime_ids = []
-        
-        # Try agentcore-config.json first
-        config_file = Path('agentcore-config.json')
-        if config_file.exists():
-            print("Loading runtime IDs from agentcore-config.json...")
-            with open(config_file, 'r') as f:
-                config = json.load(f)
-                unity_id = config.get('unity_mcp', {}).get('runtime_id')
-                glue_id = config.get('glue_mcp', {}).get('runtime_id')
-                if unity_id:
-                    runtime_ids.append(('Unity', unity_id))
-                if glue_id:
-                    runtime_ids.append(('Glue', glue_id))
-        
-        # Try .env file as fallback
-        if not runtime_ids:
-            env_file = Path('.env')
-            if env_file.exists():
-                print("Loading runtime IDs from .env...")
-                with open(env_file, 'r') as f:
-                    for line in f:
-                        if 'UNITY_MCP_RUNTIME_ID=' in line:
-                            unity_id = line.split('=')[1].strip()
-                            runtime_ids.append(('Unity', unity_id))
-                        elif 'GLUE_MCP_RUNTIME_ID=' in line:
-                            glue_id = line.split('=')[1].strip()
-                            runtime_ids.append(('Glue', glue_id))
-        
-        # Always check for runtimes in account (config files might be incomplete)
-        print("Checking for AgentCore runtimes in your account...")
-        
-        region = get_terraform_output('aws_region', default='us-east-1')
-        print(f"[DEBUG] Creating bedrock-agentcore-control client for region: {region}")
-        
-        try:
-            client = boto3.client('bedrock-agentcore-control', region_name=region)
-            print("[DEBUG] Client created successfully")
-        except Exception as e:
-            print(f"[DEBUG] Error creating client: {e}")
-            raise
-        
-        try:
-            print("[DEBUG] Calling list_agent_runtimes...")
-            response = client.list_agent_runtimes(maxResults=100)
-            print(f"[DEBUG] API response received")
-            print(f"[DEBUG] Response keys: {response.keys()}")
-            print(f"[DEBUG] Found {len(response.get('agentRuntimeSummaries', []))} total runtimes in account")
-            
-            for runtime in response.get('agentRuntimeSummaries', []):
-                name = runtime.get('agentRuntimeName', '')
-                runtime_arn = runtime.get('agentRuntimeArn', '')
-                
-                # Extract runtime ID from ARN (format: arn:aws:bedrock-agentcore:region:account:runtime/ID)
-                if runtime_arn and '/runtime/' in runtime_arn:
-                    runtime_id = runtime_arn.split('/runtime/')[-1]
-                else:
-                    runtime_id = runtime.get('agentRuntimeId', '')
-                
-                print(f"[DEBUG] Runtime: {name}, ARN: {runtime_arn}")
-                
-                # Only match runtimes that start with our specific patterns
-                if name.startswith('unity_catalog_mcp') or name.startswith('glue_catalog_mcp'):
-                    # Avoid duplicates
-                    if not any(existing_id == runtime_id for _, existing_id in runtime_ids):
-                        runtime_ids.append((name, runtime_id))
-                        print(f"   Found: {name} ({runtime_id})")
-        except Exception as e:
-            print(f"⚠️  Could not list runtimes: {e}")
-            import traceback
-            print(f"[DEBUG] Error details: {traceback.format_exc()}")
-        
-        # Delete found runtimes
-        if runtime_ids:
-            region = get_terraform_output('aws_region', default='us-east-1')
-            client = boto3.client('bedrock-agentcore-control', region_name=region)
-            
-            for name, runtime_id in runtime_ids:
-                try:
-                    print(f"Deleting {name} runtime: {runtime_id}")
-                    client.delete_agent_runtime(agentRuntimeId=runtime_id)
-                    print(f"  Waiting for deletion to complete...")
-                    
-                    # Wait for deletion to complete
-                    import time
-                    max_wait = 180  # 3 minutes
-                    waited = 0
-                    while waited < max_wait:
-                        try:
-                            response = client.get_agent_runtime(agentRuntimeId=runtime_id)
-                            status = response.get('status', '')
-                            if status == 'DELETING':
-                                print(f"  Status: {status} (waiting...)")
-                                time.sleep(10)
-                                waited += 10
-                            else:
-                                break
-                        except client.exceptions.ResourceNotFoundException:
-                            # Runtime no longer exists - deletion complete
-                            print(f"✅ Deleted {name} MCP runtime")
-                            break
-                        except Exception:
-                            # If we can't check status, assume it's deleted
-                            break
-                    
-                    if waited >= max_wait:
-                        print(f"⚠️  Timeout waiting for {name} deletion (may still be in progress)")
-                        
-                except client.exceptions.ResourceNotFoundException:
-                    print(f"ℹ️  {name} runtime already deleted")
-                except Exception as e:
-                    print(f"⚠️  Could not delete {name} runtime: {e}")
-        else:
-            print("ℹ️  No AgentCore runtimes found to delete")
-            
-    except Exception as e:
-        print(f"⚠️  Error deleting AgentCore runtimes: {e}")
-
 def delete_codebuild_projects():
     """Delete CodeBuild projects created by AgentCore toolkit"""
     print("\n" + "=" * 60)
-    print("STEP 2: Deleting CodeBuild Projects")
+    print("STEP 1: Deleting CodeBuild Projects")
     print("=" * 60)
     
     try:
@@ -211,7 +82,7 @@ def delete_codebuild_projects():
 def cleanup_agentcore_enis():
     """Clean up ENIs created by AgentCore that may be blocking VPC deletion"""
     print("\n" + "=" * 60)
-    print("STEP 3: Cleaning Up AgentCore Network Interfaces")
+    print("STEP 2: Cleaning Up AgentCore Network Interfaces")
     print("=" * 60)
     
     try:
@@ -269,33 +140,12 @@ def cleanup_agentcore_enis():
 def empty_ecr_repositories():
     """Empty and delete ECR repositories"""
     print("\n" + "=" * 60)
-    print("STEP 4: Cleaning Up ECR Repositories")
+    print("STEP 3: Cleaning Up ECR Repositories")
     print("=" * 60)
     
     try:
         aws_region = get_terraform_output('aws_region', default='us-east-1')
-        print(f"[DEBUG] Using AWS region: {aws_region}")
         ecr_client = boto3.client('ecr', region_name=aws_region)
-        
-        # Get Terraform-managed ECR repos
-        terraform_repos = []
-        unity_ecr = get_terraform_output('unity_mcp_ecr_uri')
-        glue_ecr = get_terraform_output('glue_mcp_ecr_uri')
-        streamlit_ecr = get_terraform_output('ecr_repository_url')
-        
-        print(f"[DEBUG] Terraform outputs:")
-        print(f"[DEBUG]   unity_mcp_ecr_uri: {unity_ecr}")
-        print(f"[DEBUG]   glue_mcp_ecr_uri: {glue_ecr}")
-        print(f"[DEBUG]   ecr_repository_url: {streamlit_ecr}")
-        
-        if unity_ecr:
-            terraform_repos.append(unity_ecr.split('/')[-1])
-        if glue_ecr:
-            terraform_repos.append(glue_ecr.split('/')[-1])
-        if streamlit_ecr:
-            terraform_repos.append(streamlit_ecr.split('/')[-1])
-        
-        print(f"[DEBUG] Terraform repos to process: {terraform_repos}")
         
         # Find ALL repos in account and categorize them
         all_repos = []
@@ -303,45 +153,43 @@ def empty_ecr_repositories():
         project_repos = []
         
         try:
-            print("[DEBUG] Listing all ECR repositories in account...")
+            print("Listing all ECR repositories in account...")
             response = ecr_client.describe_repositories()
             all_repos = [repo['repositoryName'] for repo in response['repositories']]
-            print(f"[DEBUG] Found {len(all_repos)} total ECR repositories: {all_repos}")
             
             for repo_name in all_repos:
                 if 'bedrock-agentcore' in repo_name.lower():
                     toolkit_repos.append(repo_name)
                 elif 'catalog-agents' in repo_name.lower():
                     project_repos.append(repo_name)
-            
-            print(f"[DEBUG] Toolkit repos: {toolkit_repos}")
-            print(f"[DEBUG] Project repos: {project_repos}")
         except Exception as e:
             print(f"⚠️  Could not list ECR repositories: {e}")
-            import traceback
-            print(f"[DEBUG] Error details: {traceback.format_exc()}")
         
         # Delete project repos (catalog-agents/*)
-        for repo_name in project_repos:
-            try:
-                print(f"Deleting project repo: {repo_name}...")
-                ecr_client.delete_repository(repositoryName=repo_name, force=True)
-                print(f"  ✅ Deleted repository and all images")
-            except ecr_client.exceptions.RepositoryNotFoundException:
-                print(f"  ℹ️  Repository not found")
-            except Exception as e:
-                print(f"  ⚠️  Error: {e}")
+        if project_repos:
+            print(f"Found {len(project_repos)} project ECR repositories")
+            for repo_name in project_repos:
+                try:
+                    print(f"  Deleting: {repo_name}...")
+                    ecr_client.delete_repository(repositoryName=repo_name, force=True)
+                    print(f"  ✅ Deleted repository and all images")
+                except ecr_client.exceptions.RepositoryNotFoundException:
+                    print(f"  ℹ️  Repository not found")
+                except Exception as e:
+                    print(f"  ⚠️  Error: {e}")
         
         # Delete toolkit-created repos (bedrock-agentcore-*)
-        for repo_name in toolkit_repos:
-            try:
-                print(f"Deleting toolkit repo: {repo_name}...")
-                ecr_client.delete_repository(repositoryName=repo_name, force=True)
-                print(f"  ✅ Deleted repository and all images")
-            except ecr_client.exceptions.RepositoryNotFoundException:
-                print(f"  ℹ️  Repository not found")
-            except Exception as e:
-                print(f"  ⚠️  Error: {e}")
+        if toolkit_repos:
+            print(f"Found {len(toolkit_repos)} toolkit ECR repositories")
+            for repo_name in toolkit_repos:
+                try:
+                    print(f"  Deleting: {repo_name}...")
+                    ecr_client.delete_repository(repositoryName=repo_name, force=True)
+                    print(f"  ✅ Deleted repository and all images")
+                except ecr_client.exceptions.RepositoryNotFoundException:
+                    print(f"  ℹ️  Repository not found")
+                except Exception as e:
+                    print(f"  ⚠️  Error: {e}")
         
         if not project_repos and not toolkit_repos:
             print("ℹ️  No ECR repositories found")
@@ -352,7 +200,7 @@ def empty_ecr_repositories():
 def destroy_terraform():
     """Destroy Terraform infrastructure"""
     print("\n" + "=" * 60)
-    print("STEP 5: Destroying Terraform Infrastructure")
+    print("STEP 4: Destroying Terraform Infrastructure")
     print("=" * 60)
     
     terraform_dir = Path("deploy/terraform")
@@ -365,7 +213,6 @@ def destroy_terraform():
     print("   - RDS database")
     print("   - ECS cluster and services")
     print("   - ALB and security groups")
-    print("   - ECR repositories")
     print("   - All data will be PERMANENTLY deleted")
     
     response = input("\nAre you sure you want to continue? (type 'yes' to confirm): ")
@@ -384,7 +231,7 @@ def destroy_terraform():
 def cleanup_local_files():
     """Clean up local configuration files"""
     print("\n" + "=" * 60)
-    print("STEP 6: Cleaning Up Local Files")
+    print("STEP 5: Cleaning Up Local Files")
     print("=" * 60)
     
     files_to_remove = [
@@ -406,30 +253,30 @@ def main():
     print("⚠️  WARNING: This will delete ALL deployed resources!")
     print("   This action CANNOT be undone.\n")
     
+    print("⚠️  NOTE: AgentCore runtimes must be deleted manually BEFORE running this script.")
+    print("   See README.md 'Manual Cleanup Steps' section for instructions.\n")
+    
     try:
-        # Step 1: Delete AgentCore runtimes
-        delete_agentcore_runtimes()
-        
-        # Step 2: Delete CodeBuild projects
+        # Step 1: Delete CodeBuild projects
         delete_codebuild_projects()
         
-        # Step 3: Clean up AgentCore ENIs
+        # Step 2: Clean up AgentCore ENIs
         cleanup_agentcore_enis()
         
-        # Step 4: Empty ECR repositories
+        # Step 3: Delete ECR repositories
         empty_ecr_repositories()
         
-        # Step 5: Destroy Terraform infrastructure
+        # Step 4: Destroy Terraform infrastructure
         destroy_terraform()
         
-        # Step 6: Clean up local files
+        # Step 5: Clean up local files
         cleanup_local_files()
         
         print("\n" + "=" * 60)
         print("🎉 CLEANUP COMPLETE!")
         print("=" * 60)
         print("\n✅ All AWS resources have been removed")
-        print("✅ Local configuration files have been cleaned up")
+        print("\n✅ Local configuration files have been cleaned up")
         print("\n📝 Note: Check AWS Console to verify all resources are deleted")
         
     except KeyboardInterrupt:

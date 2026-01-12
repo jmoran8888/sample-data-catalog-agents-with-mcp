@@ -238,17 +238,36 @@ terraform output alb_dns_name
 
 ⚠️ **Warning**: Destroys ALL resources and data. This action CANNOT be undone.
 
+#### Step 1: Manually Delete AgentCore Runtimes (Required First)
+
+AgentCore runtimes must be deleted manually before running the cleanup script:
+
+```bash
+# List all AgentCore runtimes
+aws bedrock-agentcore-control list-agent-runtimes --region us-east-1
+
+# Delete each runtime (use the ID from the ARN: arn:.../runtime/ID)
+aws bedrock-agentcore-control delete-agent-runtime \
+  --agent-runtime-id unity_catalog_mcp_<suffix>-<id> \
+  --region us-east-1
+
+aws bedrock-agentcore-control delete-agent-runtime \
+  --agent-runtime-id glue_catalog_mcp_<suffix>-<id> \
+  --region us-east-1
+```
+
+#### Step 2: Run Automated Cleanup Script
+
 ```bash
 python setup/cleanup_aws_terraform.py
 ```
 
 This script will:
-1. Delete AgentCore runtimes (Unity & Glue MCP servers)
-2. Delete CodeBuild projects (created by toolkit)
-3. Delete toolkit-created ECR repositories (bedrock-agentcore-*)
-4. Empty Terraform-managed ECR repositories (Terraform will delete them)
-5. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, etc.)
-6. Remove local configuration files (.env, agentcore-config.json, etc.)
+1. Delete CodeBuild projects (created by toolkit)
+2. Clean up AgentCore Network Interfaces (ENIs)
+3. Delete ALL ECR repositories (catalog-agents/* and bedrock-agentcore-*)
+4. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, etc.)
+5. Remove local configuration files (.env, agentcore-config.json, etc.)
 
 ## Usage & Example Queries
 
