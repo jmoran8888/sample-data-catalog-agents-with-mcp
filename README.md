@@ -237,10 +237,11 @@ terraform output alb_dns_name
 
 **Step 3: Start SSM Port Forwarding**
 
-In CloudShell, run this command (replace `<alb-dns>` with your actual ALB DNS):
+In CloudShell, run this command (replace `<bastion-id>` and `<alb-dns>` with actual values):
 
 ```bash
 aws ssm start-session \
+  --target <bastion-id> \
   --document-name AWS-StartPortForwardingSessionToRemoteHost \
   --parameters '{
     "host":["<alb-dns>"],
@@ -250,9 +251,17 @@ aws ssm start-session \
   --region us-east-1
 ```
 
+**Get the bastion ID and ALB DNS:**
+```bash
+cd deploy/terraform
+terraform output bastion_instance_id
+terraform output alb_dns_name
+```
+
 **Example:**
 ```bash
 aws ssm start-session \
+  --target i-0123456789abcdef0 \
   --document-name AWS-StartPortForwardingSessionToRemoteHost \
   --parameters '{
     "host":["internal-catalog-agents-alb-123456.us-east-1.elb.amazonaws.com"],

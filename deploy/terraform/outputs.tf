@@ -28,6 +28,11 @@ output "glue_mcp_ecr_uri" {
   value       = aws_ecr_repository.glue_mcp.repository_url
 }
 
+output "bastion_instance_id" {
+  description = "Bastion instance ID for SSM port forwarding"
+  value       = aws_instance.bastion.id
+}
+
 output "alb_dns_name" {
   description = "DNS name of the load balancer"
   value       = aws_lb.main.dns_name

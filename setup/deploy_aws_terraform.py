@@ -227,6 +227,7 @@ def main():
     print("=" * 60)
     
     alb_dns = get_terraform_output('alb_dns_name')
+    bastion_id = get_terraform_output('bastion_instance_id')
     
     print("\n⚠️  Note: ALB is internal - sample data must be populated manually")
     print("   You can populate data in two ways:\n")
@@ -252,6 +253,7 @@ def main():
     print("1. Open AWS Console → CloudShell")
     print("2. Run this command in CloudShell:")
     print(f"\n   aws ssm start-session \\")
+    print(f"     --target {bastion_id} \\")
     print(f"     --document-name AWS-StartPortForwardingSessionToRemoteHost \\")
     print(f"     --parameters '{{")
     print(f"       \"host\":[\"{alb_dns}\"],")
