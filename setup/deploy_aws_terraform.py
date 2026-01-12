@@ -239,7 +239,7 @@ def main():
     print("\n2. Populate Unity Catalog (after SSM connection - see below):")
     print("   a. Connect via SSM port forwarding (instructions below)")
     print("   b. In a new terminal (keep SSM running), run:")
-    print(f"      python setup/setup_unity_simple.py --port 8443")
+    print(f"      python setup/setup_unity_sample_data.py --port 8443")
     
     print("\nNote: You can also skip data population and use Streamlit UI")
     print("      to explore empty catalogs first\n")

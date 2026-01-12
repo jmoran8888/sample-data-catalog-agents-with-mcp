@@ -99,7 +99,7 @@ python setup/setup_glue_sample_data.py
 
 **For Unity Catalog:**
 ```bash
-python setup/setup_unity_simple.py
+python setup/setup_unity_sample_data.py
 ```
 
 ### 5. Build MCP Servers
@@ -227,7 +227,7 @@ aws ssm start-session \
 
 Then in a new terminal (keep SSM running):
 ```bash
-python setup/setup_unity_simple.py --port 8443
+python setup/setup_unity_sample_data.py --port 8443
 ```
 
 Note: Port 8443 used for AWS SSM tunnel access (local development uses default 8080).
