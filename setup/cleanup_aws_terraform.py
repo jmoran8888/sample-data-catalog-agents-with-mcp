@@ -100,8 +100,8 @@ def delete_agentcore_runtimes():
                 
                 print(f"[DEBUG] Runtime: {name}, ARN: {runtime_arn}")
                 
-                # Match any catalog-related runtime
-                if any(keyword in name.lower() for keyword in ['catalog', 'unity', 'glue', 'mcp']):
+                # Only match runtimes that start with our specific patterns
+                if name.startswith('unity_catalog_mcp') or name.startswith('glue_catalog_mcp'):
                     # Avoid duplicates
                     if not any(existing_id == runtime_id for _, existing_id in runtime_ids):
                         runtime_ids.append((name, runtime_id))
@@ -286,18 +286,12 @@ def empty_ecr_repositories():
         except Exception as e:
             print(f"⚠️  Could not list ECR repositories: {e}")
         
-        # Empty Terraform-managed repos (Terraform will delete them)
+        # Delete Terraform-managed repos (force=True empties and deletes)
         for repo_name in set(terraform_repos):
             try:
-                print(f"Emptying Terraform-managed repo: {repo_name}...")
-                images = ecr_client.list_images(repositoryName=repo_name)
-                image_ids = images.get('imageIds', [])
-                
-                if image_ids:
-                    ecr_client.batch_delete_image(repositoryName=repo_name, imageIds=image_ids)
-                    print(f"  ✅ Deleted {len(image_ids)} images")
-                else:
-                    print(f"  ℹ️  No images")
+                print(f"Deleting Terraform-managed repo: {repo_name}...")
+                ecr_client.delete_repository(repositoryName=repo_name, force=True)
+                print(f"  ✅ Deleted repository and all images")
             except ecr_client.exceptions.RepositoryNotFoundException:
                 print(f"  ℹ️  Repository not found")
             except Exception as e:
