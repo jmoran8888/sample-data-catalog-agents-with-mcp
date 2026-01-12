@@ -228,15 +228,21 @@ def main():
     
     alb_dns = get_terraform_output('alb_dns_name')
     
-    print("\n⚠️  Note: ALB is internal - cannot populate data from local machine")
-    print("   Sample data will be populated after you connect via SSM\n")
+    print("\n⚠️  Note: ALB is internal - sample data must be populated manually")
+    print("   You can populate data in two ways:\n")
     
-    print("After connecting via SSM port forwarding (see instructions below),")
-    print("you can populate Unity Catalog with sample data by running:")
-    print(f"\n   export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog")
-    print(f"   export DISABLE_SSL_VERIFY=1")
-    print(f"   python setup/setup_unity_simple.py")
-    print("\nOr wait 2-3 minutes for services to fully start, then access Streamlit UI\n")
+    print("Option A: Populate Glue Catalog (can run now from local machine):")
+    print("   python setup/setup_glue_sample_data.py")
+    
+    print("\nOption B: Populate Unity Catalog (after SSM connection):")
+    print("   1. Connect via SSM port forwarding (see instructions below)")
+    print("   2. Run these commands:")
+    print(f"      export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog")
+    print(f"      export DISABLE_SSL_VERIFY=1")
+    print(f"      python setup/setup_unity_simple.py")
+    
+    print("\nOption C: Use Streamlit UI to query empty catalogs first,")
+    print("          then populate data as needed\n")
     
     # Final summary
     print("=" * 60)
