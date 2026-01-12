@@ -48,6 +48,10 @@ def delete_agentcore_runtimes():
     try:
         import boto3
         
+        # Get region first and show it
+        region = get_terraform_output('aws_region', default='us-east-1')
+        print(f"[DEBUG] Using AWS region: {region}")
+        
         # Load runtime IDs from config file or .env
         runtime_ids = []
         
@@ -260,13 +264,19 @@ def empty_ecr_repositories():
     
     try:
         aws_region = get_terraform_output('aws_region', default='us-east-1')
+        print(f"[DEBUG] Using AWS region: {aws_region}")
         ecr_client = boto3.client('ecr', region_name=aws_region)
         
-        # Get Terraform-managed ECR repos (will be deleted by Terraform)
+        # Get Terraform-managed ECR repos
         terraform_repos = []
         unity_ecr = get_terraform_output('unity_mcp_ecr_uri')
         glue_ecr = get_terraform_output('glue_mcp_ecr_uri')
         streamlit_ecr = get_terraform_output('ecr_repository_url')
+        
+        print(f"[DEBUG] Terraform outputs:")
+        print(f"[DEBUG]   unity_mcp_ecr_uri: {unity_ecr}")
+        print(f"[DEBUG]   glue_mcp_ecr_uri: {glue_ecr}")
+        print(f"[DEBUG]   ecr_repository_url: {streamlit_ecr}")
         
         if unity_ecr:
             terraform_repos.append(unity_ecr.split('/')[-1])
@@ -274,6 +284,8 @@ def empty_ecr_repositories():
             terraform_repos.append(glue_ecr.split('/')[-1])
         if streamlit_ecr:
             terraform_repos.append(streamlit_ecr.split('/')[-1])
+        
+        print(f"[DEBUG] Terraform repos to process: {terraform_repos}")
         
         # Find toolkit-created repos (need to be deleted manually)
         toolkit_repos = []
