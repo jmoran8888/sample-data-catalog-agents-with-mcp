@@ -287,21 +287,34 @@ def empty_ecr_repositories():
         
         print(f"[DEBUG] Terraform repos to process: {terraform_repos}")
         
-        # Find toolkit-created repos (need to be deleted manually)
+        # Find ALL repos in account and categorize them
+        all_repos = []
         toolkit_repos = []
+        project_repos = []
+        
         try:
+            print("[DEBUG] Listing all ECR repositories in account...")
             response = ecr_client.describe_repositories()
-            for repo in response['repositories']:
-                repo_name = repo['repositoryName']
+            all_repos = [repo['repositoryName'] for repo in response['repositories']]
+            print(f"[DEBUG] Found {len(all_repos)} total ECR repositories: {all_repos}")
+            
+            for repo_name in all_repos:
                 if 'bedrock-agentcore' in repo_name.lower():
                     toolkit_repos.append(repo_name)
+                elif 'catalog-agents' in repo_name.lower():
+                    project_repos.append(repo_name)
+            
+            print(f"[DEBUG] Toolkit repos: {toolkit_repos}")
+            print(f"[DEBUG] Project repos: {project_repos}")
         except Exception as e:
             print(f"⚠️  Could not list ECR repositories: {e}")
+            import traceback
+            print(f"[DEBUG] Error details: {traceback.format_exc()}")
         
-        # Delete Terraform-managed repos (force=True empties and deletes)
-        for repo_name in set(terraform_repos):
+        # Delete project repos (catalog-agents/*)
+        for repo_name in project_repos:
             try:
-                print(f"Deleting Terraform-managed repo: {repo_name}...")
+                print(f"Deleting project repo: {repo_name}...")
                 ecr_client.delete_repository(repositoryName=repo_name, force=True)
                 print(f"  ✅ Deleted repository and all images")
             except ecr_client.exceptions.RepositoryNotFoundException:
@@ -309,21 +322,18 @@ def empty_ecr_repositories():
             except Exception as e:
                 print(f"  ⚠️  Error: {e}")
         
-        # Empty AND delete toolkit-created repos
+        # Delete toolkit-created repos (bedrock-agentcore-*)
         for repo_name in toolkit_repos:
             try:
-                print(f"Deleting toolkit-created repo: {repo_name}...")
-                
-                # Delete repo (force=True deletes images too)
+                print(f"Deleting toolkit repo: {repo_name}...")
                 ecr_client.delete_repository(repositoryName=repo_name, force=True)
                 print(f"  ✅ Deleted repository and all images")
-                    
             except ecr_client.exceptions.RepositoryNotFoundException:
                 print(f"  ℹ️  Repository not found")
             except Exception as e:
                 print(f"  ⚠️  Error: {e}")
         
-        if not terraform_repos and not toolkit_repos:
+        if not project_repos and not toolkit_repos:
             print("ℹ️  No ECR repositories found")
                 
     except Exception as e:
