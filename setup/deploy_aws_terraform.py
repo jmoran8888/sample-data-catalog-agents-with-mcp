@@ -60,8 +60,36 @@ def main():
     print("⚠️  Note: ALB is internal and accessed via SSM port forwarding")
     print("   See final instructions for CloudShell access setup\n")
     
-    # Force IPv4 for Terraform registry connectivity
+    # Debug AWS credentials
+    print("=" * 60)
+    print("DEBUG: Checking AWS Credentials")
+    print("=" * 60)
     import os
+    
+    print(f"AWS_PROFILE: {os.environ.get('AWS_PROFILE', 'not set')}")
+    print(f"AWS_DEFAULT_REGION: {os.environ.get('AWS_DEFAULT_REGION', 'not set')}")
+    print(f"AWS_ACCESS_KEY_ID: {'set' if os.environ.get('AWS_ACCESS_KEY_ID') else 'not set'}")
+    print(f"AWS_SECRET_ACCESS_KEY: {'set' if os.environ.get('AWS_SECRET_ACCESS_KEY') else 'not set'}")
+    print(f"AWS_SESSION_TOKEN: {'set' if os.environ.get('AWS_SESSION_TOKEN') else 'not set'}")
+    
+    print("\nTesting AWS credentials with boto3...")
+    try:
+        sts = boto3.client('sts')
+        identity = sts.get_caller_identity()
+        print(f"✓ AWS Account: {identity['Account']}")
+        print(f"✓ User ARN: {identity['Arn']}")
+        print(f"✓ User ID: {identity['UserId']}")
+    except Exception as e:
+        print(f"❌ AWS credentials test failed: {e}")
+        print("\nPlease check your AWS credentials:")
+        print("  - Run: aws sso login (if using SSO)")
+        print("  - Or update ~/.aws/credentials with valid keys")
+        print("  - Then run this script again")
+        sys.exit(1)
+    
+    print()
+    
+    # Force IPv4 for Terraform registry connectivity
     os.environ['TF_DISABLE_IPV6'] = '1'
     
     # Step 1: Deploy Terraform Infrastructure
