@@ -233,7 +233,7 @@ def main():
     
     print("1. Connect via SSM port forwarding (instructions below)")
     print("2. In a new terminal (keep SSM running), run:")
-    print(f"   python setup/setup_unity_sample_data.py")
+    print(f"   python setup/setup_unity_sample_data.py --port 8443")
     
     print("\nNote: AWS Glue catalog is already populated by Terraform during deployment.\n")
     

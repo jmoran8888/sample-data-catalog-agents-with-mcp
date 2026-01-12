@@ -1,41 +1,43 @@
 #!/usr/bin/env python3
 """
-Script to add sample tables to Unity Catalog for AWS deployment via SSM tunnel.
-Uses port 8443 (HTTPS) for SSM port forwarding access.
-For local development, use setup_unity_simple.py instead.
+Simplified script to add sample tables to Unity Catalog using basic types.
+Supports both local (port 8080) and AWS SSM tunnel (port 8443) access.
 """
 
 import requests
 import json
+import os
 import urllib3
+import argparse
 
-# Unity Catalog API via SSM tunnel at port 8443 (HTTPS)
-BASE_URL = "https://localhost:8443/api/2.1/unity-catalog"
+def get_base_url(port=None):
+    """Get BASE_URL with support for port parameter"""
+    # Priority: 1. Environment variable, 2. Port parameter, 3. Default 8080
+    if os.environ.get('UNITY_CATALOG_URL'):
+        return os.environ.get('UNITY_CATALOG_URL')
+    
+    port = port or 8080
+    protocol = 'https' if port == 8443 else 'http'
+    return f'{protocol}://localhost:{port}/api/2.1/unity-catalog'
 
-# Disable SSL warnings for self-signed certificate
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-VERIFY_SSL = False
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Populate Unity Catalog with sample data')
+parser.add_argument('--port', type=int, choices=[8080, 8443], 
+                    help='Port number (8080 for local, 8443 for AWS SSM tunnel)')
+args = parser.parse_args()
+
+BASE_URL = get_base_url(args.port)
+
+# Disable SSL warnings if HTTPS (port 8443)
+if 'https://' in BASE_URL or os.environ.get('DISABLE_SSL_VERIFY'):
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    VERIFY_SSL = False
+else:
+    VERIFY_SSL = True
 
 print(f"Using Unity Catalog URL: {BASE_URL}")
-print("SSL verification disabled (self-signed certificate)")
-
-def create_schema(catalog_name, schema_name):
-    """Create a schema in Unity Catalog"""
-    url = f"{BASE_URL}/schemas"
-    data = {
-        "name": schema_name,
-        "catalog_name": catalog_name,
-        "comment": f"Sample schema for {schema_name} data"
-    }
-    
-    response = requests.post(url, json=data, verify=VERIFY_SSL)
-    if response.status_code == 201:
-        print(f"✓ Created schema: {catalog_name}.{schema_name}")
-    elif response.status_code == 409:
-        print(f"✓ Schema already exists: {catalog_name}.{schema_name}")
-    else:
-        print(f"✗ Failed to create schema {schema_name}: {response.text}")
-    return response.status_code in [201, 409]
+if not VERIFY_SSL:
+    print("SSL verification disabled")
 
 def create_table(catalog_name, schema_name, table_name, columns, comment):
     """Create a table in Unity Catalog"""
@@ -62,12 +64,7 @@ def create_table(catalog_name, schema_name, table_name, columns, comment):
 def main():
     catalog_name = "unity"
     
-    # Create schemas
-    schemas = ["retail", "analytics", "customer_data"]
-    for schema in schemas:
-        create_schema(catalog_name, schema)
-    
-    # Simple tables with basic types only (matching setup_unity_simple.py for compatibility)
+    # Simple tables with basic types only
     tables = [
         {
             "schema": "retail",
@@ -116,8 +113,7 @@ def main():
             table["comment"]
         )
     
-    print(f"\n✓ Sample data setup complete!")
-    print(f"Created {len(schemas)} schemas and {len(tables)} tables in Unity Catalog")
+    print(f"\n✓ Simple sample data setup complete!")
 
 if __name__ == "__main__":
     main()

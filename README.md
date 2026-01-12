@@ -228,7 +228,7 @@ aws ssm start-session \
 
 Then in a new terminal (keep SSM running):
 ```bash
-python setup/setup_unity_sample_data.py
+python setup/setup_unity_sample_data.py --port 8443
 ```
 
 ### 5. Run the Application
