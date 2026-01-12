@@ -119,8 +119,10 @@ def main():
         print("❌ deploy/terraform directory not found")
         sys.exit(1)
     
-    print("Initializing Terraform (forcing IPv4)...")
-    run_command("terraform init", cwd=str(terraform_dir), show_output=True)
+    # Skip init since providers are already cached locally
+    # Terraform init has IPv6 connectivity issues to registry.terraform.io
+    print("Skipping terraform init (providers already cached)...")
+    print("✓ Using cached providers from .terraform/ directory")
     
     # Check if terraform.tfvars exists
     tfvars_path = terraform_dir / "terraform.tfvars"
