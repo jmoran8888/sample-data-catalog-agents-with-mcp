@@ -226,17 +226,7 @@ def main():
     print("STEP 5: Create Sample Catalog Schemas")
     print("=" * 60)
     
-    alb_dns = get_terraform_output('alb_dns_name')
-    bastion_id = get_terraform_output('bastion_instance_id')
-        
-    print("To create Unity Catalog schemas and tables:\n")
-    
-    print("1. Connect via SSM port forwarding (instructions below)")
-    print("2. In a new terminal (keep SSM running), run:")
-    print(f"   python setup/setup_unity_sample_data.py --port 8443")
-    
-    print("\nNote: AWS Glue catalog is already populated by Terraform during deployment.\n")
-    
+
     print("\nAlternatively, populate Unity after SSM connection - see below:")
     
     # Final summary
@@ -263,6 +253,13 @@ def main():
     print(f"   Glue MCP: {glue_id}")
     print(f"\n⏳ Note: Allow a few minutes for ECS service to fully start")
     print(f"\n📖 For more details, see README.md section on SSM Access")
+    alb_dns = get_terraform_output('alb_dns_name')
+    bastion_id = get_terraform_output('bastion_instance_id')
+    print(f"\n To create Unity Catalog schemas and tables:\n")
+    print("1. Make sure you are connected via SSM port forwarding (instructions above)")
+    print("2. In a new terminal (keep SSM running), run:")
+    print(f"   python setup/setup_unity_sample_data.py ")
+    print("\nNote: AWS Glue catalog is already populated by Terraform during deployment.\n")
 
 if __name__ == "__main__":
     try:
