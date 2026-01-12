@@ -1,7 +1,5 @@
 # Copy this file to terraform.tfvars and fill in your values
-
-# Database password (optional - has default)
-# db_password = "YourSecurePassword123!"
+# With SSM-based access, minimal configuration is required
 
 # AWS region (optional - defaults to us-east-1)
 # aws_region = "us-east-1"
@@ -9,6 +7,9 @@
 # Environment name (optional - defaults to dev)
 # environment = "dev"
 
-# IP Address Whitelist (REQUIRED for security)
-# Get your IP with: curl ifconfig.me
-allowed_ip_address = ""  # Set to your IP address (e.g., "1.2.3.4")
+# Database password (optional - has default, but change for production)
+# db_password = "YourSecurePassword123!"
+
+# Note: No IP address configuration needed!
+# Access is via AWS Systems Manager (SSM) port forwarding through CloudShell
+# See README.md for access instructions
