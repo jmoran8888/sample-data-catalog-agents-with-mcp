@@ -165,23 +165,25 @@ def empty_ecr_repositories():
         except Exception as e:
             print(f"⚠️  Could not list ECR repositories: {e}")
         
-        # Empty project repos (catalog-agents/*) - Terraform will delete them
-        if project_repos:
-            print(f"Found {len(project_repos)} project ECR repositories")
-            for repo_name in project_repos:
-                try:
-                    print(f"  Emptying: {repo_name}...")
-                    images = ecr_client.list_images(repositoryName=repo_name)
-                    image_ids = images.get('imageIds', [])
-                    if image_ids:
-                        ecr_client.batch_delete_image(repositoryName=repo_name, imageIds=image_ids)
-                        print(f"  ✅ Deleted {len(image_ids)} images (Terraform will delete repo)")
-                    else:
-                        print(f"  ℹ️  No images to delete")
-                except ecr_client.exceptions.RepositoryNotFoundException:
-                    print(f"  ℹ️  Repository not found")
-                except Exception as e:
-                    print(f"  ⚠️  Error: {e}")
+        # Empty project repos (catalog-agents/streamlit-app only) - Terraform will delete them
+        # Note: AgentCore MCP repos are created by toolkit with randomized names (bedrock-agentcore-*)
+        streamlit_repo = 'catalog-agents/streamlit-app'
+        if streamlit_repo in project_repos:
+            try:
+                print(f"  Emptying: {streamlit_repo}...")
+                images = ecr_client.list_images(repositoryName=streamlit_repo)
+                image_ids = images.get('imageIds', [])
+                if image_ids:
+                    ecr_client.batch_delete_image(repositoryName=streamlit_repo, imageIds=image_ids)
+                    print(f"  ✅ Deleted {len(image_ids)} images (Terraform will delete repo)")
+                else:
+                    print(f"  ℹ️  No images to delete")
+            except ecr_client.exceptions.RepositoryNotFoundException:
+                print(f"  ℹ️  Repository not found")
+            except Exception as e:
+                print(f"  ⚠️  Error: {e}")
+        else:
+            print("ℹ️  Streamlit ECR repository not found")
         
         # Delete toolkit-created repos (bedrock-agentcore-*)
         if toolkit_repos:
