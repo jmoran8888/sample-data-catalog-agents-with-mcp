@@ -287,6 +287,24 @@ https://localhost:8443
 - Query both Unity and Glue catalogs
 - View sample data and test agents
 
+#### Populating Sample Data (Both Catalogs):
+
+**Glue Catalog** - Run from your local machine (anytime):
+```bash
+python setup/setup_glue_sample_data.py
+```
+
+**Unity Catalog** - Run while SSM tunnel is active:
+
+In a new terminal (keep SSM tunnel running in the first terminal):
+```bash
+export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog
+export DISABLE_SSL_VERIFY=1
+python setup/setup_unity_simple.py
+```
+
+This creates sample databases and tables in both catalogs that demonstrate the agent capabilities.
+
 #### Access Flow Diagram:
 ```
 [Your Browser] → localhost:8443
