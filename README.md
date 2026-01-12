@@ -219,25 +219,44 @@ This single script automatically:
 
 The application uses an **internal ALB** (not publicly accessible) for enhanced security. Access is provided through AWS Systems Manager port forwarding.
 
-**Zero Local Setup Required** - Everything runs in AWS CloudShell!
+**⚠️ Important**: SSM port forwarding must run on **your local machine**, not in CloudShell, so your browser can access localhost.
+
+#### Prerequisites - One-Time Setup:
+
+**Install AWS Session Manager Plugin** (required for port forwarding):
+
+**macOS:**
+```bash
+brew install --cask session-manager-plugin
+```
+
+**Linux:**
+```bash
+curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+sudo dpkg -i session-manager-plugin.deb
+```
+
+**Windows:**
+Download from: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html
+
+**Verify installation:**
+```bash
+session-manager-plugin
+# Should show version and usage info
+```
+
+**Why not CloudShell?** Port forwarding creates a tunnel from where the command runs. If you run it in CloudShell, the tunnel endpoint is in AWS, and your local browser can't access AWS's localhost. The tunnel must run on your local machine.
 
 #### Step-by-Step Access Instructions:
 
-**Step 1: Get ALB DNS Name**
+**Step 1: Get Connection Details**
 ```bash
 cd deploy/terraform
+terraform output bastion_instance_id
 terraform output alb_dns_name
-# Example: internal-catalog-agents-alb-123456.us-east-1.elb.amazonaws.com
 ```
 
-**Step 2: Open AWS CloudShell**
-- Go to AWS Console (https://console.aws.amazon.com)
-- Click the CloudShell icon in the top navigation bar
-- Wait for CloudShell terminal to initialize (takes a few seconds)
-
-**Step 3: Start SSM Port Forwarding**
-
-In CloudShell, run this command (replace `<bastion-id>` and `<alb-dns>` with actual values):
+**Step 2: Start SSM Port Forwarding** (run on your local terminal):
 
 ```bash
 aws ssm start-session \
@@ -271,19 +290,19 @@ aws ssm start-session \
   --region us-east-1
 ```
 
-**Step 4: Access in Your Browser**
+**Step 3: Access in Your Browser**
 
-While the tunnel is running in CloudShell, open your **local browser**:
+While the tunnel is running on your local machine, open your **local browser**:
 ```
 https://localhost:8443
 ```
 
-**Step 5: Accept SSL Warning**
+**Step 4: Accept SSL Warning**
 - Browser will show a security warning (self-signed certificate)
 - Click "Advanced" → "Proceed to localhost (unsafe)" or similar
 - **This is safe** - it's your own deployment with self-signed cert
 
-**Step 6: Use the Application**
+**Step 5: Use the Application**
 - Streamlit UI will load at `https://localhost:8443`
 - Query both Unity and Glue catalogs
 - View sample data and test agents
@@ -292,7 +311,9 @@ https://localhost:8443
 ```
 [Your Browser] → localhost:8443
        ↓
-[SSM Tunnel in CloudShell] (encrypted)
+[SSM Tunnel on Your Machine] (encrypted)
+       ↓
+[Bastion Instance] (in private subnet)
        ↓
 [Internal ALB] → port 443 (private VPC)
        ↓
