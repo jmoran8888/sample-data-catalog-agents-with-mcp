@@ -200,7 +200,11 @@ This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP server
 - If your IP changes later, re-run `python setup/deploy_aws_terraform.py` or manually update `allowed_ip_address` in `deploy/terraform/terraform.tfvars` and run `terraform apply`
 - The `terraform.tfvars` file is in `.gitignore` - never commit it
 
-### Deployment
+### Deployment Options
+
+You can deploy using either **Terraform** or **AWS CDK**:
+
+#### Option 1: Terraform (Recommended for Production)
 
 ```bash
 # Complete automated deployment
@@ -214,6 +218,51 @@ This single script automatically:
 4. Updates ECS services with configuration
 5. Populates both AWS Glue and Unity catalogs with sample data
 6. Provides access URLs
+
+#### Option 2: AWS CDK (Alternative IaC)
+
+**Prerequisites:** CDK requires a virtual environment for dependencies.
+
+```bash
+# Create and activate CDK virtual environment
+python3 -m venv .venv-cdk
+source .venv-cdk/bin/activate  # On Linux/macOS
+# .venv-cdk\Scripts\activate    # On Windows
+
+# Install CDK dependencies
+cd deploy/cdk
+pip install -r requirements.txt
+cd ../..
+
+# Complete automated deployment
+python setup/deploy_aws_cdk.py
+```
+
+**CDK Deployment includes:**
+- Same infrastructure as Terraform (VPC, ECS, RDS, ALB, etc.)
+- Automatic IP whitelisting and configuration
+- MCP server deployment via AgentCore toolkit
+- Sample data population
+
+**CDK vs Terraform:**
+- **Terraform**: Mature, widely adopted, imperative configuration
+- **CDK**: Type-safe, programmatic infrastructure, native AWS constructs
+- Both deploy identical infrastructure
+- Choose based on team preference and existing expertise
+
+**CDK-Specific Commands:**
+```bash
+# View infrastructure changes before deploying
+cd deploy/cdk
+cdk diff
+
+# Manually deploy without automation script
+cdk deploy --all --parameters CatalogAgentsSecurityStack:AllowedIPAddress=YOUR.IP.HERE/32
+
+# Destroy CDK infrastructure (after deleting AgentCore runtimes)
+cd ../..
+python setup/cleanup_aws_cdk.py
+```
 
 ### Accessing the Application
 

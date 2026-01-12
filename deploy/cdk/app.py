@@ -5,32 +5,19 @@ Deploys the same infrastructure as Terraform but using AWS CDK
 """
 
 import aws_cdk as cdk
-from stacks.network_stack import NetworkStack
-from stacks.security_stack import SecurityStack
-from stacks.database_stack import DatabaseStack
-from stacks.storage_stack import StorageStack
-from stacks.compute_stack import ComputeStack
-from stacks.loadbalancer_stack import LoadBalancerStack
-from stacks.ecs_services_stack import EcsServicesStack
-from stacks.agentcore_stack import AgentCoreStack
-from stacks.glue_stack import GlueStack
+from stacks import (
+    NetworkStack,
+    SecurityStack,
+    DatabaseStack,
+    StorageStack,
+    ComputeStack,
+    LoadBalancerStack,
+    EcsServicesStack,
+    AgentCoreStack,
+    GlueStack,
+)
 
 app = cdk.App()
-
-# Get configuration from context
-environment = app.node.try_get_context("environment") or "dev"
-owner = app.node.try_get_context("owner") or "catalog-agents-team"
-cost_center = app.node.try_get_context("cost_center") or "engineering"
-allowed_ip = app.node.try_get_context("allowed_ip")
-
-# Default tags for all resources
-tags = {
-    "Project": "catalog-agents-demo",
-    "Environment": environment,
-    "Owner": owner,
-    "CostCenter": cost_center,
-    "FISTarget": "true"
-}
 
 # Environment configuration
 env = cdk.Environment(
@@ -38,83 +25,94 @@ env = cdk.Environment(
     region=app.node.try_get_context("region") or "us-east-1"
 )
 
-# Create stacks in dependency order
+# Phase 1: Network Stack - VPC, Subnets, NAT Gateway
 network_stack = NetworkStack(
-    app, "CatalogAgentsNetworkStack",
-    env=env,
-    tags=tags
+    app,
+    "CatalogAgentsNetworkStack",
+    env=env
 )
 
+# Phase 2: Security Stack - Security Groups and IP Whitelisting
 security_stack = SecurityStack(
-    app, "CatalogAgentsSecurityStack",
+    app,
+    "CatalogAgentsSecurityStack",
     vpc=network_stack.vpc,
-    allowed_ip=allowed_ip,
-    env=env,
-    tags=tags
+    env=env
+)
+security_stack.add_dependency(network_stack)
+
+# Phase 3: Storage Stack - S3 Buckets and ECR Repositories
+storage_stack = StorageStack(
+    app,
+    "CatalogAgentsStorageStack",
+    env=env
 )
 
+# Phase 4: Database Stack - RDS PostgreSQL
 database_stack = DatabaseStack(
-    app, "CatalogAgentsDatabaseStack",
+    app,
+    "CatalogAgentsDatabaseStack",
     vpc=network_stack.vpc,
     rds_security_group=security_stack.rds_security_group,
-    environment=environment,
-    env=env,
-    tags=tags
+    env=env
 )
+database_stack.add_dependency(security_stack)
 
-storage_stack = StorageStack(
-    app, "CatalogAgentsStorageStack",
-    environment=environment,
-    env=env,
-    tags=tags
-)
-
+# Phase 5: Compute Stack - ECS Cluster and IAM Roles
 compute_stack = ComputeStack(
-    app, "CatalogAgentsComputeStack",
-    vpc=network_stack.vpc,
-    ecs_tasks_security_group=security_stack.ecs_tasks_security_group,
-    database=database_stack.database,
-    streamlit_repository=storage_stack.streamlit_repository,
-    environment=environment,
-    env=env,
-    tags=tags
+    app,
+    "CatalogAgentsComputeStack",
+    env=env
 )
 
+# Phase 6: Load Balancer Stack - ALB, Target Groups, HTTPS Certificate
 loadbalancer_stack = LoadBalancerStack(
-    app, "CatalogAgentsLoadBalancerStack",
+    app,
+    "CatalogAgentsLoadBalancerStack",
     vpc=network_stack.vpc,
     alb_security_group=security_stack.alb_security_group,
-    unity_target_group_target=compute_stack.unity_catalog_service,
-    streamlit_target_group_target=compute_stack.streamlit_service,
-    env=env,
-    tags=tags
+    env=env
 )
+loadbalancer_stack.add_dependency(security_stack)
 
+# Phase 7: ECS Services Stack - Task Definitions and Services
 ecs_services_stack = EcsServicesStack(
-    app, "CatalogAgentsEcsServicesStack",
-    unity_catalog_service=compute_stack.unity_catalog_service,
-    streamlit_service=compute_stack.streamlit_service,
+    app,
+    "CatalogAgentsEcsServicesStack",
+    vpc=network_stack.vpc,
+    cluster=compute_stack.cluster,
+    ecs_security_group=security_stack.ecs_tasks_security_group,
+    task_execution_role=compute_stack.task_execution_role,
+    task_role=compute_stack.task_role,
     unity_target_group=loadbalancer_stack.unity_target_group,
     streamlit_target_group=loadbalancer_stack.streamlit_target_group,
-    env=env,
-    tags=tags
+    database=database_stack.database,
+    streamlit_repository=storage_stack.streamlit_repository,
+    alb_dns_name=loadbalancer_stack.alb.load_balancer_dns_name,
+    env=env
 )
+ecs_services_stack.add_dependency(compute_stack)
+ecs_services_stack.add_dependency(loadbalancer_stack)
+ecs_services_stack.add_dependency(database_stack)
 
+# Phase 8: AgentCore Stack - IAM Role and Security Group
 agentcore_stack = AgentCoreStack(
-    app, "CatalogAgentsAgentCoreStack",
+    app,
+    "CatalogAgentsAgentCoreStack",
     vpc=network_stack.vpc,
-    agentcore_security_group=security_stack.agentcore_security_group,
-    environment=environment,
-    env=env,
-    tags=tags
+    unity_mcp_repository=storage_stack.unity_mcp_repository,
+    glue_mcp_repository=storage_stack.glue_mcp_repository,
+    env=env
 )
+agentcore_stack.add_dependency(storage_stack)
 
+# Phase 9: Glue Stack - Glue Databases and Tables
 glue_stack = GlueStack(
-    app, "CatalogAgentsGlueStack",
+    app,
+    "CatalogAgentsGlueStack",
     glue_data_bucket=storage_stack.glue_data_bucket,
-    environment=environment,
-    env=env,
-    tags=tags
+    env=env
 )
+glue_stack.add_dependency(storage_stack)
 
 app.synth()
