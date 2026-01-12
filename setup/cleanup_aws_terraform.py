@@ -91,7 +91,9 @@ def delete_agentcore_runtimes():
                 for runtime in response.get('agentRuntimeSummaries', []):
                     name = runtime.get('agentRuntimeName', '')
                     runtime_id = runtime.get('agentRuntimeId', '')
-                    if 'catalogmcp' in name.lower() or 'unitymcp' in name.lower() or 'gluemcp' in name.lower():
+                    # Match patterns: unity_catalog_mcp_, glue_catalog_mcp_, or any catalog-related runtime
+                    if ('catalog' in name.lower() and 'mcp' in name.lower()) or \
+                       'unity' in name.lower() or 'glue' in name.lower():
                         runtime_ids.append((name, runtime_id))
                         print(f"   Found: {name} ({runtime_id})")
             except Exception as e:
