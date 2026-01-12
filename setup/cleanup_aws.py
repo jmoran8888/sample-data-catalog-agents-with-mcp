@@ -239,60 +239,72 @@ def cleanup_agentcore_enis():
         print(f"⚠️  Error checking ENIs: {e}")
 
 def empty_ecr_repositories():
-    """Empty ECR repositories before Terraform destroy"""
+    """Empty and delete ECR repositories"""
     print("\n" + "=" * 60)
-    print("STEP 4: Emptying ECR Repositories")
+    print("STEP 4: Cleaning Up ECR Repositories")
     print("=" * 60)
     
     try:
         aws_region = get_terraform_output('aws_region', default='us-east-1')
         ecr_client = boto3.client('ecr', region_name=aws_region)
         
-        # Get ECR repository names from Terraform
-        repos = []
+        # Get Terraform-managed ECR repos (will be deleted by Terraform)
+        terraform_repos = []
         unity_ecr = get_terraform_output('unity_mcp_ecr_uri')
         glue_ecr = get_terraform_output('glue_mcp_ecr_uri')
         streamlit_ecr = get_terraform_output('ecr_repository_url')
         
         if unity_ecr:
-            repos.append(unity_ecr.split('/')[-1])
+            terraform_repos.append(unity_ecr.split('/')[-1])
         if glue_ecr:
-            repos.append(glue_ecr.split('/')[-1])
+            terraform_repos.append(glue_ecr.split('/')[-1])
         if streamlit_ecr:
-            repos.append(streamlit_ecr.split('/')[-1])
+            terraform_repos.append(streamlit_ecr.split('/')[-1])
         
-        # Also check for toolkit-created repos
+        # Find toolkit-created repos (need to be deleted manually)
+        toolkit_repos = []
         try:
             response = ecr_client.describe_repositories()
             for repo in response['repositories']:
-                if 'bedrock-agentcore' in repo['repositoryName'].lower():
-                    repos.append(repo['repositoryName'])
+                repo_name = repo['repositoryName']
+                if 'bedrock-agentcore' in repo_name.lower():
+                    toolkit_repos.append(repo_name)
         except Exception as e:
             print(f"⚠️  Could not list ECR repositories: {e}")
         
-        # Delete all images in each repository
-        for repo_name in set(repos):  # Use set to avoid duplicates
+        # Empty Terraform-managed repos (Terraform will delete them)
+        for repo_name in set(terraform_repos):
             try:
-                print(f"Emptying {repo_name}...")
-                
-                # List all images
+                print(f"Emptying Terraform-managed repo: {repo_name}...")
                 images = ecr_client.list_images(repositoryName=repo_name)
                 image_ids = images.get('imageIds', [])
                 
                 if image_ids:
-                    # Delete all images
-                    ecr_client.batch_delete_image(
-                        repositoryName=repo_name,
-                        imageIds=image_ids
-                    )
-                    print(f"  ✅ Deleted {len(image_ids)} images from {repo_name}")
+                    ecr_client.batch_delete_image(repositoryName=repo_name, imageIds=image_ids)
+                    print(f"  ✅ Deleted {len(image_ids)} images")
                 else:
-                    print(f"  ℹ️  No images in {repo_name}")
+                    print(f"  ℹ️  No images")
+            except ecr_client.exceptions.RepositoryNotFoundException:
+                print(f"  ℹ️  Repository not found")
+            except Exception as e:
+                print(f"  ⚠️  Error: {e}")
+        
+        # Empty AND delete toolkit-created repos
+        for repo_name in toolkit_repos:
+            try:
+                print(f"Deleting toolkit-created repo: {repo_name}...")
+                
+                # Delete repo (force=True deletes images too)
+                ecr_client.delete_repository(repositoryName=repo_name, force=True)
+                print(f"  ✅ Deleted repository and all images")
                     
             except ecr_client.exceptions.RepositoryNotFoundException:
-                print(f"  ℹ️  Repository {repo_name} not found")
+                print(f"  ℹ️  Repository not found")
             except Exception as e:
-                print(f"  ⚠️  Error emptying {repo_name}: {e}")
+                print(f"  ⚠️  Error: {e}")
+        
+        if not terraform_repos and not toolkit_repos:
+            print("ℹ️  No ECR repositories found")
                 
     except Exception as e:
         print(f"⚠️  Error accessing ECR: {e}")
