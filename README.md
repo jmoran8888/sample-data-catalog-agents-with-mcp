@@ -222,9 +222,12 @@ After deployment completes, the script will output:
 
 **To access:**
 1. Open the Application URL in your browser (already configured for your IP)
-2. Access is automatically restricted to the IP address detected during deployment
-3. If your IP changes, re-run `python setup/deploy_aws_terraform.py` (it will auto-update your IP)
-4. Use the web interface to query both catalogs
+2. **You'll see a security warning** because the ALB uses a self-signed HTTPS certificate
+   - Click "Advanced" or "Details" and proceed to the site
+   - This is expected and safe - it's your own deployment
+3. Access is automatically restricted to the IP address detected during deployment
+4. If your IP changes, re-run `python setup/deploy_aws_terraform.py` (it will auto-update your IP)
+5. Use the web interface to query both catalogs
 
 **To get URL later:**
 ```bash
@@ -232,7 +235,11 @@ cd deploy/terraform
 terraform output alb_dns_name
 ```
 
-**Security Note:** The ALB only accepts HTTPS connections from your automatically whitelisted IP address. Access from other IPs will be blocked by the security group.
+**Security Notes:** 
+- The ALB uses HTTPS with a **self-signed certificate** (browser will show warning - safe to proceed)
+- The ALB only accepts HTTPS connections from your automatically whitelisted IP address
+- Access from other IPs will be blocked by the security group
+- For production use, replace with a real certificate (see Terraform alb.tf)
 
 ### Cleanup
 
