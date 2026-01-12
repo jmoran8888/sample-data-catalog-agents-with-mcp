@@ -229,20 +229,17 @@ def main():
     alb_dns = get_terraform_output('alb_dns_name')
     bastion_id = get_terraform_output('bastion_instance_id')
     
-    print("\n⚠️  Note: ALB is internal - sample data must be populated manually\n")
+    print("\n⚠️  Note: Glue databases/tables created by Terraform automatically\n")
     
-    print("To populate BOTH catalogs with sample data:\n")
+    print("To populate Unity Catalog with sample data:\n")
     
-    print("1. Populate Glue Catalog (run now from local machine):")
-    print("   python setup/setup_glue_sample_data.py")
+    print("1. Connect via SSM port forwarding (instructions below)")
+    print("2. In a new terminal (keep SSM running), run:")
+    print(f"   python setup/setup_unity_sample_data.py")
     
-    print("\n2. Populate Unity Catalog (after SSM connection - see below):")
-    print("   a. Connect via SSM port forwarding (instructions below)")
-    print("   b. In a new terminal (keep SSM running), run:")
-    print(f"      python setup/setup_unity_sample_data.py")
+    print("\nNote: AWS Glue catalog is already populated by Terraform during deployment.\n")
     
-    print("\nNote: You can also skip data population and use Streamlit UI")
-    print("      to explore empty catalogs first\n")
+    print("\nAlternatively, populate Unity after SSM connection - see below:")
     
     # Final summary
     print("=" * 60)

@@ -210,9 +210,8 @@ The deployment takes approximately 10-15 minutes.
 ### 4. Populate Sample Data
 
 **AWS Glue Catalog:**
-```bash
-python setup/setup_glue_sample_data.py
-```
+
+Glue databases and tables are automatically created by Terraform during deployment. No manual setup needed!
 
 **Unity Catalog:**
 
@@ -230,7 +229,7 @@ Then in a new terminal (keep SSM running):
 python setup/setup_unity_sample_data.py
 ```
 
-Note: setup_unity_sample_data.py is configured for AWS SSM tunnel (port 8443, HTTPS). For local development, use setup_unity_simple.py instead.
+Note: setup_unity_sample_data.py is configured for AWS SSM tunnel (port 8443, HTTPS). Glue catalog is pre-populated by Terraform.
 
 ### 5. Run the Application
 
