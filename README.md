@@ -212,8 +212,8 @@ This single script automatically:
 2. Builds and pushes Streamlit Docker image to ECR
 3. Deploys MCP servers to AgentCore Runtime (toolkit builds MCP images)
 4. Updates ECS services with configuration
-5. Populates both AWS Glue and Unity catalogs with sample data
-6. Provides SSM access instructions
+5. Provides instructions to populate both AWS Glue and Unity catalogs with sample data
+6. Provides SSM access instructions with bastion ID and ALB DNS
 
 ### Accessing the Application via SSM Port Forwarding
 
