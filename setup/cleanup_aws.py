@@ -144,83 +144,38 @@ def delete_agentcore_runtimes():
         print(f"⚠️  Error deleting AgentCore runtimes: {e}")
 
 def delete_codebuild_projects():
-    """Delete CodeBuild projects created by AgentCore toolkit for this deployment"""
+    """Delete CodeBuild projects created by AgentCore toolkit"""
     print("\n" + "=" * 60)
     print("STEP 2: Deleting CodeBuild Projects")
     print("=" * 60)
     
     try:
-        # Read agent names from config to find associated CodeBuild projects
-        agent_names = []
+        region = get_terraform_output('aws_region', default='us-east-1')
+        codebuild = boto3.client('codebuild', region_name=region)
         
-        # Try to get agent names from .bedrock_agentcore.yaml
-        yaml_file = Path('.bedrock_agentcore.yaml')
-        if yaml_file.exists():
-            print("Reading agent names from .bedrock_agentcore.yaml...")
-            try:
-                with open(yaml_file, 'r') as f:
-                    content = f.read()
-                    # Extract agent names (they're in the YAML as keys)
-                    import re
-                    # Look for agent_name entries in YAML
-                    matches = re.findall(r'agent_name:\s*([^\s\n]+)', content)
-                    agent_names.extend(matches)
-            except Exception as e:
-                print(f"⚠️  Could not parse YAML: {e}")
+        print("Searching for AgentCore CodeBuild projects...")
         
-        # Also try agentcore-config.json
-        config_file = Path('agentcore-config.json')
-        if config_file.exists() and not agent_names:
-            print("Reading from agentcore-config.json...")
-            try:
-                with open(config_file, 'r') as f:
-                    config = json.load(f)
-                    # Extract runtime IDs which contain the agent names
-                    for key in ['unity_mcp', 'glue_mcp']:
-                        if key in config:
-                            runtime_id = config[key].get('runtime_id', '')
-                            # Runtime ID format: agentName-randomId
-                            # Try to extract agent name from it
-                            if runtime_id:
-                                # Agent names are typically stored separately
-                                # For now, use known patterns
-                                pass
-            except Exception as e:
-                print(f"⚠️  Could not parse config: {e}")
+        # List all CodeBuild projects
+        response = codebuild.list_projects()
+        project_names = response.get('projects', [])
         
-        if agent_names:
-            region = get_terraform_output('aws_region', default='us-east-1')
-            codebuild = boto3.client('codebuild', region_name=region)
-            
-            print(f"Looking for CodeBuild projects matching: {agent_names}")
-            
-            # List all CodeBuild projects
-            response = codebuild.list_projects()
-            project_names = response.get('projects', [])
-            
-            # Find projects that match our agent names
-            toolkit_projects = []
-            for project_name in project_names:
-                for agent_name in agent_names:
-                    if agent_name.lower() in project_name.lower():
-                        toolkit_projects.append(project_name)
-                        break
-            
-            if toolkit_projects:
-                print(f"Found {len(toolkit_projects)} CodeBuild projects for this deployment:")
-                for project in toolkit_projects:
-                    try:
-                        print(f"  Deleting: {project}")
-                        codebuild.delete_project(name=project)
-                        print(f"  ✅ Deleted CodeBuild project: {project}")
-                    except Exception as e:
-                        print(f"  ⚠️  Error deleting {project}: {e}")
-            else:
-                print("ℹ️  No matching CodeBuild projects found")
+        # Find projects created by AgentCore toolkit (pattern: bedrock-agentcore-*-builder)
+        toolkit_projects = []
+        for project_name in project_names:
+            if 'bedrock-agentcore' in project_name.lower() and '-builder' in project_name.lower():
+                toolkit_projects.append(project_name)
+        
+        if toolkit_projects:
+            print(f"Found {len(toolkit_projects)} AgentCore CodeBuild projects:")
+            for project in toolkit_projects:
+                try:
+                    print(f"  Deleting: {project}")
+                    codebuild.delete_project(name=project)
+                    print(f"  ✅ Deleted CodeBuild project: {project}")
+                except Exception as e:
+                    print(f"  ⚠️  Error deleting {project}: {e}")
         else:
-            print("ℹ️  No agent names found in config files")
-            print("   CodeBuild projects will not be automatically deleted")
-            print("   You may need to manually delete them from AWS Console")
+            print("ℹ️  No AgentCore CodeBuild projects found")
             
     except Exception as e:
         print(f"⚠️  Error accessing CodeBuild: {e}")
