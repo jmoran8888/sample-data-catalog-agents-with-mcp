@@ -245,8 +245,6 @@ session-manager-plugin
 # Should show version and usage info
 ```
 
-**Why not CloudShell?** Port forwarding creates a tunnel from where the command runs. If you run it in CloudShell, the tunnel endpoint is in AWS, and your local browser can't access AWS's localhost. The tunnel must run on your local machine.
-
 #### Step-by-Step Access Instructions:
 
 **Step 1: Run the Deployment Script**
