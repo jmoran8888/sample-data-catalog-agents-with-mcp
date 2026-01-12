@@ -157,8 +157,6 @@ def main():
     
     # Build and push Streamlit app only
     print("\n🐳 Building Streamlit App (may take 1-2 minutes)...")
-    # Ensure Docker uses the active context
-    run_command(f"docker context use desktop-linux 2>/dev/null || true", check=False)
     run_command(f"docker build --platform linux/amd64 -f deploy/docker/Dockerfile.streamlit -t {streamlit_ecr_uri}:latest .", show_output=True)
     
     print("📤 Pushing Streamlit App to ECR...")
