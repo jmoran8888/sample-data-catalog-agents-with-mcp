@@ -60,6 +60,10 @@ def main():
     print("⚠️  Note: ALB is internal and accessed via SSM port forwarding")
     print("   See final instructions for CloudShell access setup\n")
     
+    # Force IPv4 for Terraform registry connectivity
+    import os
+    os.environ['TF_DISABLE_IPV6'] = '1'
+    
     # Step 1: Deploy Terraform Infrastructure
     print("=" * 60)
     print("STEP 1: Deploying Terraform Infrastructure")
@@ -70,7 +74,7 @@ def main():
         print("❌ deploy/terraform directory not found")
         sys.exit(1)
     
-    print("Initializing Terraform...")
+    print("Initializing Terraform (forcing IPv4)...")
     run_command("terraform init", cwd=str(terraform_dir), show_output=True)
     
     # Check if terraform.tfvars exists
