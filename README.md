@@ -280,28 +280,28 @@ https://localhost:8443
 - Click "Advanced" → "Proceed to localhost (unsafe)" or similar
 - **This is safe** - it's your own deployment with self-signed cert
 
-**Step 5: Use the Application**
-- Streamlit UI will load at `https://localhost:8443`
-- Query both Unity and Glue catalogs
-- View sample data and test agents
-
 #### Populating Sample Data (Both Catalogs):
 
-**Glue Catalog** - Run from your local machine (anytime):
+Before using the application, populate both catalogs with sample data:
+
+**AWS Glue Catalog:**
 ```bash
 python setup/setup_glue_sample_data.py
 ```
 
-**Unity Catalog** - Run while SSM tunnel is active:
+**Unity Catalog** (while SSM tunnel is running):
 
 In a new terminal (keep SSM tunnel running in the first terminal):
 ```bash
-export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog
-export DISABLE_SSL_VERIFY=1
 python setup/setup_unity_simple.py
 ```
 
-This creates sample databases and tables in both catalogs that demonstrate the agent capabilities.
+Note: Unity Catalog setup script automatically uses `http://localhost:8080` locally or will prompt for URL if needed.
+
+**Step 5: Use the Application**
+- Streamlit UI will load at `https://localhost:8443`
+- Query both Unity and Glue catalogs
+- View sample data and test agents
 
 #### Access Flow Diagram:
 ```
