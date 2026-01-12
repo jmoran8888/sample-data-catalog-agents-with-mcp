@@ -221,9 +221,9 @@ def main():
     
     print("✅ ECS services updated\n")
     
-    # Step 5: Sample Data Population Instructions
+    # Step 5: Catalog Schema Creation Instructions
     print("=" * 60)
-    print("STEP 5: Sample Data Population")
+    print("STEP 5: Create Sample Catalog Schemas")
     print("=" * 60)
     
     alb_dns = get_terraform_output('alb_dns_name')
@@ -231,7 +231,7 @@ def main():
     
     print("\n⚠️  Note: Glue databases/tables created by Terraform automatically\n")
     
-    print("To populate Unity Catalog with sample data:\n")
+    print("To create Unity Catalog schemas and tables:\n")
     
     print("1. Connect via SSM port forwarding (instructions below)")
     print("2. In a new terminal (keep SSM running), run:")
