@@ -249,44 +249,24 @@ session-manager-plugin
 
 #### Step-by-Step Access Instructions:
 
-**Step 1: Get Connection Details**
-```bash
-cd deploy/terraform
-terraform output bastion_instance_id
-terraform output alb_dns_name
-```
+**Step 1: Run the Deployment Script**
 
-**Step 2: Start SSM Port Forwarding** (run on your local terminal):
+The deployment script provides a complete SSM command at the end:
 
 ```bash
-aws ssm start-session \
-  --target <bastion-id> \
-  --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters '{
-    "host":["<alb-dns>"],
-    "portNumber":["443"],
-    "localPortNumber":["8443"]
-  }' \
-  --region us-east-1
+python setup/deploy_aws_terraform.py
 ```
 
-**Get the bastion ID and ALB DNS:**
-```bash
-cd deploy/terraform
-terraform output bastion_instance_id
-terraform output alb_dns_name
-```
+**Step 2: Copy the SSM Command from Output**
 
-**Example:**
+At the end of deployment, the script outputs a ready-to-use SSM command with all values (bastion ID, ALB DNS, region) already filled in. Simply copy and paste it into your **local terminal** (not CloudShell).
+
+Example output:
 ```bash
 aws ssm start-session \
   --target i-0123456789abcdef0 \
   --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters '{
-    "host":["internal-catalog-agents-alb-123456.us-east-1.elb.amazonaws.com"],
-    "portNumber":["443"],
-    "localPortNumber":["8443"]
-  }' \
+  --parameters '{"host":["internal-catalog-agents-alb-123456.us-east-1.elb.amazonaws.com"],"portNumber":["443"],"localPortNumber":["8443"]}' \
   --region us-east-1
 ```
 
