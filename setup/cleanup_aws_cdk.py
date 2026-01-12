@@ -41,12 +41,8 @@ def get_cdk_output(stack_name, output_name, default=None):
     return default
 
 def get_aws_region():
-    """Get AWS region from config or default"""
-    try:
-        session = boto3.Session()
-        return session.region_name or 'us-east-1'
-    except:
-        return 'us-east-1'
+    """Get AWS region - hardcoded to us-east-1 for consistency with Terraform"""
+    return 'us-east-1'
 
 def delete_codebuild_projects():
     """Delete CodeBuild projects created by AgentCore toolkit"""

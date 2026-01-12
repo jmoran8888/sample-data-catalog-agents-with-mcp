@@ -104,12 +104,8 @@ def get_public_ip():
     sys.exit(1)
 
 def get_aws_region():
-    """Get AWS region from config or default"""
-    try:
-        session = boto3.Session()
-        return session.region_name or 'us-east-1'
-    except:
-        return 'us-east-1'
+    """Get AWS region - hardcoded to us-east-1 for consistency with Terraform"""
+    return 'us-east-1'
 
 def get_aws_account():
     """Get AWS account ID"""
@@ -169,7 +165,7 @@ def main():
         f"--parameters CatalogAgentsSecurityStack:AllowedIPAddress={ip_address}/32 "
         f"--parameters CatalogAgentsDatabaseStack:DBUsername=unitycatalog "
         f"--parameters CatalogAgentsDatabaseStack:DBPassword=ChangeThisSecurePassword123! "
-        f"--parameters CatalogAgentsEcsServicesStack:AWSRegion={aws_region}"
+        f"--parameters CatalogAgentsEcsServicesStack:AWSRegion=us-east-1"
     )
     
     run_command(deploy_cmd, cwd=str(cdk_dir), show_output=True)

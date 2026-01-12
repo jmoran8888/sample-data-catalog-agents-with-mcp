@@ -19,10 +19,10 @@ from stacks import (
 
 app = cdk.App()
 
-# Environment configuration
+# Environment configuration - Force us-east-1 for consistency with Terraform
 env = cdk.Environment(
     account=app.node.try_get_context("account"),
-    region=app.node.try_get_context("region") or "us-east-1"
+    region="us-east-1"  # Hardcoded to match Terraform deployment
 )
 
 # Phase 1: Network Stack - VPC, Subnets, NAT Gateway
