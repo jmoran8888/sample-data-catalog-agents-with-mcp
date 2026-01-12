@@ -228,9 +228,7 @@ def main():
     
     alb_dns = get_terraform_output('alb_dns_name')
     bastion_id = get_terraform_output('bastion_instance_id')
-    
-    print("\n⚠️  Note: Glue databases/tables created by Terraform automatically\n")
-    
+        
     print("To create Unity Catalog schemas and tables:\n")
     
     print("1. Connect via SSM port forwarding (instructions below)")
