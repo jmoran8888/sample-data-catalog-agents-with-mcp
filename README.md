@@ -102,7 +102,7 @@ python setup/setup_glue_simple.py
 python setup/setup_unity_simple.py
 ```
 
-Note: These scripts create database schemas and table definitions (metadata), not actual data rows.
+Note: These scripts create database schemas and table definitions (metadata).
 
 ### 5. Build MCP Servers
 
