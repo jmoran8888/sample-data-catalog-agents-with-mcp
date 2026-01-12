@@ -99,8 +99,18 @@ def deploy_mcp_server(server_name, entrypoint_file, agent_execution_role, region
     
     # Get runtime details
     agent_info = runtime.status()
-    runtime_id = agent_info.endpoint.get('agentRuntimeId', '')
-    runtime_arn = agent_info.endpoint.get('agentRuntimeArn', '')
+    
+    # Try multiple possible fields for runtime ID
+    runtime_id = agent_info.endpoint.get('agentRuntimeId', '') or \
+                 launch_result.agent_id or \
+                 ''
+    runtime_arn = agent_info.endpoint.get('agentRuntimeArn', '') or \
+                  launch_result.agent_arn or \
+                  ''
+    
+    print(f"\n[DEBUG] Runtime details from agent_info: {agent_info.endpoint}")
+    print(f"[DEBUG] Extracted Runtime ID: {runtime_id}")
+    print(f"[DEBUG] Extracted Runtime ARN: {runtime_arn}")
     
     print(f"\n✅ {server_name} deployed successfully!")
     print(f"   Runtime ID: {runtime_id}")

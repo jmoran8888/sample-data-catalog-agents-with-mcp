@@ -78,26 +78,38 @@ def delete_agentcore_runtimes():
                             glue_id = line.split('=')[1].strip()
                             runtime_ids.append(('Glue', glue_id))
         
-        if not runtime_ids:
-            print("ℹ️  No runtime IDs found in config files")
-            print("   Checking for any AgentCore runtimes in your account...")
+        # Always check for runtimes in account (config files might be incomplete)
+        print("Checking for AgentCore runtimes in your account...")
+        
+        region = get_terraform_output('aws_region', default='us-east-1')
+        client = boto3.client('bedrock-agentcore-control', region_name=region)
+        
+        try:
+            response = client.list_agent_runtimes(maxResults=100)
+            print(f"[DEBUG] Found {len(response.get('agentRuntimeSummaries', []))} total runtimes in account")
             
-            # List all runtimes and find catalog-related ones
-            region = get_terraform_output('aws_region', default='us-east-1')
-            client = boto3.client('bedrock-agentcore-control', region_name=region)
-            
-            try:
-                response = client.list_agent_runtimes(maxResults=50)
-                for runtime in response.get('agentRuntimeSummaries', []):
-                    name = runtime.get('agentRuntimeName', '')
+            for runtime in response.get('agentRuntimeSummaries', []):
+                name = runtime.get('agentRuntimeName', '')
+                runtime_arn = runtime.get('agentRuntimeArn', '')
+                
+                # Extract runtime ID from ARN (format: arn:aws:bedrock-agentcore:region:account:runtime/ID)
+                if runtime_arn and '/runtime/' in runtime_arn:
+                    runtime_id = runtime_arn.split('/runtime/')[-1]
+                else:
                     runtime_id = runtime.get('agentRuntimeId', '')
-                    # Match patterns: unity_catalog_mcp_, glue_catalog_mcp_, or any catalog-related runtime
-                    if ('catalog' in name.lower() and 'mcp' in name.lower()) or \
-                       'unity' in name.lower() or 'glue' in name.lower():
+                
+                print(f"[DEBUG] Runtime: {name}, ARN: {runtime_arn}")
+                
+                # Match any catalog-related runtime
+                if any(keyword in name.lower() for keyword in ['catalog', 'unity', 'glue', 'mcp']):
+                    # Avoid duplicates
+                    if not any(existing_id == runtime_id for _, existing_id in runtime_ids):
                         runtime_ids.append((name, runtime_id))
                         print(f"   Found: {name} ({runtime_id})")
-            except Exception as e:
-                print(f"⚠️  Could not list runtimes: {e}")
+        except Exception as e:
+            print(f"⚠️  Could not list runtimes: {e}")
+            import traceback
+            print(f"[DEBUG] Error details: {traceback.format_exc()}")
         
         # Delete found runtimes
         if runtime_ids:
