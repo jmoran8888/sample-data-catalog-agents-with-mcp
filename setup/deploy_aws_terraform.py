@@ -60,11 +60,17 @@ def main():
     print("⚠️  Note: ALB is internal and accessed via SSM port forwarding")
     print("   See final instructions for CloudShell access setup\n")
     
+    # Check if AWS_PROFILE is set
+    import os
+    if not os.environ.get('AWS_PROFILE'):
+        print("⚠️  AWS_PROFILE not set - will use default credentials")
+        print("   If you have multiple AWS profiles, set AWS_PROFILE before running:")
+        print("   export AWS_PROFILE=<your-profile-name>\n")
+    
     # Debug AWS credentials
     print("=" * 60)
     print("DEBUG: Checking AWS Credentials")
     print("=" * 60)
-    import os
     
     print(f"AWS_PROFILE: {os.environ.get('AWS_PROFILE', 'not set')}")
     print(f"AWS_DEFAULT_REGION: {os.environ.get('AWS_DEFAULT_REGION', 'not set')}")
@@ -72,19 +78,30 @@ def main():
     print(f"AWS_SECRET_ACCESS_KEY: {'set' if os.environ.get('AWS_SECRET_ACCESS_KEY') else 'not set'}")
     print(f"AWS_SESSION_TOKEN: {'set' if os.environ.get('AWS_SESSION_TOKEN') else 'not set'}")
     
+    # Check what profile AWS CLI is using
+    print("\nChecking AWS CLI configuration...")
+    cli_profile = run_command("aws configure get profile", check=False)
+    if not cli_profile:
+        print("AWS CLI Profile: default")
+    else:
+        print(f"AWS CLI Profile: {cli_profile}")
+    
     print("\nTesting AWS credentials with boto3...")
     try:
+        # Use default session first
         sts = boto3.client('sts')
         identity = sts.get_caller_identity()
         print(f"✓ AWS Account: {identity['Account']}")
         print(f"✓ User ARN: {identity['Arn']}")
         print(f"✓ User ID: {identity['UserId']}")
     except Exception as e:
-        print(f"❌ AWS credentials test failed: {e}")
-        print("\nPlease check your AWS credentials:")
-        print("  - Run: aws sso login (if using SSO)")
-        print("  - Or update ~/.aws/credentials with valid keys")
-        print("  - Then run this script again")
+        print(f"❌ boto3 default credentials failed: {e}")
+        print("\n⚠️  CREDENTIAL MISMATCH DETECTED")
+        print("   AWS CLI may be using a different profile than Python/boto3")
+        print("\n   Solutions:")
+        print("   1. Set environment variable: export AWS_PROFILE=<profile-name>")
+        print("   2. Or update ~/.aws/credentials [default] section with working keys")
+        print(f"\n   Available profiles: {run_command('aws configure list-profiles', check=False)}")
         sys.exit(1)
     
     print()
