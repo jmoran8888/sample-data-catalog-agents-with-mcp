@@ -229,21 +229,22 @@ def main():
     alb_dns = get_terraform_output('alb_dns_name')
     bastion_id = get_terraform_output('bastion_instance_id')
     
-    print("\n⚠️  Note: ALB is internal - sample data must be populated manually")
-    print("   You can populate data in two ways:\n")
+    print("\n⚠️  Note: ALB is internal - sample data must be populated manually\n")
     
-    print("Option A: Populate Glue Catalog (can run now from local machine):")
+    print("To populate BOTH catalogs with sample data:\n")
+    
+    print("1. Populate Glue Catalog (run now from local machine):")
     print("   python setup/setup_glue_sample_data.py")
     
-    print("\nOption B: Populate Unity Catalog (after SSM connection):")
-    print("   1. Connect via SSM port forwarding (see instructions below)")
-    print("   2. Run these commands:")
+    print("\n2. Populate Unity Catalog (after SSM connection - see below):")
+    print("   a. Connect via SSM port forwarding (instructions below)")
+    print("   b. In a new terminal, run:")
     print(f"      export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog")
     print(f"      export DISABLE_SSL_VERIFY=1")
     print(f"      python setup/setup_unity_simple.py")
     
-    print("\nOption C: Use Streamlit UI to query empty catalogs first,")
-    print("          then populate data as needed\n")
+    print("\nNote: You can also skip data population and use Streamlit UI")
+    print("      to explore empty catalogs first\n")
     
     # Final summary
     print("=" * 60)
