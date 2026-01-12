@@ -55,7 +55,7 @@ class DatabaseStack(Stack):
             self,
             "UnityCatalogDatabase",
             engine=rds.DatabaseInstanceEngine.postgres(
-                version=rds.PostgresEngineVersion.VER_15_14
+                version=rds.PostgresEngineVersion.VER_15
             ),
             instance_type=ec2.InstanceType.of(
                 ec2.InstanceClass.BURSTABLE3,
