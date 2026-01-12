@@ -245,9 +245,10 @@ python setup/cleanup_aws.py
 This script will:
 1. Delete AgentCore runtimes (Unity & Glue MCP servers)
 2. Delete CodeBuild projects (created by toolkit)
-3. Empty all ECR repositories (including toolkit-created ones)
-4. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, etc.)
-5. Remove local configuration files (.env, agentcore-config.json, etc.)
+3. Delete toolkit-created ECR repositories (bedrock-agentcore-*)
+4. Empty Terraform-managed ECR repositories (Terraform will delete them)
+5. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, etc.)
+6. Remove local configuration files (.env, agentcore-config.json, etc.)
 
 ## Usage & Example Queries
 
