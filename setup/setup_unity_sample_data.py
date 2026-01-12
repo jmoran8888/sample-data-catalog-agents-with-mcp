@@ -94,10 +94,10 @@ def main():
                 {"name": "order_id", "type_name": "STRING", "nullable": False, "comment": "Unique order identifier"},
                 {"name": "customer_id", "type_name": "STRING", "nullable": False, "comment": "Customer who placed the order"},
                 {"name": "product_id", "type_name": "STRING", "nullable": False, "comment": "Product ordered"},
-                {"name": "quantity", "type_name": "INTEGER", "nullable": False, "comment": "Quantity ordered"},
-                {"name": "unit_price", "type_name": "DECIMAL(10,2)", "nullable": False, "comment": "Price per unit"},
-                {"name": "total_amount", "type_name": "DECIMAL(10,2)", "nullable": False, "comment": "Total order amount"},
-                {"name": "order_date", "type_name": "DATE", "nullable": False, "comment": "Date order was placed"},
+                {"name": "quantity", "type_name": "LONG", "nullable": False, "comment": "Quantity ordered"},
+                {"name": "unit_price", "type_name": "DOUBLE", "nullable": False, "comment": "Price per unit"},
+                {"name": "total_amount", "type_name": "DOUBLE", "nullable": False, "comment": "Total order amount"},
+                {"name": "order_date", "type_name": "STRING", "nullable": False, "comment": "Date order was placed"},
                 {"name": "status", "type_name": "STRING", "nullable": True, "comment": "Order status"},
                 {"name": "created_at", "type_name": "TIMESTAMP", "nullable": True, "comment": "Order creation timestamp"}
             ]
@@ -112,9 +112,9 @@ def main():
                 {"name": "category", "type_name": "STRING", "nullable": True, "comment": "Product category"},
                 {"name": "subcategory", "type_name": "STRING", "nullable": True, "comment": "Product subcategory"},
                 {"name": "brand", "type_name": "STRING", "nullable": True, "comment": "Product brand"},
-                {"name": "price", "type_name": "DECIMAL(10,2)", "nullable": False, "comment": "Product price"},
-                {"name": "cost", "type_name": "DECIMAL(10,2)", "nullable": True, "comment": "Product cost"},
-                {"name": "inventory_count", "type_name": "INTEGER", "nullable": True, "comment": "Current inventory count"},
+                {"name": "price", "type_name": "DOUBLE", "nullable": False, "comment": "Product price"},
+                {"name": "cost", "type_name": "DOUBLE", "nullable": True, "comment": "Product cost"},
+                {"name": "inventory_count", "type_name": "LONG", "nullable": True, "comment": "Current inventory count"},
                 {"name": "description", "type_name": "STRING", "nullable": True, "comment": "Product description"},
                 {"name": "created_at", "type_name": "TIMESTAMP", "nullable": True, "comment": "Product creation timestamp"}
             ]
@@ -124,12 +124,12 @@ def main():
             "name": "sales_metrics",
             "comment": "Daily sales performance metrics",
             "columns": [
-                {"name": "date", "type_name": "DATE", "nullable": False, "comment": "Sales date"},
+                {"name": "date", "type_name": "STRING", "nullable": False, "comment": "Sales date"},
                 {"name": "region", "type_name": "STRING", "nullable": True, "comment": "Sales region"},
-                {"name": "total_sales", "type_name": "DECIMAL(15,2)", "nullable": False, "comment": "Total sales amount"},
-                {"name": "total_orders", "type_name": "INTEGER", "nullable": False, "comment": "Total number of orders"},
-                {"name": "unique_customers", "type_name": "INTEGER", "nullable": False, "comment": "Number of unique customers"},
-                {"name": "avg_order_value", "type_name": "DECIMAL(10,2)", "nullable": True, "comment": "Average order value"},
+                {"name": "total_sales", "type_name": "DOUBLE", "nullable": False, "comment": "Total sales amount"},
+                {"name": "total_orders", "type_name": "LONG", "nullable": False, "comment": "Total number of orders"},
+                {"name": "unique_customers", "type_name": "LONG", "nullable": False, "comment": "Number of unique customers"},
+                {"name": "avg_order_value", "type_name": "DOUBLE", "nullable": True, "comment": "Average order value"},
                 {"name": "created_at", "type_name": "TIMESTAMP", "nullable": True, "comment": "Record creation timestamp"}
             ]
         },
@@ -140,10 +140,10 @@ def main():
             "columns": [
                 {"name": "customer_id", "type_name": "STRING", "nullable": False, "comment": "Customer identifier"},
                 {"name": "segment", "type_name": "STRING", "nullable": True, "comment": "Customer segment (VIP, Regular, New)"},
-                {"name": "lifetime_value", "type_name": "DECIMAL(12,2)", "nullable": True, "comment": "Customer lifetime value"},
-                {"name": "total_orders", "type_name": "INTEGER", "nullable": True, "comment": "Total number of orders"},
-                {"name": "avg_order_value", "type_name": "DECIMAL(10,2)", "nullable": True, "comment": "Average order value"},
-                {"name": "last_order_date", "type_name": "DATE", "nullable": True, "comment": "Date of last order"},
+                {"name": "lifetime_value", "type_name": "DOUBLE", "nullable": True, "comment": "Customer lifetime value"},
+                {"name": "total_orders", "type_name": "LONG", "nullable": True, "comment": "Total number of orders"},
+                {"name": "avg_order_value", "type_name": "DOUBLE", "nullable": True, "comment": "Average order value"},
+                {"name": "last_order_date", "type_name": "STRING", "nullable": True, "comment": "Date of last order"},
                 {"name": "churn_risk", "type_name": "STRING", "nullable": True, "comment": "Churn risk level (High, Medium, Low)"},
                 {"name": "updated_at", "type_name": "TIMESTAMP", "nullable": True, "comment": "Last update timestamp"}
             ]
