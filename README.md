@@ -241,8 +241,14 @@ https://localhost:8443
 
 **Note:** Browser will show SSL warning (self-signed certificate) - click "Advanced" → "Proceed" - this is safe.
 
-- Query both Unity and Glue catalogs
-- View sample data and test agents
+#### Security Benefits:
+
+✅ **No public internet exposure** - ALB is completely private<br/>
+✅ **No static IP required** - Works from anywhere with AWS credentials<br/>
+✅ **MFA compatible** - Uses your AWS IAM authentication (with MFA if enabled)<br/>
+✅ **Audit trail** - All SSM sessions logged in CloudWatch<br/>
+✅ **Minimal local setup** - Only AWS CLI and Session Manager plugin needed<br/>
+✅ **Encrypted tunnels** - Traffic encrypted through AWS infrastructure<br/>
 
 ### Cleanup
 
@@ -280,6 +286,7 @@ This script will:
 5. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, ECR, etc.)
 6. Remove local configuration files (.env, agentcore-config.json, etc.)
 
+
 ## Example Queries
 
 **For AWS Glue Catalog:**
@@ -303,37 +310,7 @@ This script will:
 - "Show me all tables in the AWS Glue catalog"
 - "Find tables with columns containing 'timestamp' across both catalogs"
 
-## Limitations
-
-This project is a proof-of-concept. Do not use this code for production purposes without performing additional analysis. Since we are using an open-source version of the Unity catalog, experiment with open-source data rather than production data.
-
-## Security
-
-**IMPORTANT:** Before deploying this project to AWS:
-1. Review and follow all security guidelines in [SECURITY.md](SECURITY.md)
-2. Replace all placeholder passwords with secure values
-3. Never commit `terraform.tfvars`, `*.tfstate`, or `tfplan` files
-4. Consider using AWS Secrets Manager for credential management
-
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information on reporting security issues.
-
-## License
-
-This library is licensed under the MIT-0 License. See the LICENSE file.
-#### Access Flow Diagram:
-```
-[Your Browser] → localhost:8443
-       ↓
-[SSM Tunnel on Your Machine] (encrypted)
-       ↓
-[Bastion Instance] (in private subnet)
-       ↓
-[Internal ALB] → port 443 (private VPC)
-       ↓
-[ECS Streamlit Service] → port 8501
-```
-
-#### Troubleshooting:
+## Troubleshooting
 
 **"command not found: aws"**
 - Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
@@ -352,74 +329,6 @@ This library is licensed under the MIT-0 License. See the LICENSE file.
 - Keep your local terminal window open (where SSM is running)
 - If you close it, re-run the SSM command
 - No data loss - just reconnects to existing infrastructure
-
-#### Security Benefits:
-
-✅ **No public internet exposure** - ALB is completely private
-✅ **No static IP required** - Works from anywhere with AWS credentials
-✅ **MFA compatible** - Uses your AWS IAM authentication (with MFA if enabled)
-✅ **Audit trail** - All SSM sessions logged in CloudWatch
-✅ **Minimal local setup** - Only AWS CLI and Session Manager plugin needed
-✅ **Encrypted tunnels** - Traffic encrypted through AWS infrastructure
-
-### Cleanup
-
-⚠️ **Warning**: Destroys ALL resources and data. This action CANNOT be undone.
-
-#### Step 1: Manually Delete AgentCore Runtimes (Required First)
-
-AgentCore runtimes must be deleted manually before running the cleanup script:
-
-```bash
-# List all AgentCore runtimes
-aws bedrock-agentcore-control list-agent-runtimes --region us-east-1
-
-# Delete each runtime (use the ID from the ARN: arn:.../runtime/ID)
-aws bedrock-agentcore-control delete-agent-runtime \
-  --agent-runtime-id unity_catalog_mcp_<suffix>-<id> \
-  --region us-east-1
-
-aws bedrock-agentcore-control delete-agent-runtime \
-  --agent-runtime-id glue_catalog_mcp_<suffix>-<id> \
-  --region us-east-1
-```
-
-#### Step 2: Run Automated Cleanup Script
-
-```bash
-python setup/cleanup_aws_terraform.py
-```
-
-This script will:
-1. Delete CodeBuild projects (created by toolkit)
-2. Clean up AgentCore Network Interfaces (ENIs)
-3. Empty Terraform-managed ECR repos (Terraform will delete them)
-4. Delete toolkit-created ECR repositories (bedrock-agentcore-*)
-5. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, ECR, etc.)
-6. Remove local configuration files (.env, agentcore-config.json, etc.)
-
-## Example Queries
-
-**For AWS Glue Catalog:**
-- "List all databases in the Glue catalog"
-- "Show me all tables in database X"
-- "Find tables with 'customer' in the name"
-- "Get details for table Y in database X"
-- "Find tables with columns containing 'timestamp'"
-
-**For Unity Catalog:**
-- "List all databases in the Unity catalog"
-- "Show me all tables in catalog_name.schema_name"
-- "Find tables with 'customer' in the name"
-- "Get details for table_name in catalog_name.schema_name"
-- "Find tables with columns containing 'timestamp'"
-
-**For Unified Catalog Agent:**
-- "List all databases in both catalogs"
-- "Find tables with 'customer' in the name in both catalogs"
-- "Show me all tables in the Unity catalog"
-- "Show me all tables in the AWS Glue catalog"
-- "Find tables with columns containing 'timestamp' across both catalogs"
 
 ## Limitations
 
