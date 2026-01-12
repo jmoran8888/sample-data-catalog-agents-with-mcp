@@ -90,7 +90,7 @@ Install Unity Catalog [locally](https://github.com/unitycatalog/unitycatalog) an
 - The Unity catalog API should be accessible at http://localhost:8080/api/2.1/unity-catalog
 - The API follows the [Unity Catalog REST API specification](https://docs.unitycatalog.io/swagger-docs/)
 
-### 4. Populate Sample Data
+### 4. Create Sample Catalog Schemas
 
 **For AWS Glue Catalog:**
 ```bash
@@ -101,6 +101,8 @@ python setup/setup_glue_simple.py
 ```bash
 python setup/setup_unity_simple.py
 ```
+
+Note: These scripts create database schemas and table definitions (metadata), not actual data rows.
 
 ### 5. Build MCP Servers
 
@@ -207,11 +209,11 @@ This script automatically:
 
 The deployment takes approximately 10-15 minutes.
 
-### 4. Populate Sample Data
+### 4. Create Sample Catalog Schemas
 
 **AWS Glue Catalog:**
 
-Glue databases and tables are automatically created by Terraform during deployment. No manual setup needed!
+Glue databases and table schemas are automatically created by Terraform during deployment. No manual setup needed!
 
 **Unity Catalog:**
 
@@ -228,8 +230,6 @@ Then in a new terminal (keep SSM running):
 ```bash
 python setup/setup_unity_sample_data.py
 ```
-
-Note: setup_unity_sample_data.py is configured for AWS SSM tunnel (port 8443, HTTPS). Glue catalog is pre-populated by Terraform.
 
 ### 5. Run the Application
 
