@@ -244,13 +244,6 @@ https://localhost:8443
 - Query both Unity and Glue catalogs
 - View sample data and test agents
 
-**Security Benefits:**
-✅ No public internet exposure - ALB is completely private
-✅ No static IP required - works from anywhere with AWS credentials
-✅ MFA compatible - uses your AWS IAM authentication
-✅ Full audit trail - all SSM sessions logged in CloudWatch
-✅ Encrypted tunnels through AWS infrastructure
-
 ### Cleanup
 
 ⚠️ **Warning**: Destroys ALL resources and data. This action CANNOT be undone.
