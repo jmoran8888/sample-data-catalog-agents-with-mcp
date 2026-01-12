@@ -238,9 +238,7 @@ def main():
     
     print("\n2. Populate Unity Catalog (after SSM connection - see below):")
     print("   a. Connect via SSM port forwarding (instructions below)")
-    print("   b. In a new terminal, run:")
-    print(f"      export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog")
-    print(f"      export DISABLE_SSL_VERIFY=1")
+    print("   b. In a new terminal (keep SSM running), run:")
     print(f"      python setup/setup_unity_simple.py")
     
     print("\nNote: You can also skip data population and use Streamlit UI")
@@ -251,8 +249,7 @@ def main():
     print("🎉 DEPLOYMENT COMPLETE!")
     print("=" * 60)
     print(f"\n📱 To access your application via SSM port forwarding:\n")
-    print("1. Open AWS Console → CloudShell")
-    print("2. Run this command in CloudShell:")
+    print("Run this command in your **local terminal**:")
     print(f"\n   aws ssm start-session \\")
     print(f"     --target {bastion_id} \\")
     print(f"     --document-name AWS-StartPortForwardingSessionToRemoteHost \\")
