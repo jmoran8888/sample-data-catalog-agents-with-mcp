@@ -143,26 +143,48 @@ Access at: http://localhost:8501
 
 ## AWS Deployment
 
-### Prerequisites
+### 1. Environment Setup
 
-1. **Python 3.9+** with pip **and virtual environment (REQUIRED)**
-   ```bash
-   # Create and activate virtual environment
-   python3 -m venv .venv-aws
-   source .venv-aws/bin/activate  # On Linux/macOS
-   # .venv-aws\Scripts\activate    # On Windows
-   
-   # Install deployment dependencies
-   pip install boto3 requests bedrock-agentcore-starter-toolkit
-   ```
+Create and activate a virtual environment:
+```bash
+python3 -m venv .venv-aws
+source .venv-aws/bin/activate  # On Linux/macOS
+# .venv-aws\Scripts\activate    # On Windows
+```
 
-2. **AWS CLI** configured with appropriate permissions
-3. **Terraform** >= 1.0
-4. **Docker** for building container images
+Install requirements:
+```bash
+pip install boto3 requests bedrock-agentcore-starter-toolkit
+```
+
+**Additional Requirements:**
+- **AWS CLI** configured with appropriate permissions
+- **AWS Session Manager Plugin** (for accessing application)
+- **Terraform** >= 1.0
+- **Docker** for building container images
+
+**AWS Session Manager Plugin Installation:**
+
+**macOS:**
+```bash
+brew install --cask session-manager-plugin
+```
+
+**Linux:**
+```bash
+curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+sudo dpkg -i session-manager-plugin.deb
+```
+
+**Windows:**
+Download from: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html
+
+Verify installation:
+```bash
+session-manager-plugin
+```
 
 Required AWS permissions: ECS, ECR, RDS, VPC, IAM, CloudWatch, Bedrock AgentCore, CodeBuild
-
-**⚠️ Important**: Always use a virtual environment for AWS deployments to ensure consistent package versions and avoid threading issues with the AgentCore toolkit.
 
 ### How AgentCore Deployment Works
 
