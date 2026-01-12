@@ -331,7 +331,7 @@ This creates sample databases and tables in both catalogs that demonstrate the a
 - Safe to proceed - it's your own infrastructure
 
 **Keep tunnel running:**
-- Keep CloudShell window open
+- Keep your local terminal window open (where SSM is running)
 - If you close it, re-run the SSM command
 - No data loss - just reconnects to existing infrastructure
 
