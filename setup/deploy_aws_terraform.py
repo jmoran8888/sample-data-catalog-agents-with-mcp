@@ -57,31 +57,50 @@ def get_terraform_output(output_name):
 def get_public_ip():
     """Get the user's public IPv4 address - REQUIRED for deployment"""
     import requests
+    import subprocess
+    
+    # Try IPv4-specific web endpoints first
     try:
-        # Use IPv4-specific endpoint
         response = requests.get('https://api.ipify.org?format=text', timeout=5)
         ip = response.text.strip()
-        # Verify it's IPv4 (contains dots, not colons)
-        if ':' in ip:
-            raise Exception("Got IPv6 address, need IPv4")
-        return ip
-    except:
-        try:
-            # Fallback: Try IPv4-specific endpoint
-            response = requests.get('https://ipv4.icanhazip.com', timeout=5)
-            ip = response.text.strip()
-            if ':' in ip:
-                raise Exception("Got IPv6 address, need IPv4")
+        if ':' not in ip:  # Verify it's IPv4
             return ip
-        except Exception as e:
-            print("❌ CRITICAL ERROR: Could not detect your public IPv4 address")
-            print("   Both api.ipify.org and ipv4.icanhazip.com failed")
-            print("\n   To fix:")
-            print("   1. Check your internet connection")
-            print("   2. Or manually create deploy/terraform/terraform.tfvars with:")
-            print('      allowed_ip_address = "YOUR.IPv4.HERE"')
-            print("   3. Get your IPv4 with: curl -4 ifconfig.me")
-            sys.exit(1)
+    except:
+        pass
+    
+    try:
+        response = requests.get('https://ipv4.icanhazip.com', timeout=5)
+        ip = response.text.strip()
+        if ':' not in ip:  # Verify it's IPv4
+            return ip
+    except:
+        pass
+    
+    # Final fallback: Use curl -4 to force IPv4
+    try:
+        print("Trying curl -4 ifconfig.me for IPv4 address...")
+        result = subprocess.run(
+            ['curl', '-4', '-s', 'ifconfig.me'],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+        if result.returncode == 0:
+            ip = result.stdout.strip()
+            if ':' not in ip and ip:  # Verify it's IPv4 and not empty
+                return ip
+    except:
+        pass
+    
+    # All methods failed
+    print("❌ CRITICAL ERROR: Could not detect your public IPv4 address")
+    print("   All detection methods failed (api.ipify.org, ipv4.icanhazip.com, curl -4)")
+    print("\n   To fix:")
+    print("   1. Check your internet connection")
+    print("   2. Manually create deploy/terraform/terraform.tfvars with:")
+    print('      allowed_ip_address = "YOUR.IPv4.HERE"')
+    print("   3. Get your IPv4 with: curl -4 ifconfig.me")
+    sys.exit(1)
 
 def create_or_update_tfvars(ip_address):
     """Create or update terraform.tfvars with IP address"""
