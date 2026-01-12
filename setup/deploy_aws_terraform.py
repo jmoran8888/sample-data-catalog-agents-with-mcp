@@ -239,6 +239,8 @@ def main():
     print("\n2. Populate Unity Catalog (after SSM connection - see below):")
     print("   a. Connect via SSM port forwarding (instructions below)")
     print("   b. In a new terminal (keep SSM running), run:")
+    print(f"      export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog")
+    print(f"      export DISABLE_SSL_VERIFY=1")
     print(f"      python setup/setup_unity_simple.py")
     
     print("\nNote: You can also skip data population and use Streamlit UI")
