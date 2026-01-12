@@ -119,10 +119,13 @@ def main():
         print("❌ deploy/terraform directory not found")
         sys.exit(1)
     
-    # Skip init since providers are already cached locally
-    # Terraform init has IPv6 connectivity issues to registry.terraform.io
-    print("Skipping terraform init (providers already cached)...")
-    print("✓ Using cached providers from .terraform/ directory")
+    # Check if Terraform providers are cached
+    terraform_cache = terraform_dir / ".terraform" / "providers"
+    if terraform_cache.exists() and list(terraform_cache.rglob("*")):
+        print("✓ Terraform providers already cached - skipping init")
+    else:
+        print("Initializing Terraform (first time setup)...")
+        run_command("terraform init", cwd=str(terraform_dir), show_output=True)
     
     # Check if terraform.tfvars exists
     tfvars_path = terraform_dir / "terraform.tfvars"
@@ -249,7 +252,7 @@ def main():
     print(f"       \"portNumber\":[\"443\"],")
     print(f"       \"localPortNumber\":[\"8443\"]")
     print(f"     }}' \\")
-    print(f"     --region us-east-1")
+    print(f"     --region {aws_region}")
     print(f"\n3. While tunnel is running, open in your browser: https://localhost:8443")
     print(f"4. Accept the SSL warning (self-signed certificate - this is safe)")
     print(f"\n🔐 Runtime IDs saved to .env file")
