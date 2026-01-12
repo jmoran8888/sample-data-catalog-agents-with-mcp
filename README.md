@@ -186,145 +186,149 @@ session-manager-plugin
 
 Required AWS permissions: ECS, ECR, RDS, VPC, IAM, CloudWatch, Bedrock AgentCore, CodeBuild
 
-### How AgentCore Deployment Works
+### 2. Configure AWS Profile
 
-This project uses the **bedrock-agentcore-starter-toolkit** to deploy MCP servers to AWS Bedrock AgentCore:
+Make sure your AWS profile is set up correctly with permissions to deploy infrastructure and access AWS services.
 
-1. **Toolkit packages your Python code** - MCP server files and dependencies
-2. **Creates CodeBuild projects** - Automatically builds container images from source
-3. **Manages ECR repositories** - Creates and pushes to toolkit-managed repos (bedrock-agentcore-*)
-4. **Deploys to AgentCore** - Handles all API complexities correctly
-5. **Monitors deployment** - Waits for READY status
+### 3. Deploy Infrastructure
 
-**Benefits:**
-- ✅ Reliable deployment (matches AWS Console behavior)
-- ✅ Automatic container building
-- ✅ No manual Docker commands needed for MCP servers
-- ✅ Built-in error handling
-
-**Resources Created:**
-- CodeBuild projects (one per MCP server)
-- ECR repositories (bedrock-agentcore-unityCatalogMcp_*, bedrock-agentcore-glueCatalogMcp_*)
-- AgentCore runtime instances
-- Sample data automatically populated in both catalogs
-
-**Note:** All toolkit-created resources are automatically cleaned up by `cleanup_aws_terraform.py`.
-
-### Configuration
-
-**No manual configuration required!** The deployment script handles all infrastructure setup automatically.
-
-**⚠️ Security Notes**: 
-- ALB is **internal only** (not internet-facing)
-- Access via **AWS Systems Manager (SSM)** port forwarding
-- No public IP whitelisting needed
-- Works from any location with AWS credentials
-- Encrypted tunnels through AWS infrastructure
-- All access logged in CloudWatch for auditing
-
-### Deployment
-
-```bash
-# Complete automated deployment
-python setup/deploy_aws_terraform.py
-```
-
-This single script automatically:
-1. Deploys Terraform infrastructure (VPC, ECS, RDS, internal ALB, SSM VPC endpoints)
-2. Builds and pushes Streamlit Docker image to ECR
-3. Deploys MCP servers to AgentCore Runtime (toolkit builds MCP images)
-4. Updates ECS services with configuration
-5. Provides instructions to populate both AWS Glue and Unity catalogs with sample data
-6. Provides SSM access instructions with bastion ID and ALB DNS
-
-### Accessing the Application via SSM Port Forwarding
-
-The application uses an **internal ALB** (not publicly accessible) for enhanced security. Access is provided through AWS Systems Manager port forwarding.
-
-**⚠️ Important**: SSM port forwarding must run on **your local machine** so your browser can access localhost.
-
-#### Prerequisites - One-Time Setup:
-
-**Install AWS Session Manager Plugin** (required for port forwarding):
-
-**macOS:**
-```bash
-brew install --cask session-manager-plugin
-```
-
-**Linux:**
-```bash
-curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-sudo dpkg -i session-manager-plugin.deb
-```
-
-**Windows:**
-Download from: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html
-
-**Verify installation:**
-```bash
-session-manager-plugin
-# Should show version and usage info
-```
-
-#### Step-by-Step Access Instructions:
-
-**Step 1: Run the Deployment Script**
-
-The deployment script provides a complete SSM command at the end:
+Run the automated deployment script:
 
 ```bash
 python setup/deploy_aws_terraform.py
 ```
 
-**Step 2: Copy the SSM Command from Output**
+This script automatically:
+- Deploys Terraform infrastructure (VPC, ECS, RDS, internal ALB, bastion instance, SSM VPC endpoints)
+- Builds and pushes Streamlit Docker image to ECR
+- Deploys MCP servers to AgentCore Runtime using bedrock-agentcore-starter-toolkit
+- Updates ECS services
+- Provides SSM access command with bastion ID and ALB DNS
 
-At the end of deployment, the script outputs a ready-to-use SSM command with all values (bastion ID, ALB DNS, region) already filled in. Simply copy and paste it into your **local terminal**.
+The deployment takes approximately 10-15 minutes.
 
-Example output:
-```bash
-aws ssm start-session \
-  --target i-0123456789abcdef0 \
-  --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters '{"host":["internal-catalog-agents-alb-123456.us-east-1.elb.amazonaws.com"],"portNumber":["443"],"localPortNumber":["8443"]}' \
-  --region us-east-1
-```
-
-**Step 3: Access in Your Browser**
-
-While the tunnel is running on your local machine, open your **local browser**:
-```
-https://localhost:8443
-```
-
-**Step 4: Accept SSL Warning**
-- Browser will show a security warning (self-signed certificate)
-- Click "Advanced" → "Proceed to localhost (unsafe)" or similar
-- **This is safe** - it's your own deployment with self-signed cert
-
-#### Populating Sample Data (Both Catalogs):
-
-Before using the application, populate both catalogs with sample data:
+### 4. Populate Sample Data
 
 **AWS Glue Catalog:**
 ```bash
 python setup/setup_glue_sample_data.py
 ```
 
-**Unity Catalog** (while SSM tunnel is running):
+**Unity Catalog:**
 
-In a new terminal (keep SSM tunnel running in the first terminal):
+First, connect via SSM port forwarding (copy command from deployment output and run in local terminal):
 ```bash
+aws ssm start-session \
+  --target <bastion-id> \
+  --document-name AWS-StartPortForwardingSessionToRemoteHost \
+  --parameters '{"host":["<alb-dns>"],"portNumber":["443"],"localPortNumber":["8443"]}' \
+  --region <region>
+```
+
+Then in a new terminal (keep SSM running):
+```bash
+export UNITY_CATALOG_URL=https://localhost:8443/api/2.1/unity-catalog
+export DISABLE_SSL_VERIFY=1
 python setup/setup_unity_simple.py
 ```
 
-Note: Unity Catalog setup script automatically uses `http://localhost:8080` locally or will prompt for URL if needed.
+Note: Environment variables needed because Unity is accessed via SSM tunnel at port 8443 (not the default 8080).
 
-**Step 5: Use the Application**
-- Streamlit UI will load at `https://localhost:8443`
+### 5. Run the Application
+
+Access the Streamlit UI at:
+```
+https://localhost:8443
+```
+
+**Note:** Browser will show SSL warning (self-signed certificate) - click "Advanced" → "Proceed" - this is safe.
+
 - Query both Unity and Glue catalogs
 - View sample data and test agents
 
+**Security Benefits:**
+✅ No public internet exposure - ALB is completely private
+✅ No static IP required - works from anywhere with AWS credentials
+✅ MFA compatible - uses your AWS IAM authentication
+✅ Full audit trail - all SSM sessions logged in CloudWatch
+✅ Encrypted tunnels through AWS infrastructure
+
+### Cleanup
+
+⚠️ **Warning**: Destroys ALL resources and data. This action CANNOT be undone.
+
+#### Step 1: Manually Delete AgentCore Runtimes (Required First)
+
+AgentCore runtimes must be deleted manually before running the cleanup script:
+
+```bash
+# List all AgentCore runtimes
+aws bedrock-agentcore-control list-agent-runtimes --region us-east-1
+
+# Delete each runtime (use the ID from the ARN: arn:.../runtime/ID)
+aws bedrock-agentcore-control delete-agent-runtime \
+  --agent-runtime-id unity_catalog_mcp_<suffix>-<id> \
+  --region us-east-1
+
+aws bedrock-agentcore-control delete-agent-runtime \
+  --agent-runtime-id glue_catalog_mcp_<suffix>-<id> \
+  --region us-east-1
+```
+
+#### Step 2: Run Automated Cleanup Script
+
+```bash
+python setup/cleanup_aws_terraform.py
+```
+
+This script will:
+1. Delete CodeBuild projects (created by toolkit)
+2. Clean up AgentCore Network Interfaces (ENIs)
+3. Empty Terraform-managed ECR repos (Terraform will delete them)
+4. Delete toolkit-created ECR repositories (bedrock-agentcore-*)
+5. Destroy all Terraform infrastructure (VPC, ECS, RDS, ALB, security groups, ECR, etc.)
+6. Remove local configuration files (.env, agentcore-config.json, etc.)
+
+## Example Queries
+
+**For AWS Glue Catalog:**
+- "List all databases in the Glue catalog"
+- "Show me all tables in database X"
+- "Find tables with 'customer' in the name"
+- "Get details for table Y in database X"
+- "Find tables with columns containing 'timestamp'"
+
+**For Unity Catalog:**
+- "List all databases in the Unity catalog"
+- "Show me all tables in catalog_name.schema_name"
+- "Find tables with 'customer' in the name"
+- "Get details for table_name in catalog_name.schema_name"
+- "Find tables with columns containing 'timestamp'"
+
+**For Unified Catalog Agent:**
+- "List all databases in both catalogs"
+- "Find tables with 'customer' in the name in both catalogs"
+- "Show me all tables in the Unity catalog"
+- "Show me all tables in the AWS Glue catalog"
+- "Find tables with columns containing 'timestamp' across both catalogs"
+
+## Limitations
+
+This project is a proof-of-concept. Do not use this code for production purposes without performing additional analysis. Since we are using an open-source version of the Unity catalog, experiment with open-source data rather than production data.
+
+## Security
+
+**IMPORTANT:** Before deploying this project to AWS:
+1. Review and follow all security guidelines in [SECURITY.md](SECURITY.md)
+2. Replace all placeholder passwords with secure values
+3. Never commit `terraform.tfvars`, `*.tfstate`, or `tfplan` files
+4. Consider using AWS Secrets Manager for credential management
+
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information on reporting security issues.
+
+## License
+
+This library is licensed under the MIT-0 License. See the LICENSE file.
 #### Access Flow Diagram:
 ```
 [Your Browser] → localhost:8443
