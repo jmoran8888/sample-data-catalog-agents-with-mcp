@@ -220,15 +220,9 @@ def main():
     run_command(f"aws ecs update-service --cluster {cluster_name} --service streamlit-app-service --force-new-deployment --region {aws_region}")
     
     print("✅ ECS services updated\n")
-    
-    # Step 5: Catalog Schema Creation Instructions
-    print("=" * 60)
-    print("STEP 5: Create Sample Catalog Schemas")
-    print("=" * 60)
-    
-
-    print("\nAlternatively, populate Unity after SSM connection - see below:")
-    
+    # Get infrastructure outputs for final summary
+    alb_dns = get_terraform_output('alb_dns_name')
+    bastion_id = get_terraform_output('bastion_instance_id')
     # Final summary
     print("=" * 60)
     print("🎉 DEPLOYMENT COMPLETE!")
@@ -244,6 +238,11 @@ def main():
     print(f"       \"localPortNumber\":[\"8443\"]")
     print(f"     }}' \\")
     print(f"     --region {aws_region}")
+    print(f"\n2. To create Unity Catalog schemas and tables:\n")
+    print("a. Make sure you are connected via SSM port forwarding (instructions above)")
+    print("b. In a new terminal (keep SSM running), run:")
+    print(f"   python setup/setup_unity_sample_data.py ")
+    print("\nNote: AWS Glue catalog is already populated by Terraform during deployment.\n")
     print(f"\n3. While tunnel is running, open in your browser: https://localhost:8443")
     print(f"4. Accept the SSL warning (self-signed certificate - this is safe)")
     print(f"\n🔐 Runtime IDs saved to .env file")
@@ -253,13 +252,7 @@ def main():
     print(f"   Glue MCP: {glue_id}")
     print(f"\n⏳ Note: Allow a few minutes for ECS service to fully start")
     print(f"\n📖 For more details, see README.md section on SSM Access")
-    alb_dns = get_terraform_output('alb_dns_name')
-    bastion_id = get_terraform_output('bastion_instance_id')
-    print(f"\n To create Unity Catalog schemas and tables:\n")
-    print("1. Make sure you are connected via SSM port forwarding (instructions above)")
-    print("2. In a new terminal (keep SSM running), run:")
-    print(f"   python setup/setup_unity_sample_data.py ")
-    print("\nNote: AWS Glue catalog is already populated by Terraform during deployment.\n")
+
 
 if __name__ == "__main__":
     try:
