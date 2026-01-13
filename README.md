@@ -209,15 +209,9 @@ This script automatically:
 
 The deployment takes approximately 10-15 minutes.
 
-### 4. Create Sample Catalog Schemas
+### 4. Connect via SSM Port Forwarding
 
-**AWS Glue Catalog:**
-
-Glue databases and table schemas are automatically created by Terraform during deployment. No manual setup needed!
-
-**Unity Catalog:**
-
-First, get the required connection information:
+Get the required connection information from Terraform:
 ```bash
 # Get bastion instance ID
 BASTION_ID=$(cd deploy/terraform && terraform output -raw bastion_instance_id)
@@ -234,34 +228,6 @@ echo "ALB DNS: $ALB_DNS"
 echo "Region: $AWS_REGION"
 ```
 
-Then connect via SSM port forwarding:
-```bash
-aws ssm start-session \
-  --target $BASTION_ID \
-  --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters "{\"host\":[\"$ALB_DNS\"],\"portNumber\":[\"443\"],\"localPortNumber\":[\"8443\"]}" \
-  --region $AWS_REGION
-```
-
-In a new terminal (keep SSM running):
-```bash
-python setup/setup_unity_sample_data.py
-```
-
-### 5. Access the Application
-
-If you closed the deployment terminal, get the connection information:
-```bash
-# Get bastion instance ID
-BASTION_ID=$(cd deploy/terraform && terraform output -raw bastion_instance_id)
-
-# Get ALB DNS name
-ALB_DNS=$(cd deploy/terraform && terraform output -raw alb_dns_name)
-
-# Get AWS region
-AWS_REGION=$(cd deploy/terraform && terraform output -raw aws_region)
-```
-
 Connect via SSM port forwarding:
 ```bash
 aws ssm start-session \
@@ -271,12 +237,31 @@ aws ssm start-session \
   --region $AWS_REGION
 ```
 
-Then access the Streamlit UI at:
+**Keep this terminal window open** - closing it will disconnect the tunnel. You can reconnect anytime by running these commands again.
+
+### 5. Create Sample Catalog Schemas
+
+**AWS Glue Catalog:**
+
+Glue databases and table schemas are automatically created by Terraform during deployment. No manual setup needed!
+
+**Unity Catalog:**
+
+In a new terminal (keep SSM tunnel running in the other terminal):
+```bash
+python setup/setup_unity_sample_data.py
+```
+
+### 6. Access the Application
+
+With the SSM tunnel active (from step 4), access the Streamlit UI at:
 ```
 https://localhost:8443
 ```
 
 **Note:** Browser will show SSL warning (self-signed certificate) - click "Advanced" → "Proceed" - this is safe.
+
+If you closed the SSM tunnel, return to step 4 to reconnect.
 
 #### Security Benefits:
 
