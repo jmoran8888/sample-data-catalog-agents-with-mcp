@@ -217,23 +217,61 @@ Glue databases and table schemas are automatically created by Terraform during d
 
 **Unity Catalog:**
 
-First, connect via SSM port forwarding (copy command from deployment output and run in local terminal):
+First, get the required connection information:
+```bash
+# Get bastion instance ID
+BASTION_ID=$(cd deploy/terraform && terraform output -raw bastion_instance_id)
+
+# Get ALB DNS name
+ALB_DNS=$(cd deploy/terraform && terraform output -raw alb_dns_name)
+
+# Get AWS region
+AWS_REGION=$(cd deploy/terraform && terraform output -raw aws_region)
+
+# Display the values
+echo "Bastion ID: $BASTION_ID"
+echo "ALB DNS: $ALB_DNS"
+echo "Region: $AWS_REGION"
+```
+
+Then connect via SSM port forwarding:
 ```bash
 aws ssm start-session \
-  --target <bastion-id> \
+  --target $BASTION_ID \
   --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters '{"host":["<alb-dns>"],"portNumber":["443"],"localPortNumber":["8443"]}' \
-  --region <region>
+  --parameters "{\"host\":[\"$ALB_DNS\"],\"portNumber\":[\"443\"],\"localPortNumber\":[\"8443\"]}" \
+  --region $AWS_REGION
 ```
 
-Then in a new terminal (keep SSM running):
+In a new terminal (keep SSM running):
 ```bash
-python setup/setup_unity_sample_data.py --port 8443
+python setup/setup_unity_sample_data.py
 ```
 
-### 5. Run the Application
+### 5. Access the Application
 
-Access the Streamlit UI at:
+If you closed the deployment terminal, get the connection information:
+```bash
+# Get bastion instance ID
+BASTION_ID=$(cd deploy/terraform && terraform output -raw bastion_instance_id)
+
+# Get ALB DNS name
+ALB_DNS=$(cd deploy/terraform && terraform output -raw alb_dns_name)
+
+# Get AWS region
+AWS_REGION=$(cd deploy/terraform && terraform output -raw aws_region)
+```
+
+Connect via SSM port forwarding:
+```bash
+aws ssm start-session \
+  --target $BASTION_ID \
+  --document-name AWS-StartPortForwardingSessionToRemoteHost \
+  --parameters "{\"host\":[\"$ALB_DNS\"],\"portNumber\":[\"443\"],\"localPortNumber\":[\"8443\"]}" \
+  --region $AWS_REGION
+```
+
+Then access the Streamlit UI at:
 ```
 https://localhost:8443
 ```
