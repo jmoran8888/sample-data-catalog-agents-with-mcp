@@ -211,7 +211,9 @@ The deployment takes approximately 10-15 minutes.
 
 ### 4. Connect via SSM Port Forwarding
 
-Get the required connection information from Terraform:
+**Note:** The deployment script (step 3) provides a ready-to-use connection command with all values filled in. You can copy and paste it directly from the deployment output.
+
+If you closed the deployment terminal, get the connection information from Terraform:
 ```bash
 # Get bastion instance ID
 BASTION_ID=$(cd deploy/terraform && terraform output -raw bastion_instance_id)
